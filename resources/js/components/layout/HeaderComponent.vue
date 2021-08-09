@@ -4,7 +4,7 @@
     >
         <div class="flex items-center w-full max-w-5xl">
             <div class="w-28">
-                <h1>GoFish</h1>
+                <h1></h1>
             </div>
             <div class="ml-5">
                 <a href="#" class="mr-3 text-sm text-primary">Hot Deals</a>
