@@ -6,17 +6,19 @@
             title="Fisheries near me"
             :venues="venues"
             :live="live"
+            :userPosition="userPosition"
         ></venue-list-component>
         <venue-list-component
             title="Best fisheries near me"
             :venues="venues"
             :live="live"
+            :userPosition="userPosition"
         ></venue-list-component>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["venues", "live"]
+    props: ["venues", "live", "userPosition"]
 };
 </script>

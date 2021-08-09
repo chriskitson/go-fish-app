@@ -37,7 +37,6 @@ class BootstrapController extends Controller
       }));
 
       $town = isset($town_filter) ? $town_filter["long_name"] : "";
-      
     }
 
     // get all venues
@@ -45,8 +44,13 @@ class BootstrapController extends Controller
 
     return response()->json(array(
       "venues" => $venues,
-      "town" => $town,
-      "lat" => $lat
+      "userPosition" => array(
+        "latitude" => $lat,
+        "longitude" => $lng,
+        "town" => $town
+      )
     ));
+
+
   }
 }

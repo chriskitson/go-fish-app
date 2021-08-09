@@ -14,9 +14,6 @@ let actions = {
                 //     message: err.message
                 // });
             });
-    },
-    USER_POSITION({ commit }, data) {
-        commit("USER_POSITION", data);
     }
 };
 export default actions;

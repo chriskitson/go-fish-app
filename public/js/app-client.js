@@ -1860,6 +1860,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)({
@@ -1881,22 +1885,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       navigator.geolocation.getCurrentPosition(function (position) {
-        _this.$store.dispatch("USER_POSITION", _objectSpread({
-          error: ""
-        }, position.coords));
-
         var _position$coords = position.coords,
             latitude = _position$coords.latitude,
             longitude = _position$coords.longitude;
 
         _this.getData("?latitude=".concat(latitude, "&longitude=").concat(longitude));
       }, function (error) {
-        _this.$store.dispatch("USER_POSITION", {
-          error: error,
-          latitude: null,
-          longitude: null
-        });
-
         _this.getData("");
       });
     },
@@ -1996,8 +1990,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ["venues", "live"]
+  props: ["venues", "live", "userPosition"]
 });
 
 /***/ }),
@@ -2092,8 +2088,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ["title", "venues", "live"]
+  props: ["title", "venues", "live", "userPosition"]
 });
 
 /***/ }),
@@ -2268,10 +2276,6 @@ var actions = {
       //     message: err.message
       // });
     });
-  },
-  USER_POSITION: function USER_POSITION(_ref2, data) {
-    var commit = _ref2.commit;
-    commit("USER_POSITION", data);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -2345,6 +2349,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./resources/js/store/state.js");
+
 var mutations = {
   EXAMPLE: function EXAMPLE(state, data) {
     state.venues = data;
@@ -2354,10 +2360,8 @@ var mutations = {
   },
   BOOTSTRAP_DATA: function BOOTSTRAP_DATA(state, data) {
     state.venues = data.venues;
+    state.userPosition = data.userPosition;
     state.live = true;
-  },
-  USER_POSITION: function USER_POSITION(state, data) {
-    state.userPosition = data;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -2381,7 +2385,8 @@ var state = {
   userPosition: {
     error: "",
     latitude: null,
-    longitude: null
+    longitude: null,
+    town: ""
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
@@ -20405,7 +20410,13 @@ var render = function() {
     [
       _c("header-component"),
       _vm._v(" "),
-      _c("home-component", { attrs: { venues: _vm.venues, live: _vm.live } }),
+      _c("home-component", {
+        attrs: {
+          venues: _vm.venues,
+          live: _vm.live,
+          userPosition: _vm.userPosition
+        }
+      }),
       _vm._v(" "),
       _c("footer-component")
     ],
@@ -20571,7 +20582,8 @@ var render = function() {
         attrs: {
           title: "Fisheries near me",
           venues: _vm.venues,
-          live: _vm.live
+          live: _vm.live,
+          userPosition: _vm.userPosition
         }
       }),
       _vm._v(" "),
@@ -20579,7 +20591,8 @@ var render = function() {
         attrs: {
           title: "Best fisheries near me",
           venues: _vm.venues,
-          live: _vm.live
+          live: _vm.live,
+          userPosition: _vm.userPosition
         }
       })
     ],
@@ -20675,8 +20688,32 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "w-full max-w-5xl mt-10" }, [
-    _c("h2", { staticClass: "mb-2 text-xl font-semibold" }, [
-      _vm._v(_vm._s(_vm.title))
+    _c("h2", { staticClass: "flex items-center mb-2 text-xl font-semibold" }, [
+      _vm._v("\n        " + _vm._s(_vm.title) + "\n        "),
+      _vm.userPosition.town !== ""
+        ? _c("span", { staticClass: "flex items-center ml-2" }, [
+            _vm._v(
+              "\n            - " +
+                _vm._s(_vm.userPosition.town) +
+                "\n            "
+            ),
+            _c(
+              "a",
+              {
+                staticClass: "flex items-center ml-10 text-sm text-primary",
+                attrs: { href: "#" }
+              },
+              [
+                _c("icon", {
+                  staticClass: "w-4 h-4 mr-2",
+                  attrs: { name: "location-marker" }
+                }),
+                _vm._v(" Update my\n                location")
+              ],
+              1
+            )
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _vm.live

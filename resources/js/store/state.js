@@ -4,7 +4,8 @@ let state = {
     userPosition: {
         error: "",
         latitude: null,
-        longitude: null
+        longitude: null,
+        town: ""
     }
 };
 

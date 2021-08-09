@@ -1,3 +1,5 @@
+import state from "./state";
+
 let mutations = {
     EXAMPLE(state, data) {
         state.venues = data;
@@ -7,11 +9,9 @@ let mutations = {
     },
     BOOTSTRAP_DATA(state, data) {
         state.venues = data.venues;
+        state.userPosition = data.userPosition;
         state.live = true;
     },
-    USER_POSITION(state, data) {
-        state.userPosition = data;
-    }
 };
 
 export default mutations;
