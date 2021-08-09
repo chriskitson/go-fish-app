@@ -16,8 +16,18 @@ Vue.component(
 );
 
 Vue.component(
+    "top-search-component",
+    require("./components/search/TopSearchComponent.vue").default
+);
+
+Vue.component(
     "footer-component",
     require("./components/layout/FooterComponent.vue").default
+);
+
+Vue.component(
+    "banner-component",
+    require("./components/presentation/banner/BannerComponent.vue").default
 );
 
 Vue.component(

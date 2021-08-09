@@ -6,10 +6,18 @@ module.exports = {
     ],
     darkMode: false, // or 'media' or 'class'
     theme: {
-        extend: {}
+        extend: {
+            colors: {
+                primary: "#2384eb",
+                secondary: "#7fccea",
+                light: "#a7afca"
+            }
+        }
     },
     variants: {
-        extend: {}
+        extend: {
+
+        }
     },
     plugins: []
 };

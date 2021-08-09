@@ -1,9 +1,14 @@
 <template>
-    <div
-        class="flex items-center justify-between w-full max-w-5xl px-8 mx-auto"
-    >
+    <div class="w-full max-w-5xl mx-auto">
+        <top-search-component></top-search-component>
+        <banner-component></banner-component>
         <venue-list-component
             title="Fisheries near me"
+            :venues="venues"
+            :live="live"
+        ></venue-list-component>
+        <venue-list-component
+            title="Best fisheries near me"
             :venues="venues"
             :live="live"
         ></venue-list-component>
