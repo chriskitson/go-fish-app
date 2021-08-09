@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./components/App";
 import Vuex from "vuex";
+import store from "./store";
 
 Vue.use(Vuex);
 
@@ -15,5 +16,6 @@ Vue.component(
 );
 
 export default new Vue({
-    render: h => h(App)
+    render: h => h(App),
+    store
 });
