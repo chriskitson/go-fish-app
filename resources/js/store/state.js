@@ -1,10 +1,6 @@
 let state = {
     live: false,
-    venues: [
-        1,
-        2,
-        3
-    ]
+    venues: []
 };
 
 export default state;

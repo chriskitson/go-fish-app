@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\VenueController;
+use App\Http\Controllers\BootstrapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('load', [BootstrapController::class, 'load']);
+
+Route::get('venues', [VenueController::class, 'all']);

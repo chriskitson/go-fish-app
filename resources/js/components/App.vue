@@ -1,11 +1,9 @@
 <template>
-    <div id="app">
+    <main class="w-full" id="app">
         <header-component></header-component>
-        <h1 class="text-sm">Hello World</h1>
-        {{ venues.length }}
-        {{ live ? 'yes' : 'no' }}
+        <home-component :venues="venues" :live="live"></home-component>
         <footer-component></footer-component>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -16,6 +14,9 @@ export default {
             venues: state => state.venues,
             live: state => state.live
         })
+    },
+    mounted() {
+        this.$store.dispatch("BOOTSTRAP_DATA_FETCH");
     }
 };
 </script>

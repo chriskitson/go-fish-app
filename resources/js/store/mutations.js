@@ -4,6 +4,10 @@ let mutations = {
     },
     LIVE(state, data) {
         state.live = data;
+    },
+    BOOTSTRAP_DATA(state, data) {
+        state.venues = data.venues;
+        state.live = true;
     }
 };
 

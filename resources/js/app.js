@@ -7,12 +7,27 @@ Vue.use(Vuex);
 
 Vue.component(
     "header-component",
-    require("./components/presentation/Header.vue").default
+    require("./components/layout/HeaderComponent.vue").default
+);
+
+Vue.component(
+    "home-component",
+    require("./components/layout/HomeComponent.vue").default
 );
 
 Vue.component(
     "footer-component",
-    require("./components/presentation/Footer.vue").default
+    require("./components/layout/FooterComponent.vue").default
+);
+
+Vue.component(
+    "venue-list-component",
+    require("./components/presentation/venue/VenueListComponent.vue").default
+);
+
+Vue.component(
+    "venue-item-component",
+    require("./components/presentation/venue/VenueItemComponent.vue").default
 );
 
 export default new Vue({
