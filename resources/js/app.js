@@ -2,8 +2,10 @@ import Vue from "vue";
 import App from "./components/App";
 import Vuex from "vuex";
 import store from "./store";
+import VIcon from "vue-tailwind-icons";
 
 Vue.use(Vuex);
+Vue.use(VIcon, { set: "outline" });
 
 Vue.component(
     "header-component",

@@ -1,6 +1,11 @@
 let state = {
     live: false,
-    venues: []
+    venues: [],
+    userPosition: {
+        error: "",
+        latitude: null,
+        longitude: null
+    }
 };
 
 export default state;

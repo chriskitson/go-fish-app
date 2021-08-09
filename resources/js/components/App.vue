@@ -12,11 +12,37 @@ export default {
     computed: {
         ...mapState({
             venues: state => state.venues,
-            live: state => state.live
+            live: state => state.live,
+            userPosition: state => state.userPosition
         })
     },
     mounted() {
-        this.$store.dispatch("BOOTSTRAP_DATA_FETCH");
+        this.getUserPosition();
+    },
+    methods: {
+        getUserPosition() {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    this.$store.dispatch("USER_POSITION", {
+                        error: "",
+                        ...position.coords
+                    });
+                    const { coords: { latitude, longitude}} = position;
+                    this.getData(`?latitude=${latitude}&longitude=${longitude}`);
+                },
+                error => {
+                    this.$store.dispatch("USER_POSITION", {
+                        error,
+                        latitude: null,
+                        longitude: null
+                    });
+                    this.getData("");
+                }
+            );
+        },
+        getData(q) {
+            this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);
+        }
     }
 };
 </script>

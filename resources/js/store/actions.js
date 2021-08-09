@@ -1,14 +1,8 @@
 let actions = {
-    EXAMPLE({ commit }, data) {
-        commit("FORM_SECTION", data);
-    },
-    LIVE({ commit }, live) {
-        commit("LIVE", live);
-    },
-    BOOTSTRAP_DATA_FETCH({ commit }, data) {
+    BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
         axios
             .get(
-                `/api/load`
+                `/api/load${queryString}`
             )
             .then(res => {
                 commit("BOOTSTRAP_DATA", res.data);
@@ -20,6 +14,9 @@ let actions = {
                 //     message: err.message
                 // });
             });
+    },
+    USER_POSITION({ commit }, data) {
+        commit("USER_POSITION", data);
     }
 };
 export default actions;
