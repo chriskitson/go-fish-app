@@ -2,6 +2,9 @@ let actions = {
     EXAMPLE({ commit }, data) {
         commit("FORM_SECTION", data);
     },
+    LIVE({ commit }, live) {
+        commit("LIVE", live);
+    },
     // EXAMPLE_CALL({ commit }, data: any) {
     //     if (data && data.name && data.name !== "") {
     //         commit("SUPPLIER_SEARCH_LOADING", true);

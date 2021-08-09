@@ -28,11 +28,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)({
     venues: function venues(state) {
       return state.venues;
+    },
+    live: function live(state) {
+      return state.live;
     }
   }))
 });
@@ -127,6 +131,10 @@ var actions = {
   EXAMPLE: function EXAMPLE(_ref, data) {
     var commit = _ref.commit;
     commit("FORM_SECTION", data);
+  },
+  LIVE: function LIVE(_ref2, live) {
+    var commit = _ref2.commit;
+    commit("LIVE", live);
   } // EXAMPLE_CALL({ commit }, data: any) {
   //     if (data && data.name && data.name !== "") {
   //         commit("SUPPLIER_SEARCH_LOADING", true);
@@ -222,6 +230,9 @@ __webpack_require__.r(__webpack_exports__);
 var mutations = {
   EXAMPLE: function EXAMPLE(state, data) {
     state.venues = data;
+  },
+  LIVE: function LIVE(state, data) {
+    state.live = data;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -240,6 +251,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var state = {
+  live: false,
   venues: [1, 2, 3]
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
@@ -679,7 +691,13 @@ var render = function() {
       _c("header-component"),
       _vm._v(" "),
       _c("h1", { staticClass: "text-sm" }, [_vm._v("Hello World")]),
-      _vm._v("\n    " + _vm._s(_vm.venues.length) + "\n    "),
+      _vm._v(
+        "\n    " +
+          _vm._s(_vm.venues.length) +
+          "\n    " +
+          _vm._s(_vm.live ? "yes" : "no") +
+          "\n    "
+      ),
       _c("footer-component")
     ],
     1
