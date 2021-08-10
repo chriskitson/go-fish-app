@@ -17,8 +17,12 @@ class Venue extends Model
     protected $fillable = [
         'id',
         'name',
-        'address'
+        'address',
+        'place_id'
     ];
+
+    protected $table = 'venues';
+    protected $primaryKey = 'id';
 
 
 }

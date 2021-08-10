@@ -20455,7 +20455,7 @@ var staticRenderFns = [
       "footer",
       {
         staticClass:
-          "flex items-center justify-center w-full mt-10 h-72 bg-primary"
+          "flex items-center justify-center w-full mt-10 h-144 bg-primary"
       },
       [
         _c("div", { staticClass: "flex items-center w-full max-w-5xl" }, [
