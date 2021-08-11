@@ -6,6 +6,10 @@ let state = {
         latitude: null,
         longitude: null,
         town: ""
+    },
+    locationSearch: {
+        show: true,
+        search: ''
     }
 };
 

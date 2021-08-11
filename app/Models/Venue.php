@@ -18,7 +18,8 @@ class Venue extends Model
         'id',
         'name',
         'address',
-        'place_id'
+        'place_id',
+        'distance'
     ];
 
     protected $table = 'venues';

@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Venue;
-use Illuminate\Support\Facades\Http;
+
+use App\Http\Traits\GoogleMapTrait;
 
 class BootstrapController extends Controller
 {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
+
+  use GoogleMapTrait;
+
   public function __construct()
   {
   }
@@ -22,63 +21,54 @@ class BootstrapController extends Controller
 
     $lat = $request->input('latitude');
     $lng = $request->input('longitude');
-
-    // determine location based on lat lng if supplied
     $town = "";
-    if (isset($lat) && isset($lng)) {
-
-      // Ref: https://github.com/alexpechkarev/google-maps
-      $response = \GoogleMaps::load('geocoding')
-        ->setParamByKey('latlng', $lat . ',' . $lng)
-        ->get('results');
-
-      $address_components = $response["results"][0]["address_components"];
-
-      $town_filter = current(array_filter($address_components, function ($a) {
-        return in_array("postal_town", $a["types"]);
-      }));
-
-      $town = isset($town_filter) ? $town_filter["long_name"] : "";
-    }
 
     // get all venues
-    $venues = Venue::take(100)->get();
+    $venues = Venue::get(["id", "name", "address", "place_id"]);
 
-    // use google apis to get distances
-    $key = "AIzaSyCsdU2LNn340yztbnjNhjYDeg2Gd4S3x40";
-    $origin = $lat . "," . $lng;
+    // TODO - if lat/lng NOT set by browser, can it be detected by IP?
 
-    $destinations = $venues->map(function ($venue) {
-      return 'place_id:' . $venue->place_id;
-    })->toArray();
+    // determine location based on lat lng if supplied
+    if (isset($lat) && isset($lng)) {
 
-    $destinations_batched = array_chunk($destinations , 25);
+      // TODO - is location info cached? If YES use cached values
 
-    $distances = [];
-    foreach($destinations_batched as $batch) {
-      $dest = implode("|", $batch);
-      $distances_res = Http::get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $dest . "&key=" . $key);
-      $distances =  array_merge($distances, $distances_res->json()["rows"][0]["elements"]);
+      // set origin
+      $origin = $lat . "," . $lng;
+
+      // set detsinations
+      $destinations = $venues->map(function ($venue) {
+        return 'place_id:' . $venue->place_id;
+      })->toArray();
+
+      // calculate distances
+      $distances = $this->calculate_distances($origin, $destinations);
+
+      // set distances on venue collection, then conmvert to array
+      $venues->map(function ($venue, $index) use ($distances) {
+        $venue->distance = $distances[$index]["distance"]["value"];
+        $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+      });
+
+      // convert to array and sort
+      $venues_array = $venues->toArray();
+      usort($venues_array, function ($a, $b) {
+        return $a["distance"] > $b["distance"];
+      });
+
+      // get user town
+      $town = $this->get_town($origin);
+
     }
 
-    // set distances
-    $venues->map(function ($venue, $index) use ($distances) {
-      $venue->distance = $distances[$index]["distance"]["value"];
-      $venue->distanceDisplay = $distances[$index]["distance"]["text"];
-      $index++;
-    });
-
     return response()->json(array(
-      "venues" => $venues->sortBy('distance')->take(4),
+      "venues" => array_slice($venues_array, 0, 4),
       "userPosition" => array(
         "latitude" => $lat,
         "longitude" => $lng,
         "town" => $town
       )
     ));
-
-    //place_id
-
 
   }
 }

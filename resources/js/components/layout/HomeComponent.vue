@@ -7,12 +7,14 @@
             :venues="venues"
             :live="live"
             :userPosition="userPosition"
+            @showLocation="$emit('showLocation', $event)"
         ></venue-list-component>
         <venue-list-component
             title="Best fisheries near me"
             :venues="venues"
             :live="live"
             :userPosition="userPosition"
+            @showLocation="$emit('showLocation', $event)"
         ></venue-list-component>
     </div>
 </template>

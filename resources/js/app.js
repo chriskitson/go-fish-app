@@ -13,6 +13,11 @@ Vue.component(
 );
 
 Vue.component(
+    "location-component",
+    require("./components/location/LocationComponent.vue").default
+);
+
+Vue.component(
     "home-component",
     require("./components/layout/HomeComponent.vue").default
 );

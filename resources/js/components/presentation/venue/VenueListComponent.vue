@@ -7,7 +7,7 @@
                 class="flex items-center ml-2"
             >
                 - {{ userPosition.town }}
-                <a href="#" class="flex items-center ml-10 text-sm text-primary"
+                <a href="#" v-on:click.self.prevent="$emit('showLocation', true)" class="flex items-center ml-10 text-sm text-primary"
                     ><icon name="location-marker" class="w-4 h-4 mr-2" /> Update my
                     location</a
                 >

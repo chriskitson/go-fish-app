@@ -1,7 +1,7 @@
 <template>
     <div :class="`w-1/4 h-48 p-3 ${live ? '' : 'bg-opacity-50 '}bg-secondary rounded-xl`">
         <div v-if="live">
-            {{ venue.name }}
+            {{ venue.name }} - {{ venue.distanceDisplay }}
         </div>
     </div>
 </template>

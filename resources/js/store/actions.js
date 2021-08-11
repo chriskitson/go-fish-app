@@ -14,6 +14,9 @@ let actions = {
                 //     message: err.message
                 // });
             });
+    },
+    LOCATION_SEARCH_SHOW({ commit }, show) {
+        commit("LOCATION_SEARCH_SHOW", show);
     }
 };
 export default actions;

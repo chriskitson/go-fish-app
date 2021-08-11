@@ -12,6 +12,12 @@ let mutations = {
         state.userPosition = data.userPosition;
         state.live = true;
     },
+    LOCATION_SEARCH_SHOW(state, show) {
+        state.locationSearch = {
+            ...state.locationSearch,
+            show
+        };
+    },
 };
 
 export default mutations;
