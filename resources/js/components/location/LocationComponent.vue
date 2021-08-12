@@ -46,7 +46,7 @@
                             <div class="mt-5 mb-5">
                                 <google-places-autocomplete
                                     :value="locationSearch.search"
-                                    class="w-full px-4 py-2 border rounded-md border-light"
+                                    class=""
                                     placeholder="Enter your city, post code or location"
                                     required
                                     @resultChanged="
