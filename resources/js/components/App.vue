@@ -8,7 +8,13 @@
             @showLocation="showLocationSearch"
         ></home-component>
         <footer-component></footer-component>
-        <location-component v-if="locationSearch.show" :locationSearch="locationSearch" @show="showLocationSearch"></location-component>
+        <location-component
+            v-if="locationSearch.show"
+            :locationSearch="locationSearch"
+            @show="showLocationSearch"
+            @set="setLocation"
+            @update="updateLocation"
+        ></location-component>
     </main>
 </template>
 
@@ -46,8 +52,17 @@ export default {
             this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);
         },
         showLocationSearch(show) {
-            console.log(show);
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
+        },
+        setLocation(detail) {
+            this.$store.dispatch("LOCATION_SEARCH_SET", detail);
+        },
+        updateLocation() {
+            if (this.$store.state.locationSearch.detail) {
+                const { geometry: { location }} = this.$store.state.locationSearch.detail;
+                localStorage.removeItem("homeToken");
+                this.getData(`?latitude=${location.lat()}&longitude=${location.lng()}`);
+            }
         }
     }
 };

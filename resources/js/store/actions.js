@@ -17,6 +17,9 @@ let actions = {
     },
     LOCATION_SEARCH_SHOW({ commit }, show) {
         commit("LOCATION_SEARCH_SHOW", show);
-    }
+    },
+    LOCATION_SEARCH_SET({ commit }, detail) {
+        commit("LOCATION_SEARCH_SET", detail);
+    },
 };
 export default actions;

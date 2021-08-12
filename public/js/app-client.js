@@ -1866,6 +1866,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)({
@@ -1903,8 +1909,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);
     },
     showLocationSearch: function showLocationSearch(show) {
-      console.log(show);
       this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
+    },
+    setLocation: function setLocation(detail) {
+      this.$store.dispatch("LOCATION_SEARCH_SET", detail);
+    },
+    updateLocation: function updateLocation() {
+      if (this.$store.state.locationSearch.detail) {
+        var location = this.$store.state.locationSearch.detail.geometry.location;
+        localStorage.removeItem("homeToken");
+        this.getData("?latitude=".concat(location.lat(), "&longitude=").concat(location.lng()));
+      }
     }
   }
 });
@@ -2021,7 +2036,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var vue_better_google_places_autocomplete__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-better-google-places-autocomplete */ "./node_modules/vue-better-google-places-autocomplete/dist/index.js");
-//
 //
 //
 //
@@ -2397,6 +2411,10 @@ var actions = {
   LOCATION_SEARCH_SHOW: function LOCATION_SEARCH_SHOW(_ref2, show) {
     var commit = _ref2.commit;
     commit("LOCATION_SEARCH_SHOW", show);
+  },
+  LOCATION_SEARCH_SET: function LOCATION_SEARCH_SET(_ref3, detail) {
+    var commit = _ref3.commit;
+    commit("LOCATION_SEARCH_SET", detail);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -2478,15 +2496,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var mutations = {
   BOOTSTRAP_DATA: function BOOTSTRAP_DATA(state, data) {
-    console.log(data.token);
     state.venues = data.venues;
     state.userPosition = data.userPosition;
-    localStorage.setItem('homeToken', data.token);
+    state.locationSearch = {
+      show: false,
+      search: '',
+      detail: null
+    };
     state.live = true;
+    localStorage.setItem('homeToken', data.token);
   },
   LOCATION_SEARCH_SHOW: function LOCATION_SEARCH_SHOW(state, show) {
     state.locationSearch = _objectSpread(_objectSpread({}, state.locationSearch), {}, {
       show: show
+    });
+  },
+  LOCATION_SEARCH_SET: function LOCATION_SEARCH_SET(state, detail) {
+    state.locationSearch = _objectSpread(_objectSpread({}, state.locationSearch), {}, {
+      detail: detail
     });
   }
 };
@@ -2516,7 +2543,8 @@ var state = {
   },
   locationSearch: {
     show: false,
-    search: ''
+    search: '',
+    detail: null
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
@@ -21160,7 +21188,11 @@ var render = function() {
       _vm.locationSearch.show
         ? _c("location-component", {
             attrs: { locationSearch: _vm.locationSearch },
-            on: { show: _vm.showLocationSearch }
+            on: {
+              show: _vm.showLocationSearch,
+              set: _vm.setLocation,
+              update: _vm.updateLocation
+            }
           })
         : _vm._e()
     ],
@@ -21474,10 +21506,7 @@ var render = function() {
                               },
                               on: {
                                 resultChanged: function(placeDetail) {
-                                  return _vm.$emit("searchAddressKeyPress", {
-                                    value: placeDetail,
-                                    target: "workAddress"
-                                  })
+                                  return _vm.$emit("set", placeDetail)
                                 }
                               }
                             })
@@ -21502,7 +21531,15 @@ var render = function() {
                     {
                       staticClass:
                         "inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-                      attrs: { type: "button" }
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.locationSearch.detail === null
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("update")
+                        }
+                      }
                     },
                     [_vm._v("\n                    Update\n                ")]
                   ),

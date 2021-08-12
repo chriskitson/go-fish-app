@@ -51,10 +51,7 @@
                                     required
                                     @resultChanged="
                                         placeDetail =>
-                                            $emit('searchAddressKeyPress', {
-                                                value: placeDetail,
-                                                target: 'workAddress'
-                                            })
+                                            $emit('set', placeDetail)
                                     "
                                 />
                             </div>
@@ -67,6 +64,8 @@
                     <button
                         type="button"
                         class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        :disabled="locationSearch.detail === null"
+                        @click="$emit('update')"
                     >
                         Update
                     </button>

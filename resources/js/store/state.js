@@ -9,7 +9,8 @@ let state = {
     },
     locationSearch: {
         show: false,
-        search: ''
+        search: '',
+        detail: null
     }
 };
 
