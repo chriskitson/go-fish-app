@@ -2385,7 +2385,7 @@ __webpack_require__.r(__webpack_exports__);
 var actions = {
   BOOTSTRAP_DATA_FETCH: function BOOTSTRAP_DATA_FETCH(_ref, queryString) {
     var commit = _ref.commit;
-    axios.get("/api/load".concat(queryString)).then(function (res) {
+    axios.get("/api/load".concat(queryString, "&c=").concat(localStorage.getItem("homeToken") || "")).then(function (res) {
       commit("BOOTSTRAP_DATA", res.data);
     })["catch"](function (err) {// commit("ERRORS_SET", {
       //     feature: "Get Suppliers",
@@ -2470,24 +2470,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./resources/js/store/state.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-
 var mutations = {
-  EXAMPLE: function EXAMPLE(state, data) {
-    state.venues = data;
-  },
-  LIVE: function LIVE(state, data) {
-    state.live = data;
-  },
   BOOTSTRAP_DATA: function BOOTSTRAP_DATA(state, data) {
+    console.log(data.token);
     state.venues = data.venues;
     state.userPosition = data.userPosition;
+    localStorage.setItem('homeToken', data.token);
     state.live = true;
   },
   LOCATION_SEARCH_SHOW: function LOCATION_SEARCH_SHOW(state, show) {
@@ -2521,7 +2515,7 @@ var state = {
     town: ""
   },
   locationSearch: {
-    show: true,
+    show: false,
     search: ''
   }
 };

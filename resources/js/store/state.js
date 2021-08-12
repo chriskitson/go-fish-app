@@ -8,7 +8,7 @@ let state = {
         town: ""
     },
     locationSearch: {
-        show: true,
+        show: false,
         search: ''
     }
 };

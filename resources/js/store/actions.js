@@ -2,7 +2,7 @@ let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
         axios
             .get(
-                `/api/load${queryString}`
+                `/api/load${queryString}&c=${localStorage.getItem("homeToken") || ""}`
             )
             .then(res => {
                 commit("BOOTSTRAP_DATA", res.data);
