@@ -9,18 +9,67 @@
             :userPosition="userPosition"
             @showLocation="$emit('showLocation', $event)"
         ></venue-list-component>
-        <venue-list-component
-            title="Best fisheries near me"
-            :venues="venues"
-            :live="live"
-            :userPosition="userPosition"
-            @showLocation="$emit('showLocation', $event)"
-        ></venue-list-component>
+        <category-list-component
+            title="Explore Northern Ireland"
+            :categories="counties"
+            :live="true"
+        ></category-list-component>
+        <category-list-component
+            title="How do you GoFish?"
+            :categories="types"
+            :live="true"
+        ></category-list-component>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["venues", "live", "userPosition"]
+    props: ["venues", "live", "userPosition"],
+    data: () => ({
+        counties: [
+            {
+                id: 1,
+                name: "County Antrim",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "County Armagh",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "County Down",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "Belfast",
+                img: "/images/river.jpg"
+            }
+        ],
+        types: [
+            {
+                id: 1,
+                name: "Sea fishing",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "Trout",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "Salmon",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "Fly fishing",
+                img: "/images/river.jpg"
+            }
+        ]
+    })
 };
 </script>

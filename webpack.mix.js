@@ -11,7 +11,8 @@ mix.js("resources/js/app-client.js", "public/js")
     .postCss("resources/css/app.css", "public/css")
     .webpackConfig(require("./webpack.config"))
     .tailwind()
-    .sourceMaps();
+    .sourceMaps()
+    .copy('resources/images', 'public/images', false);
 
 if (mix.inProduction()) {
     mix.version();

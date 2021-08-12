@@ -47,6 +47,16 @@ Vue.component(
     require("./components/presentation/venue/VenueItemComponent.vue").default
 );
 
+Vue.component(
+    "category-list-component",
+    require("./components/presentation/category/CategoryListComponent.vue").default
+);
+
+Vue.component(
+    "category-item-component",
+    require("./components/presentation/category/CategoryItemComponent.vue").default
+);
+
 export default new Vue({
     render: h => h(App),
     store
