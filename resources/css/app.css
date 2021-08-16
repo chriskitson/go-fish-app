@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-.vbga-input {
+.top .vbga-input {
+  @apply w-full px-4 py-2;
+}
+
+.location .vbga-input {
   @apply w-full px-4 py-2 border rounded-md border-light;
 }
 
 .vbga-results {
-  @apply absolute bg-white;
+  @apply absolute p-2 bg-white;
 }
 
 .vbga-results li {

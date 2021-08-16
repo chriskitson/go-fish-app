@@ -5,5 +5,5 @@ renderVueComponentToString(app, (err, html) => {
     if (err) {
         throw new Error(err);
     }
-    dispatch(html);
+    dispatch(`${html}`);
 });

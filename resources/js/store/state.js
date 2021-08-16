@@ -11,6 +11,10 @@ let state = {
         show: false,
         search: '',
         detail: null
+    },
+    venueSearch: {
+        search: '',
+        detail: null
     }
 };
 

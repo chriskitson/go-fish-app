@@ -1,13 +1,13 @@
 <template>
-    <div :class="`w-1/4 h-48 p-3 ${live ? '' : 'bg-opacity-50 '}bg-secondary rounded-xl`" :style="`background-image:url('${category.img}')`">
-        <div v-if="live">
+    <div :class="`w-1/${display} h-40 flex items-end bg-cover p-3 ${live ? '' : 'bg-opacity-50 '}bg-secondary rounded-xl`" :style="`background-image:url('${category ? category.img : ''}')`">
+        <a href="#" v-if="live" class="text-xl font-bold text-white">
             {{ category.name }}
-        </div>
+        </a>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["category", "live"]
+    props: ["category", "live", "display"]
 };
 </script>

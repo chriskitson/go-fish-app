@@ -5,6 +5,7 @@
             :venues="venues"
             :live="live"
             :userPosition="userPosition"
+            :venueSearch="venueSearch"
             @showLocation="showLocationSearch"
         ></home-component>
         <footer-component></footer-component>
@@ -26,7 +27,8 @@ export default {
             venues: state => state.venues,
             live: state => state.live,
             userPosition: state => state.userPosition,
-            locationSearch: state => state.locationSearch
+            locationSearch: state => state.locationSearch,
+            venueSearch: state => state.venueSearch
         })
     },
     mounted() {

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <top-search-component></top-search-component>
+        <top-search-component :venueSearch="venueSearch"></top-search-component>
         <banner-component></banner-component>
         <venue-list-component
             title="Fisheries near me"
@@ -13,23 +13,30 @@
             title="Explore Northern Ireland"
             :categories="counties"
             :live="true"
+            display="5"
         ></category-list-component>
         <category-list-component
             title="How do you GoFish?"
             :categories="types"
             :live="true"
+            display="4"
         ></category-list-component>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["venues", "live", "userPosition"],
+    props: ["venues", "live", "userPosition", "venueSearch"],
     data: () => ({
         counties: [
             {
                 id: 1,
                 name: "County Antrim",
+                img: "/images/river.jpg"
+            },
+            {
+                id: 1,
+                name: "County Fermanagh",
                 img: "/images/river.jpg"
             },
             {

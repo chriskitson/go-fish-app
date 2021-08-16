@@ -43,7 +43,7 @@
                                     near you.
                                 </p>
                             </div>
-                            <div class="mt-5 mb-5">
+                            <div class="mt-5 mb-5 location">
                                 <google-places-autocomplete
                                     :value="locationSearch.search"
                                     class=""
