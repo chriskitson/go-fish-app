@@ -23,9 +23,26 @@
                 /></span>
                 <google-places-autocomplete
                     class="h-9 w-80"
-                    placeholder="Enter your city, post code or location"
                     @resultChanged="placeDetail => $emit('set', placeDetail)"
-                />
+                >
+                    <div slot="input" slot-scope="{ context, events, actions }">
+                        <input
+                            v-model="context.input"
+                            @focus="events.inputHasReceivedFocus"
+                            @input="events.inputHasChanged"
+                            @keydown.enter.prevent="actions.selectItemFromList"
+                            @keydown.down.prevent="
+                                actions.shiftResultsSelection
+                            "
+                            @keydown.up.prevent="
+                                actions.unshiftResultsSelection
+                            "
+                            type="search"
+                            placeholder="Enter your city, post code or location"
+                            class="w-full px-4 py-2 rounded-md"
+                        />
+                    </div>
+                </google-places-autocomplete>
             </div>
 
             <button
