@@ -2,7 +2,7 @@ let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
         axios
             .get(
-                `/api/load${queryString}&c=${localStorage.getItem("homeToken") || ""}`
+                `/api/load?${queryString}&c=${localStorage.getItem("homeToken") || ""}`
             )
             .then(res => {
                 commit("BOOTSTRAP_DATA", res.data);
@@ -20,6 +20,9 @@ let actions = {
     },
     LOCATION_SEARCH_SET({ commit }, detail) {
         commit("LOCATION_SEARCH_SET", detail);
+    },
+    VENUE_SEARCH_SET({ commit }, detail) {
+        commit("VENUE_SEARCH_SET", detail);
     },
 };
 export default actions;

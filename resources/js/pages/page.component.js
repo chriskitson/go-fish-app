@@ -1,26 +1,5 @@
-<template>
-    <main class="w-full" id="app">
-        <header-component></header-component>
-        <home-component
-            :venues="venues"
-            :live="live"
-            :userPosition="userPosition"
-            :venueSearch="venueSearch"
-            @showLocation="showLocationSearch"
-        ></home-component>
-        <footer-component></footer-component>
-        <location-component
-            v-if="locationSearch.show"
-            :locationSearch="locationSearch"
-            @show="showLocationSearch"
-            @set="setLocation"
-            @update="updateLocation"
-        ></location-component>
-    </main>
-</template>
-
-<script>
 import { mapState } from "vuex";
+
 export default {
     computed: {
         ...mapState({
@@ -28,7 +7,8 @@ export default {
             live: state => state.live,
             userPosition: state => state.userPosition,
             locationSearch: state => state.locationSearch,
-            venueSearch: state => state.venueSearch
+            venueSearch: state => state.venueSearch,
+            dateSearch: state => state.dateSearch
         })
     },
     mounted() {
@@ -41,9 +21,7 @@ export default {
                     const {
                         coords: { latitude, longitude }
                     } = position;
-                    this.getData(
-                        `?latitude=${latitude}&longitude=${longitude}`
-                    );
+                    this.getData(`latitude=${latitude}&longitude=${longitude}`);
                 },
                 error => {
                     this.getData("");
@@ -61,11 +39,29 @@ export default {
         },
         updateLocation() {
             if (this.$store.state.locationSearch.detail) {
-                const { geometry: { location }} = this.$store.state.locationSearch.detail;
+                const {
+                    geometry: { location }
+                } = this.$store.state.locationSearch.detail;
                 localStorage.removeItem("homeToken");
-                this.getData(`?latitude=${location.lat()}&longitude=${location.lng()}`);
+                this.getData(
+                    `latitude=${location.lat()}&longitude=${location.lng()}`
+                );
             }
+        },
+        setVenueLocation(detail) {
+            this.$store.dispatch("VENUE_SEARCH_SET", detail);
+        },
+        searchVenues() {
+            const { dateSearch, venueSearch } = this.$store.state;
+            if (dateSearch && venueSearch.detail) {
+                console.log({
+                    date: dateSearch,
+                    location: venueSearch.detail.place_id
+                });
+            }
+        },
+        setDate() {
+            console.log("setd ate");
         }
     }
 };
-</script>

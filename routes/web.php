@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('index', ['script' => 'home']);
+});
+
+Route::get('/venue/{id}', function () {
+    return view('index', ['script' => 'detail']);
 });

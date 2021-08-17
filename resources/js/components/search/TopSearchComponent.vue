@@ -12,7 +12,8 @@
                 <input
                     type="text"
                     class="h-8 px-2 w-30"
-                    placeholder="Monday 9th August"
+                    placeholder=""
+                    :value="date"
                 />
             </div>
             <div
@@ -38,7 +39,7 @@
                                 actions.unshiftResultsSelection
                             "
                             type="search"
-                            placeholder="Enter your city, post code or location"
+                            placeholder="Enter a city, post code or location"
                             class="w-full px-4 py-2 rounded-md"
                         />
                     </div>
@@ -47,6 +48,7 @@
 
             <button
                 class="h-12 px-8 text-white border rounded-lg bg-primary border-primary"
+                @click="$emit('search')"
             >
                 Search
             </button>
@@ -57,7 +59,7 @@
 <script>
 import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
 export default {
-    props: ["venueSearch"],
+    props: ["venueSearch", "date"],
     components: {
         GooglePlacesAutocomplete
     }

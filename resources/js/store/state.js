@@ -15,7 +15,8 @@ let state = {
     venueSearch: {
         search: '',
         detail: null
-    }
+    },
+    dateSearch: new Date().getTime()
 };
 
 export default state;

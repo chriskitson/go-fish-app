@@ -5,14 +5,16 @@ mix.options({
     postCss: [require("tailwindcss")("./tailwind.config.js")]
 });
 
-mix.js("resources/js/app-client.js", "public/js")
-    .js("resources/js/app-server.js", "public/js")
+mix.js("resources/js/pages/home/home-client.js", "public/js")
+    .js("resources/js/pages/home/home-server.js", "public/js")
+    .js("resources/js/pages/detail/detail-client.js", "public/js")
+    .js("resources/js/pages/detail/detail-server.js", "public/js")
     .vue()
     .postCss("resources/css/app.css", "public/css")
     .webpackConfig(require("./webpack.config"))
     .tailwind()
     .sourceMaps()
-    .copy('resources/images', 'public/images', false);
+    .copy("resources/images", "public/images", false);
 
 if (mix.inProduction()) {
     mix.version();
