@@ -2,7 +2,9 @@ let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
         axios
             .get(
-                `/api/load?${queryString}&c=${localStorage.getItem("homeToken") || ""}`
+                `/api/load?${queryString}&c=${localStorage.getItem(
+                    "homeToken"
+                ) || ""}`
             )
             .then(res => {
                 commit("BOOTSTRAP_DATA", res.data);
@@ -24,5 +26,22 @@ let actions = {
     VENUE_SEARCH_SET({ commit }, detail) {
         commit("VENUE_SEARCH_SET", detail);
     },
+    VENUE_DETAIL_SET({ commit }, detail) {
+        commit("VENUE_DETAIL_SET", detail);
+    },
+    VENUE_DETAIL_GET({ commit }, id) {
+        return axios
+            .get(`/api/venues/${id}`)
+            .then(res => {
+                commit("VENUE_DETAIL_SET", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    }
 };
 export default actions;

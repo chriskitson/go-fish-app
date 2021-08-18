@@ -17,6 +17,6 @@ Route::get('/', function () {
     return view('index', ['script' => 'home']);
 });
 
-Route::get('/venue/{id}', function () {
-    return view('index', ['script' => 'detail']);
+Route::get('/venue/{id}', function ($id) {
+    return view('index', ['script' => 'detail', 'id' => $id]);
 });

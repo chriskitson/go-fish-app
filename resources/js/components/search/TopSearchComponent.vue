@@ -13,7 +13,7 @@
                     type="text"
                     class="h-8 px-2 w-30"
                     placeholder=""
-                    :value="date"
+                    :value="new Date(date) | dateFormat('DD/MM/YYYY')"
                 />
             </div>
             <div

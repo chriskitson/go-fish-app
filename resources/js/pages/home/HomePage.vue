@@ -25,5 +25,10 @@
 
 <script>
 import Page from "../page.component.js";
-export default Page;
+export default {
+    mixins: [Page],
+    mounted() {
+        this.getUserPosition();
+    }
+};
 </script>

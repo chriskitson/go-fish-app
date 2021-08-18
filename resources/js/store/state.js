@@ -9,14 +9,19 @@ let state = {
     },
     locationSearch: {
         show: false,
-        search: '',
+        search: "",
         detail: null
     },
     venueSearch: {
-        search: '',
+        search: "",
         detail: null
     },
-    dateSearch: new Date().getTime()
+    dateSearch: new Date().getTime(),
+    venueDetail: {
+        name: "",
+        address: "",
+        description: ""
+    }
 };
 
 export default state;

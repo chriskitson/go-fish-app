@@ -1,3 +1,13 @@
+@inject('venue', 'App\Http\Controllers\VenueController')
+
+@php
+$initial_state = array();
+// pre-fetch venue data
+if (isset($id)) {
+    $initial_state['venueDetail'] = $venue->get($id);
+}
+@endphp
+
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -9,6 +19,7 @@
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWyDnSq8kJoxf0zSdEQguVEgBBT6kuqUs&libraries=places" async defer></script>
     </head>
     <body>
-        {!! Ssr::entry('js/'.$script.'-server.js')->render() !!}
+        {!! Ssr::entry('js/'.$script.'-server.js')->context($initial_state)->render() !!}
+        <script>window.__INITIAL_STATE__='{!! json_encode($initial_state) !!}'</script>
     </body>
 </html>

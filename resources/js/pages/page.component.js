@@ -8,11 +8,9 @@ export default {
             userPosition: state => state.userPosition,
             locationSearch: state => state.locationSearch,
             venueSearch: state => state.venueSearch,
-            dateSearch: state => state.dateSearch
+            dateSearch: state => state.dateSearch,
+            venueDetail: state => state.venueDetail
         })
-    },
-    mounted() {
-        this.getUserPosition();
     },
     methods: {
         getUserPosition() {
@@ -27,6 +25,9 @@ export default {
                     this.getData("");
                 }
             );
+        },
+        getVenue(id) {
+            return this.$store.dispatch("VENUE_DETAIL_GET", id);
         },
         getData(q) {
             this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);

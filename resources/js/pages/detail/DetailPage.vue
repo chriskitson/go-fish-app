@@ -5,6 +5,7 @@
             :live="live"
             :venueSearch="venueSearch"
             :dateSearch="dateSearch"
+            :venueDetail="venueDetail"
             @showLocation="showLocationSearch"
             @setLocation="setVenueLocation"
             @setDate="setDate"
@@ -23,5 +24,14 @@
 
 <script>
 import Page from "../page.component.js";
-export default Page;
+export default {
+    mixins: [Page],
+    mounted() {
+        // this.getVenue(123);
+        // console.log(window.__INITIAL_STATE__);
+    },
+    serverPrefetch() {
+    //    return this.getVenue(123);
+    },
+};
 </script>

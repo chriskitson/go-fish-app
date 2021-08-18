@@ -24,3 +24,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('load', [BootstrapController::class, 'load']);
 
 Route::get('venues', [VenueController::class, 'all']);
+
+Route::get('venues/{id}', [VenueController::class, 'all']);

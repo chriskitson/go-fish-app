@@ -27,6 +27,9 @@ let mutations = {
             ...state.venueSearch,
             detail
         };
+    },
+    VENUE_DETAIL_SET(state, venue) {
+        state.venueDetail = venue;
     }
 };
 

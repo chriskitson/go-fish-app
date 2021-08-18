@@ -18,6 +18,7 @@ class Venue extends Model
         'id',
         'name',
         'address',
+        'description',
         'place_id',
         'distance'
     ];
