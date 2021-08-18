@@ -20,13 +20,13 @@
                 <p class="text-sm">{{ venueDetail.description }}</p>
                 <div class="flex mt-5">
                     <button
-                        class="flex items-center justify-center px-3 py-1 mr-2 text-sm border rounded-lg border-light bg-secondary"
+                        class="flex items-center justify-center px-3 py-1 mr-2 text-sm text-white rounded-lg bg-primary"
                     >
                         <icon name="location-marker" class="w-4 h-4 mr-2" />
                         Directions
                     </button>
                     <button
-                        class="flex items-center justify-center px-3 py-1 text-sm border rounded-lg border-light bg-secondary"
+                        class="flex items-center justify-center px-3 py-2 text-sm text-white rounded-lg bg-primary"
                     >
                         <icon name="pencil" class="w-4 h-4 mr-2" />
                         Review
@@ -43,7 +43,7 @@
             </div>
             <div class="col-span-2">
                 <ticket-list-component
-                    title="Tickets"
+                    :title="`Tickets from £75.00`"
                     :tickets="venueDetail.tickets"
                     :live="true"
                     display="4"

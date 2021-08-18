@@ -11,7 +11,8 @@ module.exports = {
                 primary: "#2384eb",
                 secondary: "#7fccea",
                 light: "#a7afca",
-                dark: '#666666'
+                dark: '#666666',
+                error: '#ff6961'
             }
         }
     },

@@ -3,7 +3,7 @@
         <h2 class="flex items-center mb-2 text-xl font-semibold">
             {{ title }}
             <span
-                v-if="userPosition.town !== ''"
+                v-if="userPosition && userPosition.town !== ''"
                 class="flex items-center ml-2"
             >
                 - {{ userPosition.town }}
@@ -15,7 +15,7 @@
         </h2>
         <div
             class="flex items-center justify-between w-full mx-auto space-x-4 py-50"
-            v-if="live"
+            v-if="live && venues"
         >
             <venue-item-component
                 v-for="(venue, i) in venues"
