@@ -43,7 +43,7 @@
             </div>
             <div class="col-span-2">
                 <ticket-list-component
-                    title="Day Tickets"
+                    title="Tickets"
                     :tickets="venueDetail.tickets"
                     :live="true"
                     display="4"
