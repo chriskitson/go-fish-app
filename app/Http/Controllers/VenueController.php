@@ -43,7 +43,7 @@ class VenueController extends Controller
         "name" => "Day Ticket (3 fish)",
         "description" => "Full day fishing with 3 fish limit.",
         "cost" => 115,
-        "availability" => true
+        "availability" => false
       ),
       array(
         "id" => 3,
