@@ -1,13 +1,11 @@
 @inject('venue', 'App\Http\Controllers\VenueController')
-
 @php
 $initial_state = array();
-// pre-fetch venue data
+// pre-fetch venue data server side
 if (isset($id)) {
     $initial_state['venueDetail'] = $venue->get($id);
 }
 @endphp
-
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
