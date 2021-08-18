@@ -28,8 +28,11 @@ let mutations = {
             detail
         };
     },
-    VENUE_DETAIL_SET(state, venue) {
-        state.venueDetail = venue;
+    VENUE_TICKETS_SET(state, tickets) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            tickets
+        }
     }
 };
 

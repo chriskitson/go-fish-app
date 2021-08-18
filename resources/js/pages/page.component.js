@@ -26,8 +26,8 @@ export default {
                 }
             );
         },
-        getVenue(id) {
-            return this.$store.dispatch("VENUE_DETAIL_GET", id);
+        getVenueTickets(id) {
+            return this.$store.dispatch("VENUE_TICKETS_GET", id);
         },
         getData(q) {
             this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);

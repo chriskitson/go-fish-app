@@ -26,14 +26,11 @@ let actions = {
     VENUE_SEARCH_SET({ commit }, detail) {
         commit("VENUE_SEARCH_SET", detail);
     },
-    VENUE_DETAIL_SET({ commit }, detail) {
-        commit("VENUE_DETAIL_SET", detail);
-    },
-    VENUE_DETAIL_GET({ commit }, id) {
+    VENUE_TICKETS_GET({ commit }, id) {
         return axios
-            .get(`/api/venues/${id}`)
+            .get(`/api/venues/tickets/${id}`)
             .then(res => {
-                commit("VENUE_DETAIL_SET", res.data);
+                commit("VENUE_TICKETS_SET", res.data);
             })
             .catch(err => {
                 // commit("ERRORS_SET", {

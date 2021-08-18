@@ -27,11 +27,7 @@ import Page from "../page.component.js";
 export default {
     mixins: [Page],
     mounted() {
-        // this.getVenue(123);
-        // console.log(window.__INITIAL_STATE__);
-    },
-    serverPrefetch() {
-    //    return this.getVenue(123);
-    },
+        this.getVenueTickets(this.$store.state.venueDetail.id);
+    }
 };
 </script>

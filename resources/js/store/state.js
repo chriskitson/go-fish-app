@@ -18,9 +18,11 @@ let state = {
     },
     dateSearch: new Date().getTime(),
     venueDetail: {
+        id: 0,
         name: "",
         address: "",
-        description: ""
+        description: "",
+        tickets: []
     }
 };
 

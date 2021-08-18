@@ -25,7 +25,7 @@
                         <icon name="location-marker" class="w-4 h-4 mr-2" />
                         Directions
                     </button>
-                             <button
+                    <button
                         class="flex items-center justify-center px-3 py-1 text-sm border rounded-lg border-light bg-secondary"
                     >
                         <icon name="pencil" class="w-4 h-4 mr-2" />
@@ -41,7 +41,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-span-2">main</div>
+            <div class="col-span-2">
+                <ticket-list-component
+                    title="Day Tickets"
+                    :tickets="venueDetail.tickets"
+                    :live="true"
+                    display="4"
+                ></ticket-list-component>
+            </div>
         </div>
     </div>
 </template>

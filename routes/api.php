@@ -26,3 +26,4 @@ Route::get('load', [BootstrapController::class, 'load']);
 Route::get('venues', [VenueController::class, 'all']);
 
 Route::get('venues/{id}', [VenueController::class, 'all']);
+Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);

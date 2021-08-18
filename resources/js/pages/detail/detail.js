@@ -31,6 +31,16 @@ Vue.component(
     require("../../components/layout/FooterComponent.vue").default
 );
 
+Vue.component(
+    "ticket-list-component",
+    require("../../components/presentation/ticket/TicketListComponent.vue").default
+);
+
+Vue.component(
+    "ticket-item-component",
+    require("../../components/presentation/ticket/TicketItemComponent.vue").default
+);
+
 export default new Vue({
     render: h => h(App),
     store
