@@ -13,12 +13,17 @@ Vue.use(VueFilterDateParse);
 
 Vue.component(
     "header-component",
-    require("../../components/layout/HeaderComponent.vue").default
+    require("../../components/layout/header/HeaderComponent.vue").default
+);
+
+Vue.component(
+    "footer-component",
+    require("../../components/layout/footer/FooterComponent.vue").default
 );
 
 Vue.component(
     "detail-component",
-    require("../../components/layout/DetailComponent.vue").default
+    require("../../components/layout/detail/DetailComponent.vue").default
 );
 
 Vue.component(
@@ -27,18 +32,13 @@ Vue.component(
 );
 
 Vue.component(
-    "footer-component",
-    require("../../components/layout/FooterComponent.vue").default
-);
-
-Vue.component(
     "ticket-list-component",
-    require("../../components/presentation/ticket/TicketListComponent.vue").default
+    require("../../components/ticket/TicketListComponent.vue").default
 );
 
 Vue.component(
     "ticket-item-component",
-    require("../../components/presentation/ticket/TicketItemComponent.vue").default
+    require("../../components/ticket/TicketItemComponent.vue").default
 );
 
 export default new Vue({

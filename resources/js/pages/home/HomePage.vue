@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import Page from "../page.component.js";
+import BasePage from "../base/BasePage";
 export default {
-    mixins: [Page],
+    mixins: [ BasePage ],
     mounted() {
         this.getUserPosition();
     }

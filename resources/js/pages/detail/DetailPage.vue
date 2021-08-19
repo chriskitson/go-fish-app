@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import Page from "../page.component.js";
+import BasePage from "../base/BasePage.vue";
 export default {
-    mixins: [Page],
+    mixins: [ BasePage ],
     mounted() {
         this.getVenueTickets(this.$store.state.venueDetail.id, this.$store.state.dateSearch);
     }
