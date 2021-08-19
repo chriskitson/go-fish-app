@@ -26,9 +26,9 @@ let actions = {
     VENUE_SEARCH_SET({ commit }, detail) {
         commit("VENUE_SEARCH_SET", detail);
     },
-    VENUE_TICKETS_GET({ commit }, id) {
+    VENUE_TICKETS_GET({ commit }, { id, date }) {
         return axios
-            .get(`/api/venues/tickets/${id}`)
+            .get(`/api/venues/tickets/${id}?d=${date}`)
             .then(res => {
                 commit("VENUE_TICKETS_SET", res.data);
             })

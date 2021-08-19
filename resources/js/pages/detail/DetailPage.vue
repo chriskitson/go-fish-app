@@ -27,7 +27,7 @@ import Page from "../page.component.js";
 export default {
     mixins: [Page],
     mounted() {
-        this.getVenueTickets(this.$store.state.venueDetail.id);
+        this.getVenueTickets(this.$store.state.venueDetail.id, this.$store.state.dateSearch);
     }
 };
 </script>
