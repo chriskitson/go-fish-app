@@ -6,7 +6,7 @@ import VueFilterDateParse from "@vuejs-community/vue-filter-date-parse";
 
 import { router } from './router';
 import store from "./store";
-import App from "./App";
+import App from "./pages/app/App";
 
 Vue.use(Vuex);
 Vue.use(VIcon, { set: "outline" });
