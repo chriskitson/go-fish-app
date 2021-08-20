@@ -5,7 +5,7 @@ $initial_state = array();
 if (isset($id)) {
     $initial_state['venueDetail'] = $venue->get($id)->original;
 }
-$initial_state['path'] = $path;
+$initial_state['path'] = Request::path();
 @endphp
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">

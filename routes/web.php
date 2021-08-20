@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function() {
-    return view('index', ['path' => Request::path()]);
+    return view('index');
 });
 
 
 Route::get('/venue/{id}', function($id) {
-    return view('index', ['id' => $id, 'path' => Request::path()]);
+    return view('index', [ 'id' => $id ]);
 });
