@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
-use Illuminate\Support\Facades\Http;
+use App\Http\Traits\GoogleMapTrait;
 
 class VenueController extends Controller
 {
+
+  use GoogleMapTrait;
+
   /**
    * Create a new controller instance.
    *
@@ -70,12 +73,41 @@ class VenueController extends Controller
     return response()->json($tickets);
   }
 
-  function search($date, $location) {
-    $results = array(
-      $date,
-      $location
-    );
-    return response()->json($results);
-  }
+  function search($date, $location)
+  {
 
+    // get all venues
+    $venues = Venue::get(["id", "name", "address", "place_id"]);
+
+    // set origin
+    $origin = 'place_id:' . $location;
+
+    // set destinations
+    $destinations = $venues->map(function ($venue) {
+      return 'place_id:' . $venue->place_id;
+    })->toArray();
+
+    // calculate distances
+    $distances = $this->calculate_distances($origin, $destinations);
+
+    // set distances on venue collection, then convert to array
+    $venues->map(function ($venue, $index) use ($distances) {
+      $venue->distance = $distances[$index]["distance"]["value"];
+      $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+    });
+
+    // convert to array, filter  and sort
+    $results = $venues->toArray();
+    $results = array_filter($results, function ($v) {
+      return $v["distance"] < 20000;
+    });
+    usort($results, function ($a, $b) {
+      return $a["distance"] > $b["distance"];
+    });
+
+    return response()->json(array(
+      "results" => $results
+    ));
+    
+  }
 }

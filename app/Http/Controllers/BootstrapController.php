@@ -58,7 +58,7 @@ class BootstrapController extends Controller
         // set origin
         $origin = $lat . "," . $lng;
 
-        // set detsinations
+        // set destinations
         $destinations = $venues->map(function ($venue) {
           return 'place_id:' . $venue->place_id;
         })->toArray();
@@ -66,7 +66,7 @@ class BootstrapController extends Controller
         // calculate distances
         $distances = $this->calculate_distances($origin, $destinations);
 
-        // set distances on venue collection, then conmvert to array
+        // set distances on venue collection, then convert to array
         $venues->map(function ($venue, $index) use ($distances) {
           $venue->distance = $distances[$index]["distance"]["value"];
           $venue->distanceDisplay = $distances[$index]["distance"]["text"];

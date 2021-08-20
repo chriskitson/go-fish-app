@@ -34,8 +34,8 @@ let mutations = {
             tickets
         }
     },
-    VENUE_SEARCH_RESULTS_SET(state, results) {
-        state.venueSearchResults = results;
+    VENUE_SEARCH_RESULTS_SET(state, res) {
+        state.venueSearchResults = res.results;
     }
 };
 

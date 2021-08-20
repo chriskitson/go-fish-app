@@ -6,7 +6,7 @@ export const bindState = (context, state) => {
         };
     }
     if (context.venueSearchResults) {
-        state.venueSearchResults = context.venueSearchResults;
+        state.venueSearchResults = context.venueSearchResults.results;
     }
     return state;
 };
