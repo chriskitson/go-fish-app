@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,10 +12,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index', ['script' => 'home']);
+// Route::get('/', function () {
+//     return view('index', ['script' => 'app']);
+// });
+
+Route::get('/', function() {
+    return view('index', ['path' => Request::path()]);
 });
 
-Route::get('/venue/{id}', function ($id) {
-    return view('index', ['script' => 'detail', 'id' => $id]);
+
+Route::get('/venue/{id}', function($id) {
+    return view('index', ['id' => $id, 'path' => Request::path()]);
 });

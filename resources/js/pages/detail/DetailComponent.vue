@@ -1,11 +1,5 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <top-search-component
-            :venueSearch="venueSearch"
-            :date="dateSearch"
-            @set="$emit('setLocation', $event)"
-            @search="$emit('searchVenues', $event)"
-        ></top-search-component>
         <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
             <div>
                 <img
@@ -54,7 +48,29 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-    props: ["venueSearch", "dateSearch", "venueDetail"]
+    computed: {
+        ...mapState({
+            venues: state => state.venues,
+            live: state => state.live,
+            venueDetail: state => state.venueDetail
+        })
+    },
+    mounted() {
+        this.getVenueTickets(
+            this.$store.state.venueDetail.id,
+            this.$store.state.dateSearch
+        );
+    },
+    methods: {
+        getVenueTickets(id, date) {
+            return this.$store.dispatch("VENUE_TICKETS_GET", {
+                id,
+                date
+            });
+        },
+
+    }
 };
 </script>

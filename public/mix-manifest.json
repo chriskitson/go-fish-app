@@ -1,8 +1,6 @@
 {
-    "/js/home-client.js": "/js/home-client.js",
-    "/js/home-server.js": "/js/home-server.js",
-    "/js/detail-client.js": "/js/detail-client.js",
-    "/js/detail-server.js": "/js/detail-server.js",
+    "/js/app-client.js": "/js/app-client.js",
+    "/js/app-server.js": "/js/app-server.js",
     "/css/app.css": "/css/app.css",
     "/images/river.jpg": "/images/river.jpg"
 }

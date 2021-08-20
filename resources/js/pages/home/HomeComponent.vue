@@ -1,18 +1,12 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <top-search-component
-            :venueSearch="venueSearch"
-            :date="dateSearch"
-            @set="$emit('setLocation', $event)"
-            @search="$emit('searchVenues', $event)"
-        ></top-search-component>
         <banner-component></banner-component>
         <venue-list-component
             title="Fisheries near me"
             :venues="venues"
             :live="live"
             :userPosition="userPosition"
-            @showLocation="$emit('showLocation', $event)"
+            @showLocation="showLocationSearch"
         ></venue-list-component>
         <category-list-component
             title="Explore Northern Ireland"
@@ -30,8 +24,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-    props: ["venues", "live", "userPosition", "venueSearch", "dateSearch"],
+    computed: {
+        ...mapState({
+            venues: state => state.venues,
+            live: state => state.live,
+            userPosition: state => state.userPosition,
+            locationSearch: state => state.locationSearch,
+            venueDetail: state => state.venueDetail
+        })
+    },
     data: () => ({
         counties: [
             {
@@ -82,6 +85,11 @@ export default {
                 img: "/images/river.jpg"
             }
         ]
-    })
+    }),
+    methods: {
+        showLocationSearch(show) {
+            this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
+        }
+    }
 };
 </script>
