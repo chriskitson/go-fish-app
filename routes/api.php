@@ -27,3 +27,5 @@ Route::get('venues', [VenueController::class, 'all']);
 
 Route::get('venues/{id}', [VenueController::class, 'all']);
 Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
+
+Route::get('search/{date}/{location}', [VenueController::class, 'search']);

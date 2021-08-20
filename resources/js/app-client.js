@@ -1,16 +1,11 @@
 import "./client-bootstrap";
 import app from "./app-main";
 import store from "./store";
+import { bindState } from "./ssr";
 
-// hydrate client with pre-fetched state
-if (window.__INITIAL_STATE__) {
+if (window.__INITIAL_STATE__) { // hydrate client with pre-fetched state
     const context = JSON.parse(window.__INITIAL_STATE__);
-    if (context.venueDetail) {
-        store.state.venueDetail = {
-            ...store.state.venueDetail,
-            ...context.venueDetail
-        };
-    }
+    store.replaceState(bindState(context, store.state));
 }
 
 app.$mount("#app");

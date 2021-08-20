@@ -69,4 +69,13 @@ class VenueController extends Controller
     );
     return response()->json($tickets);
   }
+
+  function search($date, $location) {
+    $results = array(
+      $date,
+      $location
+    );
+    return response()->json($results);
+  }
+
 }

@@ -69,8 +69,7 @@ export default {
                 id,
                 date
             });
-        },
-
+        }
     }
 };
 </script>

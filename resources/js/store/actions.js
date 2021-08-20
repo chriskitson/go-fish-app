@@ -1,3 +1,5 @@
+import { router } from '../router';
+
 let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
         axios
@@ -31,6 +33,21 @@ let actions = {
             .get(`/api/venues/tickets/${id}?d=${date}`)
             .then(res => {
                 commit("VENUE_TICKETS_SET", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
+    VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
+        return axios
+            .get(`/api/search/${date}/${location}`)
+            .then(res => {
+                commit("VENUE_SEARCH_RESULTS_SET", res.data);
+                router.push(`/search/${date}/${location}`);
             })
             .catch(err => {
                 // commit("ERRORS_SET", {

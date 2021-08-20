@@ -5,7 +5,7 @@
             <top-search-component
                 :venueSearch="venueSearch"
                 :date="dateSearch"
-                @set="setLocation"
+                @set="setVenueLocation"
                 @search="searchVenues"
             ></top-search-component>
         </div>
@@ -55,9 +55,6 @@ export default {
         showLocationSearch(show) {
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
         },
-        setLocation(detail) {
-            this.$store.dispatch("LOCATION_SEARCH_SET", detail);
-        },
         updateLocation() {
             if (this.$store.state.locationSearch.detail) {
                 const {
@@ -69,13 +66,16 @@ export default {
                 );
             }
         },
+        setVenueLocation(detail) {
+            this.$store.dispatch("VENUE_SEARCH_SET", detail);
+        },
         setLocation(detail) {
             this.$store.dispatch("LOCATION_SEARCH_SET", detail);
         },
         searchVenues() {
             const { dateSearch, venueSearch } = this.$store.state;
             if (dateSearch && venueSearch.detail) {
-                console.log({
+                this.$store.dispatch("VENUE_SEARCH_RESULTS_GET", {
                     date: dateSearch,
                     location: venueSearch.detail.place_id
                 });

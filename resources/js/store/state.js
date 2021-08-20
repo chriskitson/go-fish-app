@@ -23,7 +23,8 @@ let state = {
         address: "",
         description: "",
         tickets: []
-    }
+    },
+    venueSearchResults: []
 };
 
 export default state;

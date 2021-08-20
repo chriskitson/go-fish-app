@@ -2,15 +2,10 @@ import renderVueComponentToString from "vue-server-renderer/basic";
 import app from "./app-main";
 import store from "./store";
 import { router } from "./router";
+import { bindState } from "./ssr";
 
-// pre-fetched state
-if (context) {
-    if (context.venueDetail) {
-        store.state.venueDetail = {
-            ...store.state.venueDetail,
-            ...context.venueDetail
-        };
-    }
+if (context) {  // pre-fetched state
+    store.replaceState(bindState(context, store.state));
 }
 
 new Promise((resolve, reject) => {

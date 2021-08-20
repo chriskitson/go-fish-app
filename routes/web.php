@@ -12,15 +12,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('index', ['script' => 'app']);
-// });
-
 Route::get('/', function() {
     return view('index');
 });
 
-
 Route::get('/venue/{id}', function($id) {
     return view('index', [ 'id' => $id ]);
+});
+
+Route::get('/search/{date}/{location}', function($date, $location) {
+    return view('index', [ 'date' => $date, 'location' => $location ]);
 });
