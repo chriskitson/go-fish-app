@@ -1,20 +1,14 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
+        <div class="grid grid-cols-4 gap-6 mt-10 mb-20">
             <div>
                 &nbsp;
             </div>
-            <div class="col-span-2">
-                <h2>Search results</h2>
-                <div v-if="venueSearchResults.length === 0">
-                    There are no venues that match your search
-                </div>
-                <div v-if="venueSearchResults.length > 0">
-                    <search-result-list-component
-                        :results="venueSearchResults"
-                        title="dssd"
-                    ></search-result-list-component>
-                </div>
+            <div class="col-span-3">
+                <search-result-list-component
+                    :results="venueSearchResults"
+                    title="Search Results"
+                ></search-result-list-component>
             </div>
         </div>
     </div>

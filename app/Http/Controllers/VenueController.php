@@ -91,7 +91,7 @@ class VenueController extends Controller
       ])->first();
 
       $search = $req->search;
-      $venues = json_decode($req->data);
+      $results = json_decode($req->data);
     } else { // look up location based data search results
 
       // get search by place_id
@@ -120,7 +120,7 @@ class VenueController extends Controller
       // convert to array, filter  and sort
       $results = $venues->toArray();
       $results = array_filter($results, function ($v) {
-        return $v["distance"] < 20000;
+        return $v["distance"] < env('SEARCH_DISTANCE_LIMIT', 0);
       });
       usort($results, function ($a, $b) {
         return $a["distance"] > $b["distance"];
@@ -141,7 +141,9 @@ class VenueController extends Controller
 
     return response()->json(array(
       "results" => $results,
-      "search" => $search
+      "search" => $search,
+      "limit" => env('SEARCH_DISTANCE_LIMIT', 2000),
+      "cached" => !$cache_exists
     ));
   }
 }

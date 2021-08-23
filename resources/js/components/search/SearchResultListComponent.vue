@@ -3,13 +3,17 @@
         <h2 class="flex items-center mb-4 text-xl font-semibold">
             {{ title }}
         </h2>
-        <div
-            class="flex flex-wrap items-center w-full space-y-4 py-50"
-        >
-            <search-result-item-component
-                v-for="(result) in results"
-                :key="`result-${result.id}`"
-            ></search-result-item-component>
+        <div v-if="results.length === 0">
+            <p>There are no venues that match your search.</p>
+        </div>
+        <div v-if="results.length > 0">
+            <div class="flex flex-wrap items-center w-full space-y-4 py-50">
+                <search-result-item-component
+                    v-for="result in results"
+                    :key="`result-${result.id}`"
+                    :result="result"
+                ></search-result-item-component>
+            </div>
         </div>
     </div>
 </template>

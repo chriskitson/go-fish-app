@@ -36,7 +36,7 @@ trait GoogleMapTrait {
 
     public function calculate_distances($origin, $destinations) {
       // use google apis to get distances
-      $key = "AIzaSyCsdU2LNn340yztbnjNhjYDeg2Gd4S3x40";
+      $key = env('GOOGLE_MAP_KEY', '');
 
       // batch requests up in 25s
       $destinations_batched = array_chunk($destinations, 25);

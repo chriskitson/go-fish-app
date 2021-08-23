@@ -22,6 +22,6 @@ $initial_state['path'] = Request::path();
     </head>
     <body>
         {!! Ssr::entry('js/app-server.js')->context($initial_state)->render() !!}
-        <script>window.__INITIAL_STATE__='{!! json_encode($initial_state) !!}';</script>
+        <script>window.__INITIAL_STATE__='{!! str_replace("'", "\'", json_encode($initial_state)) !!}';</script>
     </body>
 </html>
