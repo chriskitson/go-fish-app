@@ -99,7 +99,7 @@ class BootstrapController extends Controller
         $cache = new RequestCache([
           "id" => $cache_id,
           "data" => json_encode($response),
-          "expires" => date('Y-m-d', strtotime("+1 week"))
+          "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
         ]);
         $cache->save();
 

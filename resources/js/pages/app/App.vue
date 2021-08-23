@@ -75,10 +75,7 @@ export default {
         searchVenues() {
             const { dateSearch, venueSearch } = this.$store.state;
             if (dateSearch && venueSearch.detail) {
-                this.$store.dispatch("VENUE_SEARCH_RESULTS_GET", {
-                    date: dateSearch,
-                    location: venueSearch.detail.place_id
-                });
+                window.location.href = `/search/${dateSearch}/${venueSearch.detail.place_id}`;
             }
         }
     }

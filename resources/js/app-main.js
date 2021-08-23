@@ -68,6 +68,16 @@ Vue.component(
     require("./components/ticket/TicketItemComponent.vue").default
 );
 
+Vue.component(
+    "search-result-list-component",
+    require("./components/search/SearchResultListComponent.vue").default
+);
+
+Vue.component(
+    "search-result-item-component",
+    require("./components/search/SearchResultItemComponent.vue").default
+);
+
 export default new Vue({
     render: h => h(App),
     store,

@@ -5,12 +5,12 @@ use Illuminate\Support\Facades\Http;
 
 trait GoogleMapTrait {
 
-    public function get_town($origin) {
+    public function get_town($origin, $key = "latlng") {
       // Ref: https://github.com/alexpechkarev/google-maps
 
       // get user location based on lat lng
       $response = \GoogleMaps::load('geocoding')
-        ->setParamByKey('latlng', $origin)
+        ->setParamByKey($key, $origin)
         ->get('results');
 
       $town_filter = current(array_filter($response["results"][0]["address_components"], function ($a) {
@@ -20,6 +20,18 @@ trait GoogleMapTrait {
       $town = isset($town_filter) ? $town_filter["long_name"] : "";
 
       return $town;
+    }
+
+    public function get_address($origin, $key = "latlng") {
+      // Ref: https://github.com/alexpechkarev/google-maps
+
+      // get user location based on lat lng
+      $response = \GoogleMaps::load('geocoding')
+        ->setParamByKey($key, $origin)
+        ->get('results');
+
+      return $response["results"][0]["formatted_address"];
+      
     }
 
     public function calculate_distances($origin, $destinations) {

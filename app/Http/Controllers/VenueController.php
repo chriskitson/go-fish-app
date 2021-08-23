@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
+use App\Models\SearchCache;
 use App\Http\Traits\GoogleMapTrait;
 
 class VenueController extends Controller
@@ -76,38 +77,71 @@ class VenueController extends Controller
   function search($date, $location)
   {
 
-    // get all venues
-    $venues = Venue::get(["id", "name", "address", "place_id"]);
+    // determine location and check if cache exists
+    $cache_exists = isset($location) && count(SearchCache::where([
+      ['id', '=', $location],
+      ['expires', '>=', date('Y-m-d')]
+    ])->get()) > 0;
 
-    // set origin
-    $origin = 'place_id:' . $location;
+    if ($cache_exists) { // load venues from cached results
 
-    // set destinations
-    $destinations = $venues->map(function ($venue) {
-      return 'place_id:' . $venue->place_id;
-    })->toArray();
+      $req = SearchCache::where([
+        ['id', '=', $location],
+        ['expires', '>=', date('Y-m-d')]
+      ])->first();
 
-    // calculate distances
-    $distances = $this->calculate_distances($origin, $destinations);
+      $search = $req->search;
+      $venues = json_decode($req->data);
+    } else { // look up location based data search results
 
-    // set distances on venue collection, then convert to array
-    $venues->map(function ($venue, $index) use ($distances) {
-      $venue->distance = $distances[$index]["distance"]["value"];
-      $venue->distanceDisplay = $distances[$index]["distance"]["text"];
-    });
+      // get search by place_id
+      $search = $this->get_address($location, "place_id");
 
-    // convert to array, filter  and sort
-    $results = $venues->toArray();
-    $results = array_filter($results, function ($v) {
-      return $v["distance"] < 20000;
-    });
-    usort($results, function ($a, $b) {
-      return $a["distance"] > $b["distance"];
-    });
+      // get all venues
+      $venues = Venue::get(["id", "name", "address", "place_id"]);
+
+      // set origin
+      $origin = 'place_id:' . $location;
+
+      // set destinations
+      $destinations = $venues->map(function ($venue) {
+        return 'place_id:' . $venue->place_id;
+      })->toArray();
+
+      // calculate distances
+      $distances = $this->calculate_distances($origin, $destinations);
+
+      // set distances on venue collection, then convert to array
+      $venues->map(function ($venue, $index) use ($distances) {
+        $venue->distance = $distances[$index]["distance"]["value"];
+        $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+      });
+
+      // convert to array, filter  and sort
+      $results = $venues->toArray();
+      $results = array_filter($results, function ($v) {
+        return $v["distance"] < 20000;
+      });
+      usort($results, function ($a, $b) {
+        return $a["distance"] > $b["distance"];
+      });
+
+      // write to cache expiring in 1 week
+      $cache = new SearchCache([
+        "id" => $location,
+        "search" => $search,
+        "data" => json_encode($results),
+        "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
+      ]);
+      $cache->save();
+
+    }
+
+    // TODO - work out availability of dates based on distance
 
     return response()->json(array(
-      "results" => $results
+      "results" => $results,
+      "search" => $search
     ));
-    
   }
 }

@@ -24,6 +24,7 @@
                 /></span>
                 <google-places-autocomplete
                     class="h-9 w-80"
+                    :value="venueSearch.search"
                     @resultChanged="placeDetail => $emit('set', placeDetail)"
                 >
                     <div slot="input" slot-scope="{ context, events, actions }">
