@@ -9,13 +9,12 @@
                 <span class="mr-2"
                     ><icon name="calendar" class="w-6 h-6"
                 /></span>
-                <!-- <datepicker
-                    v-model="date"
+                <input
+                    type="text"
                     class="h-8 px-2 w-30"
-                ></datepicker> -->
-
-<!-- <datepicker v-model="date" name=""></datepicker> -->
-
+                    placeholder=""
+                    :value="new Date(date) | dateFormat('DD/MM/YYYY')"
+                />
             </div>
             <div
                 class="flex items-center h-12 px-2 bg-white border-t border-b border-l w-96 border-light top"
