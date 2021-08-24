@@ -36,6 +36,15 @@ let mutations = {
     },
     VENUE_SEARCH_RESULTS_SET(state, res) {
         state.venueSearchResults = res.results;
+    },
+    TICKET_BOOK(state, res) {
+        if (res.success === true) {
+            const { ticket_id, availability, status, user } = res;
+            const ticket = state.venueDetail.tickets.findIndex(t => t.id === ticket_id);
+            state.venueDetail.tickets[ticket].status = status;
+            state.venueDetail.tickets[ticket].availability = availability;
+            state.venueDetail.tickets[ticket].user = user;
+        }
     }
 };
 

@@ -41,6 +41,7 @@
                     :tickets="venueDetail.tickets"
                     :live="true"
                     display="4"
+                    @book="bookTickets"
                 ></ticket-list-component>
             </div>
         </div>
@@ -68,6 +69,13 @@ export default {
             return this.$store.dispatch("VENUE_TICKETS_GET", {
                 id,
                 date
+            });
+        },
+        bookTickets(data) {
+            const { ticket_id, venue_id } = data;
+            return this.$store.dispatch("TICKET_BOOK", {
+                ticket_id,
+                venue_id
             });
         }
     }

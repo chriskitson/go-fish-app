@@ -56,6 +56,20 @@ let actions = {
                 //     message: err.message
                 // });
             });
-    }
+    },
+    TICKET_BOOK({ commit }, { ticket_id, venue_id }) {
+        return axios
+            .post(`/api/book/${venue_id}/${ticket_id}`)
+            .then(res => {
+                commit("TICKET_BOOK", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
 };
 export default actions;

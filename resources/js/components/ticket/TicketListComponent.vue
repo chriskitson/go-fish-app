@@ -13,6 +13,7 @@
                 :live="live"
                 :ticket="ticket"
                 :display="display"
+                @book="$emit('book', $event)"
             ></ticket-item-component>
             <ticket-item-component
                 v-for="index in tickets.length < display ? display - tickets.length : 0"

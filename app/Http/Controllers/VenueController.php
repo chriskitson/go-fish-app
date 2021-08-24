@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
+use App\Models\Ticket;
+use App\Models\Booking;
 use App\Models\SearchCache;
 use App\Http\Traits\GoogleMapTrait;
+use App\Http\Traits\BookingTrait;
 
 class VenueController extends Controller
 {
 
   use GoogleMapTrait;
+  use BookingTrait;
 
   /**
    * Create a new controller instance.
@@ -34,43 +38,41 @@ class VenueController extends Controller
 
   public function tickets($id)
   {
-    $tickets = array(
-      array(
-        "id" => 1,
-        "name" => "Day Ticket (4 fish)",
-        "description" => "Full day fishing with 4 fish limit.",
-        "cost" => 130,
-        "availability" => true
-      ),
-      array(
-        "id" => 2,
-        "name" => "Day Ticket (3 fish)",
-        "description" => "Full day fishing with 3 fish limit.",
-        "cost" => 115,
-        "availability" => false
-      ),
-      array(
-        "id" => 3,
-        "name" => "Half Day (2 fish)",
-        "description" => "From 08.00 – 13.00hrs",
-        "cost" => 100,
-        "availability" => true
-      ),
-      array(
-        "id" => 4,
-        "name" => "Catch & Release",
-        "description" => "On Stillwaters Lake only. *Barbless hooks only",
-        "cost" => 75,
-        "availability" => true
-      ),
-      array(
-        "id" => 5,
-        "name" => "Carrier Only",
-        "description" => "Trout season 3rd April – 30th September. (All fish returned to river)",
-        "cost" => 80,
-        "availability" => false
-      )
-    );
+
+    $user_id = 1;
+
+    // get all available ticket types
+    $tickets = Ticket::where([
+      ['venue_id', '=', $id]
+    ])->get(["id","name","description","cost","daily_limit","venue_id"]);
+
+    // set avaibility based on bookings
+    $tickets = $tickets->map(function ($ticket) use($user_id) {
+
+      // count number of existing bookings
+      $bookings = count(Booking::where([
+        ['ticket_id', '=', $ticket["id"]]
+      ])->get());
+
+      // count number of user bookings
+      $user_bookings = count(Booking::where([
+        ['ticket_id', '=', $ticket["id"]],
+        ['user_id', '=', $user_id]
+      ])->get());
+
+      $many_left = $ticket["daily_limit"] - $bookings;
+
+      // get status message
+      $status = $this->get_booking_status($user_bookings, $many_left);
+
+      // set avaibility
+      $ticket["availability"] = $ticket["daily_limit"] > 0 && $ticket["daily_limit"] > $bookings;
+      $ticket["status"] = $status;
+      $ticket["user"] = $user_bookings;
+
+      return $ticket;
+    })->toArray();
+    
     return response()->json($tickets);
   }
 
