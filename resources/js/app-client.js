@@ -1,7 +1,8 @@
-import "./client-bootstrap";
+import Vue from "vue";
 import app from "./app-main";
 import store from "./store";
 import { bindState } from "./ssr";
+import "./client-bootstrap";
 
 if (window.__INITIAL_STATE__) {
     // hydrate client with pre-fetched state
