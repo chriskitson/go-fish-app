@@ -73,9 +73,11 @@ export default {
         },
         bookTickets(data) {
             const { ticket_id, venue_id } = data;
+            const date = this.$store.state.dateSearch;
             return this.$store.dispatch("TICKET_BOOK", {
                 ticket_id,
-                venue_id
+                venue_id,
+                date
             });
         }
     }

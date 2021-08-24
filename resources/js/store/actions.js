@@ -57,9 +57,9 @@ let actions = {
                 // });
             });
     },
-    TICKET_BOOK({ commit }, { ticket_id, venue_id }) {
+    TICKET_BOOK({ commit }, { ticket_id, venue_id, date }) {
         return axios
-            .post(`/api/book/${venue_id}/${ticket_id}`)
+            .post(`/api/book/${venue_id}/${ticket_id}/${date}`)
             .then(res => {
                 commit("TICKET_BOOK", res.data);
             })

@@ -20,11 +20,12 @@ class BookingController extends Controller
   {
   }
 
-  public function book($venue_id, $ticket_id)
+  public function book($venue_id, $ticket_id, $date)
   {
 
     // TODO - this will be authenicated by user id
     $user_id = 1;
+    $date = gmdate("Y-m-d", $date / 1000);
 
     // get ticket info
     $ticket = Ticket::where([
@@ -40,13 +41,13 @@ class BookingController extends Controller
       // count number of bookings
       $bookings = count(Booking::where([
         ['ticket_id', '=', $ticket_id]
-      ])->get());
+      ])->whereDate('created_at', $date)->get());
 
      // count number of user bookings
       $user_bookings = count(Booking::where([
         ['ticket_id', '=', $ticket_id],
         ['user_id', '=', $user_id]
-      ])->get());
+      ])->whereDate('created_at', $date)->get());
 
       if ($daily_limit > 0 && $daily_limit > $bookings) {
 
@@ -86,32 +87,5 @@ class BookingController extends Controller
 
     }
 
-
-
-
-
-    // // set avaibility based on bookings
-    // $tickets = $tickets->map(function ($ticket) {
-
-    //   // count number of existing bookings
-
-
-    //   // set avaibility
-    //   $ticket["availability"] = $ticket["daily_limit"] > 0 && $ticket["daily_limit"] > $bookings;
-
-    //   return $ticket;
-    // })->toArray();
-
-    //   // write to cache expiring in 1 week
-    //   $cache = new SearchCache([
-    //     "id" => $location,
-    //     "search" => $search,
-    //     "data" => json_encode($results),
-    //     "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
-    //   ]);
-    //   $cache->save();
-
-
-    // return response()->json($tickets);
   }
 }

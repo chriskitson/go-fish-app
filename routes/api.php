@@ -31,4 +31,4 @@ Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
 
 Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
-Route::post('book/{venue_id}/{ticket_id}', [BookingController::class, 'book']);
+Route::post('book/{venue_id}/{ticket_id}/{date}', [BookingController::class, 'book']);

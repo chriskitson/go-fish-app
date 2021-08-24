@@ -8,7 +8,7 @@ use App\Models\Booking;
 use App\Models\SearchCache;
 use App\Http\Traits\GoogleMapTrait;
 use App\Http\Traits\BookingTrait;
-
+use Illuminate\Http\Request;
 class VenueController extends Controller
 {
 
@@ -36,10 +36,11 @@ class VenueController extends Controller
     return response()->json($venue);
   }
 
-  public function tickets($id)
+  public function tickets(Request $request, $id)
   {
 
     $user_id = 1;
+    $date = gmdate("Y-m-d", $request->input("d") / 1000);
 
     // get all available ticket types
     $tickets = Ticket::where([
@@ -47,18 +48,18 @@ class VenueController extends Controller
     ])->get(["id","name","description","cost","daily_limit","venue_id"]);
 
     // set avaibility based on bookings
-    $tickets = $tickets->map(function ($ticket) use($user_id) {
+    $tickets = $tickets->map(function ($ticket) use($user_id, $date) {
 
       // count number of existing bookings
       $bookings = count(Booking::where([
         ['ticket_id', '=', $ticket["id"]]
-      ])->get());
+      ])->whereDate('created_at', $date)->get());
 
       // count number of user bookings
       $user_bookings = count(Booking::where([
         ['ticket_id', '=', $ticket["id"]],
         ['user_id', '=', $user_id]
-      ])->get());
+      ])->whereDate('created_at', $date)->get());
 
       $many_left = $ticket["daily_limit"] - $bookings;
 
