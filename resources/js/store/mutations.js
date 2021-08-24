@@ -31,7 +31,8 @@ let mutations = {
     VENUE_TICKETS_SET(state, tickets) {
         state.venueDetail = {
             ...state.venueDetail,
-            tickets
+            tickets,
+            ticketsLoaded: true
         }
     },
     VENUE_SEARCH_RESULTS_SET(state, res) {

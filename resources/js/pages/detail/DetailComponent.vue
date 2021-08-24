@@ -37,9 +37,9 @@
             </div>
             <div class="col-span-2">
                 <ticket-list-component
-                    :title="`Tickets from £75.00`"
+                    :title="ticketTitle"
                     :tickets="venueDetail.tickets"
-                    :live="true"
+                    :live="venueDetail.ticketsLoaded"
                     display="4"
                     @book="bookTickets"
                 ></ticket-list-component>
@@ -55,7 +55,8 @@ export default {
         ...mapState({
             venues: state => state.venues,
             live: state => state.live,
-            venueDetail: state => state.venueDetail
+            venueDetail: state => state.venueDetail,
+            ticketTitle: state => state.venueDetail.tickets.length > 0 ? `Tickets from £${state.venueDetail.tickets.sort((a, b) => a.cost - b.cost)[0].cost}` : 'No tickets available'
         })
     },
     mounted() {

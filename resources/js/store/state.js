@@ -22,7 +22,8 @@ let state = {
         name: "",
         address: "",
         description: "",
-        tickets: []
+        tickets: [],
+        ticketsLoaded: false
     },
     venueSearchResults: []
 };
