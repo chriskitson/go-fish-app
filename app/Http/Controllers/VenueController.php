@@ -9,6 +9,7 @@ use App\Models\SearchCache;
 use App\Http\Traits\GoogleMapTrait;
 use App\Http\Traits\BookingTrait;
 use Illuminate\Http\Request;
+
 class VenueController extends Controller
 {
 
@@ -45,10 +46,10 @@ class VenueController extends Controller
     // get all available ticket types
     $tickets = Ticket::where([
       ['venue_id', '=', $id]
-    ])->get(["id","name","description","cost","daily_limit","venue_id"]);
+    ])->get(["id", "name", "description", "cost", "daily_limit", "venue_id"]);
 
     // set avaibility based on bookings
-    $tickets = $tickets->map(function ($ticket) use($user_id, $date) {
+    $tickets = $tickets->map(function ($ticket) use ($user_id, $date) {
 
       // count number of existing bookings
       $bookings = count(Booking::where([
@@ -73,12 +74,14 @@ class VenueController extends Controller
 
       return $ticket;
     })->toArray();
-    
+
     return response()->json($tickets);
   }
 
   function search($date, $location)
   {
+
+    $date = gmdate("Y-m-d", $date / 1000);
 
     // determine location and check if cache exists
     $cache_exists = isset($location) && count(SearchCache::where([
@@ -137,10 +140,31 @@ class VenueController extends Controller
         "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
       ]);
       $cache->save();
-
     }
 
-    // TODO - work out availability of dates based on distance
+    if (count($results) > 0) {
+
+      foreach ($results as $result) {
+
+        $venue_id = $result->id;
+
+        // check tickets
+        $tickets = Ticket::where([
+          ['venue_id', '=', $venue_id]
+        ])->get()->filter(function ($ticket) use ($date) {
+          // get daily limit
+          $daily_limit = $ticket->daily_limit;
+          // count number of bookings
+          $bookings = count(Booking::where([
+            ['ticket_id', '=', $ticket->id]
+          ])->whereDate('created_at', $date)->get());
+          // return available tickets
+          return $daily_limit > 0 && $daily_limit > $bookings;
+        })->values()->toArray();
+
+        $result->tickets = $tickets;
+      }
+    }
 
     return response()->json(array(
       "results" => $results,
