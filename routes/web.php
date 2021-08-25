@@ -16,6 +16,10 @@ Route::get('/', function() {
     return view('index');
 });
 
+Route::get('/login', function() {
+    return view('index');
+});
+
 Route::get('/venue/{id}', function($id) {
     return view('index', [ 'id' => $id ]);
 });

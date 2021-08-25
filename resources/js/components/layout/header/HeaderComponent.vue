@@ -1,12 +1,27 @@
 <template>
     <header
-        class="flex items-center justify-center w-full h-20 mt-10 border-t border-b border-light"
+        class="flex flex-wrap items-center justify-center w-full border-b h-30 border-light"
     >
-        <div class="flex items-center w-full max-w-5xl">
-            <div class="w-28">
-                <h1><a href="/" class="text-xl font-semibold text-primary">GoFish!</a></h1>
+        <div
+            class="flex items-center justify-center w-full h-10 border-b border-light"
+        >
+            <div
+                class="flex flex-wrap items-center justify-end w-full max-w-5xl"
+            >
+                <a href="/login" class="mr-3 text-sm text-primary"
+                    >Login | Register</a
+                >
             </div>
-            <div class="ml-5">
+        </div>
+        <div class="flex flex-wrap items-center w-full max-w-5xl">
+            <div class="flex items-center h-20 w-28">
+                <h1>
+                    <a href="/" class="text-xl font-semibold text-primary"
+                        >GoFish!</a
+                    >
+                </h1>
+            </div>
+            <div class="flex items-center ml-5">
                 <a href="#" class="mr-3 text-sm text-primary">Hot Deals</a>
                 <a href="#" class="mr-3 text-sm text-primary"
                     >Fisheries Near Me</a
