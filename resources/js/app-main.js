@@ -24,6 +24,16 @@ Vue.component(
 );
 
 Vue.component(
+    "login-component",
+    require("./components/login/LoginComponent.vue").default
+);
+
+Vue.component(
+    "register-component",
+    require("./components/login/RegisterComponent.vue").default
+);
+
+Vue.component(
     "location-component",
     require("./components/location/LocationComponent.vue").default
 );

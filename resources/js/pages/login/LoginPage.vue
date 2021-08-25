@@ -1,6 +1,15 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-      Log in the boy yee!
+        <div class="grid grid-cols-2 gap-6 my-24">
+            <login-component
+                :login="loginForm"
+                @login="login"
+            ></login-component>
+            <register-component
+                :register="registerForm"
+                @register="register"
+            ></register-component>
+        </div>
     </div>
 </template>
 
@@ -9,15 +18,17 @@ import { mapState } from "vuex";
 export default {
     computed: {
         ...mapState({
-            venues: state => state.venues,
-            live: state => state.live,
-            userPosition: state => state.userPosition,
-            locationSearch: state => state.locationSearch,
-            venueDetail: state => state.venueDetail
+            loginForm: state => state.loginForm,
+            registerForm: state => state.registerForm
         })
     },
     methods: {
-
+        login() {
+            console.log("login", this.$store.state.loginForm);
+        },
+        register() {
+            console.log("register", this.$store.state.registerForm);
+        }
     }
 };
 </script>

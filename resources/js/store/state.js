@@ -1,6 +1,17 @@
 let state = {
     live: false,
+    path: "",
     venues: [],
+    loginForm: {
+        email: '',
+        password: ''
+    },
+    registerForm: {
+        name: '',
+        email: '',
+        password: '',
+        confirm: ''
+    },
     userPosition: {
         error: "",
         latitude: null,

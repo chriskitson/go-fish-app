@@ -9,5 +9,8 @@ export const bindState = (context, state) => {
         state.venueSearchResults = context.venueSearchResults.results;
         state.venueSearch.search = context.venueSearchResults.search;
     }
+    if (context.path) {
+        state.path = context.path;
+    }
     return state;
 };

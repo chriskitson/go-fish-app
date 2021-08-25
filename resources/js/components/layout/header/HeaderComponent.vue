@@ -1,6 +1,6 @@
 <template>
     <header
-        class="flex flex-wrap items-center justify-center w-full border-b h-30 border-light"
+        class="flex flex-wrap items-center justify-center w-full bg-white border-b h-30 border-light"
     >
         <div
             class="flex items-center justify-center w-full h-10 border-b border-light"

@@ -12,7 +12,10 @@ module.exports = {
                 secondary: "#7fccea",
                 light: "#a7afca",
                 dark: '#666666',
-                error: '#ff6961'
+                error: '#ff6961',
+                grey: {
+                    light: '#EFEFEF'
+                }
             }
         }
     },

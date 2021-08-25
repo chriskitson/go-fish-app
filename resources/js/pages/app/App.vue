@@ -1,7 +1,7 @@
 <template>
-    <main class="w-full" id="app">
+    <main :class="`w-full ${bgColor}`" id="app">
         <header-component></header-component>
-        <div class="w-full max-w-5xl mx-auto">
+        <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
             <top-search-component
                 :venueSearch="venueSearch"
                 :date="dateSearch"
@@ -27,7 +27,9 @@ export default {
         ...mapState({
             locationSearch: state => state.locationSearch,
             venueSearch: state => state.venueSearch,
-            dateSearch: state => state.dateSearch
+            dateSearch: state => state.dateSearch,
+            bgColor: state => state.path === 'login' ? 'bg-grey-light' : 'bg-white',
+            showSearch: state => state.path !== 'login'
         })
     },
     mounted() {
