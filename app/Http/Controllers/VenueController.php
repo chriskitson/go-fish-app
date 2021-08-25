@@ -98,6 +98,7 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
+
     } else { // look up location based data search results
 
       // get search by place_id
@@ -140,29 +141,35 @@ class VenueController extends Controller
         "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
       ]);
       $cache->save();
+
+      // read results back from cache (better performance)
+      $results = json_decode($cache->data);
     }
 
     if (count($results) > 0) {
 
       foreach ($results as $result) {
+        
+        if (isset($result)) {
 
-        $venue_id = $result->id;
+          $venue_id = $result->id;
 
-        // check tickets
-        $tickets = Ticket::where([
-          ['venue_id', '=', $venue_id]
-        ])->get()->filter(function ($ticket) use ($date) {
-          // get daily limit
-          $daily_limit = $ticket->daily_limit;
-          // count number of bookings
-          $bookings = count(Booking::where([
-            ['ticket_id', '=', $ticket->id]
-          ])->whereDate('created_at', $date)->get());
-          // return available tickets
-          return $daily_limit > 0 && $daily_limit > $bookings;
-        })->values()->toArray();
-
-        $result->tickets = $tickets;
+          // check tickets
+          $tickets = Ticket::where([
+            ['venue_id', '=', $venue_id]
+          ])->get()->filter(function ($ticket) use ($date) {
+            // get daily limit
+            $daily_limit = $ticket->daily_limit;
+            // count number of bookings
+            $bookings = count(Booking::where([
+              ['ticket_id', '=', $ticket->id]
+            ])->whereDate('created_at', $date)->get());
+            // return available tickets
+            return $daily_limit > 0 && $daily_limit > $bookings;
+          })->values()->toArray();
+  
+          $result->tickets = $tickets;
+        }
       }
     }
 
