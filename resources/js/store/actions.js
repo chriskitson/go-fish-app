@@ -82,14 +82,34 @@ let actions = {
                 client_secret: clientSecret
             })
             .then(res => {
-                commit("LOGIN", res.data);
+                commit("LOGIN", {
+                    success: true,
+                    ...res.data
+                });
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                commit("LOGIN", {
+                    success: false,
+                    errors: [ err.response.data.message ]
+                });
+            });
+    },
+    REGISTER({ commit }, { name, email, password, confirm}) {
+        return axios
+            .post(`/api/register`, {
+                name,
+                email,
+                password,
+                password_confirmation: confirm
+            })
+            .then(res => {
+                commit("REGISTER", res.data);
+            })
+            .catch(err => {
+                commit("REGISTER", {
+                    success: false,
+                    errors: [ err.response.data.message ]
+                });
             });
     },
 };

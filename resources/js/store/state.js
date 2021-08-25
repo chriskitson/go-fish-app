@@ -2,15 +2,25 @@ let state = {
     live: false,
     path: "",
     venues: [],
+    user: {
+        loggedIn: false,
+        access_token: "",
+        refresh_token: "",
+        token_type: ""
+    },
     loginForm: {
-        email: '',
-        password: ''
+        messages: [],
+        errors: [],
+        email: "",
+        password: ""
     },
     registerForm: {
-        name: '',
-        email: '',
-        password: '',
-        confirm: ''
+        messages: [],
+        errors: [],
+        name: "",
+        email: "",
+        password: "",
+        confirm: ""
     },
     userPosition: {
         error: "",

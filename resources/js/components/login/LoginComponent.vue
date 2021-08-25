@@ -1,9 +1,19 @@
 <template>
-    <div
-        class="container flex flex-col items-center flex-1 px-2 mx-auto"
-    >
+    <div class="container flex flex-col items-center flex-1 px-2 mx-auto">
         <div class="w-full px-6 py-8 text-black bg-white rounded shadow-md">
-            <h1 class="mb-8 text-3xl text-center text-primary">Login to GoFish!</h1>
+            <h1 class="mb-8 text-3xl text-center text-primary">
+                Login to GoFish!
+            </h1>
+            <alert-component
+                v-if="login.errors.length > 0"
+                :message="login.errors.join(', ')"
+                type="error"
+            ></alert-component>
+            <alert-component
+                v-if="login.messages.length > 0"
+                :message="login.messages.join(', ')"
+                type="success"
+            ></alert-component>
             <input
                 type="text"
                 class="block w-full p-3 mb-4 border rounded border-grey-light"

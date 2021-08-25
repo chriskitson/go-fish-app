@@ -6,7 +6,7 @@ import "./client-bootstrap";
 
 if (window.__INITIAL_STATE__) {
     const context = JSON.parse(window.__INITIAL_STATE__);
-    store.replaceState(bindState(context, store.state));
+    store.replaceState(bindState(context, store.state, true));
 }
 
 app.$mount("#app");

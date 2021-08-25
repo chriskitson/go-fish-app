@@ -5,7 +5,7 @@ import { router } from "./router";
 import { bindState } from "./ssr";
 
 if (context) {  // pre-fetched state
-    store.replaceState(bindState(context, store.state));
+    store.replaceState(bindState(context, store.state, false));
 }
 
 new Promise((resolve, reject) => {

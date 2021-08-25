@@ -27,7 +27,7 @@ export default {
             this.$store.dispatch("LOGIN", this.$store.state.loginForm);
         },
         register() {
-            console.log("register", this.$store.state.registerForm);
+            this.$store.dispatch("REGISTER", this.$store.state.registerForm);
         }
     }
 };

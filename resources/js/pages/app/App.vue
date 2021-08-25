@@ -1,6 +1,6 @@
 <template>
     <main :class="`w-full ${bgColor}`" id="app">
-        <header-component></header-component>
+        <header-component :user="user"></header-component>
         <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
             <top-search-component
                 :venueSearch="venueSearch"
@@ -29,7 +29,8 @@ export default {
             venueSearch: state => state.venueSearch,
             dateSearch: state => state.dateSearch,
             bgColor: state => state.path === 'login' ? 'bg-grey-light' : 'bg-white',
-            showSearch: state => state.path !== 'login'
+            showSearch: state => state.path !== 'login',
+            user: state => state.user
         })
     },
     mounted() {

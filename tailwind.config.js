@@ -13,6 +13,7 @@ module.exports = {
                 light: "#a7afca",
                 dark: '#666666',
                 error: '#ff6961',
+                success: '#90ee90',
                 grey: {
                     light: '#EFEFEF'
                 }

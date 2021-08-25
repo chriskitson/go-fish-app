@@ -39,6 +39,11 @@ Vue.component(
 );
 
 Vue.component(
+    "alert-component",
+    require("./components/shared/AlertComponent.vue").default
+);
+
+Vue.component(
     "top-search-component",
     require("./components/search/TopSearchComponent.vue").default
 );

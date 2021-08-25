@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VenueController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BootstrapController;
 use Illuminate\Http\Request;
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('register', [RegisterController::class, 'register']);
 
 
 Route::get('load', [BootstrapController::class, 'load']);

@@ -8,9 +8,13 @@
             <div
                 class="flex flex-wrap items-center justify-end w-full max-w-5xl"
             >
-                <a href="/login" class="mr-3 text-sm text-primary"
+                <a
+                    href="/login"
+                    class="ml-3 text-sm text-primary"
+                    v-if="!user.loggedIn"
                     >Login | Register</a
                 >
+                <span class="ml-3 text-sm text-primary" v-if="user.loggedIn">Welcome back</span>
             </div>
         </div>
         <div class="flex flex-wrap items-center w-full max-w-5xl">
@@ -34,5 +38,7 @@
 </template>
 
 <script>
-export default {};
+export default {
+    props: ["user"]
+};
 </script>
