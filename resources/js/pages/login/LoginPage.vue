@@ -24,7 +24,7 @@ export default {
     },
     methods: {
         login() {
-            console.log("login", this.$store.state.loginForm);
+            this.$store.dispatch("LOGIN", this.$store.state.loginForm);
         },
         register() {
             console.log("register", this.$store.state.registerForm);

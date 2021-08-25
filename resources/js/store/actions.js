@@ -1,3 +1,4 @@
+import { clientId, clientSecret } from '../config';
 import { router } from '../router';
 
 let actions = {
@@ -62,6 +63,26 @@ let actions = {
             .post(`/api/book/${venue_id}/${ticket_id}/${date}`)
             .then(res => {
                 commit("TICKET_BOOK", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
+    LOGIN({ commit }, { email, password }) {
+        return axios
+            .post(`/oauth/token`, {
+                username: email,
+                password,
+                grant_type: 'password',
+                client_id: clientId,
+                client_secret: clientSecret
+            })
+            .then(res => {
+                commit("LOGIN", res.data);
             })
             .catch(err => {
                 // commit("ERRORS_SET", {

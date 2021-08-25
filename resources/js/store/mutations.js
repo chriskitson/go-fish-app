@@ -46,6 +46,9 @@ let mutations = {
             state.venueDetail.tickets[ticket].availability = availability;
             state.venueDetail.tickets[ticket].user = user;
         }
+    },
+    LOGIN(state, res) {
+        console.log("loginr es", res);
     }
 };
 
