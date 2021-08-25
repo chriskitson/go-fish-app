@@ -35,6 +35,13 @@ let mutations = {
             ticketsLoaded: true
         };
     },
+    VENUE_TICKET_SET(state, ticket) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            tickets: [ ticket ],
+            ticketsLoaded: true
+        }
+    },
     VENUE_SEARCH_RESULTS_SET(state, res) {
         state.venueSearchResults = res.results;
     },

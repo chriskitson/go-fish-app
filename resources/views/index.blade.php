@@ -2,8 +2,9 @@
 @php
 $initial_state = array();
 // pre-fetch venue data server side
-if (isset($id)) {   // venue detail
-    $initial_state['venueDetail'] = $venue->get($id)->original;
+if (isset($venueid)) {   // venue detail
+    $initial_state['venueDetail'] = $venue->get($venueid)->original;
+    $initial_state['ticketDetail'] = $venue->get($venueid)->original;
 }
 if (isset($date) && isset($location)) {   // venue search
     $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;

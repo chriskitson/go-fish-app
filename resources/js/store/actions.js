@@ -1,5 +1,5 @@
-import { clientId, clientSecret } from '../config';
-import { router } from '../router';
+import { clientId, clientSecret } from "../config";
+import { router } from "../router";
 
 let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
@@ -43,6 +43,20 @@ let actions = {
                 // });
             });
     },
+    VENUE_TICKET_GET({ commit }, { venue_id, id, date }) {
+        return axios
+            .get(`/api/venues/ticket/${venue_id}/${id}?d=${date}`)
+            .then(res => {
+                commit("VENUE_TICKET_SET", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
     VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
         return axios
             .get(`/api/search/${date}/${location}`)
@@ -77,7 +91,7 @@ let actions = {
             .post(`/oauth/token`, {
                 username: email,
                 password,
-                grant_type: 'password',
+                grant_type: "password",
                 client_id: clientId,
                 client_secret: clientSecret
             })
@@ -90,11 +104,11 @@ let actions = {
             .catch(err => {
                 commit("LOGIN", {
                     success: false,
-                    errors: [ err.response.data.message ]
+                    errors: [err.response.data.message]
                 });
             });
     },
-    REGISTER({ commit }, { name, email, password, confirm}) {
+    REGISTER({ commit }, { name, email, password, confirm }) {
         return axios
             .post(`/api/register`, {
                 name,
@@ -108,9 +122,9 @@ let actions = {
             .catch(err => {
                 commit("REGISTER", {
                     success: false,
-                    errors: [ err.response.data.message ]
+                    errors: [err.response.data.message]
                 });
             });
-    },
+    }
 };
 export default actions;

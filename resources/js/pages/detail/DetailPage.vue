@@ -56,7 +56,14 @@ export default {
             venues: state => state.venues,
             live: state => state.live,
             venueDetail: state => state.venueDetail,
-            ticketTitle: state => state.venueDetail.tickets.length > 0 ? `Tickets from £${state.venueDetail.tickets.sort((a, b) => a.cost - b.cost)[0].cost}` : 'No tickets available'
+            ticketTitle: state =>
+                state.venueDetail.tickets.length > 0
+                    ? `Tickets from £${
+                          state.venueDetail.tickets.sort(
+                              (a, b) => a.cost - b.cost
+                          )[0].cost
+                      }`
+                    : "No tickets available"
         })
     },
     mounted() {
@@ -75,11 +82,7 @@ export default {
         bookTickets(data) {
             const { ticket_id, venue_id } = data;
             const date = this.$store.state.dateSearch;
-            return this.$store.dispatch("TICKET_BOOK", {
-                ticket_id,
-                venue_id,
-                date
-            });
+            window.location.href = `/book/${date}/${venue_id}/${ticket_id}`;
         }
     }
 };

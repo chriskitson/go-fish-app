@@ -37,6 +37,32 @@ class VenueController extends Controller
     return response()->json($venue);
   }
 
+  public function ticket_format($ticket, $date, $user_id)
+  {
+    // count number of existing bookings
+    $bookings = count(Booking::where([
+      ['ticket_id', '=', $ticket["id"]]
+    ])->whereDate('created_at', $date)->get());
+
+    // count number of user bookings
+    $user_bookings = count(Booking::where([
+      ['ticket_id', '=', $ticket["id"]],
+      ['user_id', '=', $user_id]
+    ])->whereDate('created_at', $date)->get());
+
+    $many_left = $ticket["daily_limit"] - $bookings;
+
+    // get status message
+    $status = $this->get_booking_status($user_bookings, $many_left);
+
+    // set avaibility
+    $ticket["availability"] = $ticket["daily_limit"] > 0 && $ticket["daily_limit"] > $bookings;
+    $ticket["status"] = $status;
+    $ticket["user"] = $user_bookings;
+
+    return $ticket;
+  }
+
   public function tickets(Request $request, $id)
   {
 
@@ -50,32 +76,27 @@ class VenueController extends Controller
 
     // set avaibility based on bookings
     $tickets = $tickets->map(function ($ticket) use ($user_id, $date) {
-
-      // count number of existing bookings
-      $bookings = count(Booking::where([
-        ['ticket_id', '=', $ticket["id"]]
-      ])->whereDate('created_at', $date)->get());
-
-      // count number of user bookings
-      $user_bookings = count(Booking::where([
-        ['ticket_id', '=', $ticket["id"]],
-        ['user_id', '=', $user_id]
-      ])->whereDate('created_at', $date)->get());
-
-      $many_left = $ticket["daily_limit"] - $bookings;
-
-      // get status message
-      $status = $this->get_booking_status($user_bookings, $many_left);
-
-      // set avaibility
-      $ticket["availability"] = $ticket["daily_limit"] > 0 && $ticket["daily_limit"] > $bookings;
-      $ticket["status"] = $status;
-      $ticket["user"] = $user_bookings;
-
-      return $ticket;
+      return $this->ticket_format($ticket, $date, $user_id);
     })->toArray();
 
     return response()->json($tickets);
+  }
+
+  public function ticket(Request $request, $venue_id, $id)
+  {
+
+    $user_id = 1;
+    $date = gmdate("Y-m-d", $request->input("d") / 1000);
+
+    // get all available ticket types
+    $ticket = Ticket::where([
+      ['id', '=', $id],
+      ['venue_id', '=', $venue_id]
+    ])->first(["id", "name", "description", "cost", "daily_limit", "venue_id"])->toArray();
+
+    $ticket = $this->ticket_format($ticket, $date, $user_id);
+
+    return response()->json($ticket);
   }
 
   function search($date, $location)
@@ -98,7 +119,6 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-
     } else { // look up location based data search results
 
       // get search by place_id
@@ -149,7 +169,7 @@ class VenueController extends Controller
     if (count($results) > 0) {
 
       foreach ($results as $result) {
-        
+
         if (isset($result)) {
 
           $venue_id = $result->id;
@@ -167,7 +187,7 @@ class VenueController extends Controller
             // return available tickets
             return $daily_limit > 0 && $daily_limit > $bookings;
           })->values()->toArray();
-  
+
           $result->tickets = $tickets;
         }
       }

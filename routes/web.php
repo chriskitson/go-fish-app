@@ -12,18 +12,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
+Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/login', function() {
+Route::get('/login', function () {
     return view('index');
 });
 
-Route::get('/venue/{id}', function($id) {
-    return view('index', [ 'id' => $id ]);
+Route::get('/venue/{venueid}', function ($venueid) {
+    return view('index', ['venueid' => $venueid]);
 });
 
-Route::get('/search/{date}/{location}', function($date, $location) {
-    return view('index', [ 'date' => $date, 'location' => $location ]);
+Route::get('/book/{date}/{venueid}/{ticketid}', function ($date, $venueid, $ticketid) {
+    return view('index', ['date' => $date, 'venueid' => $venueid, 'ticketid' => $ticketid]);
+});
+
+Route::get('/search/{date}/{location}', function ($date, $location) {
+    return view('index', ['date' => $date, 'location' => $location]);
 });

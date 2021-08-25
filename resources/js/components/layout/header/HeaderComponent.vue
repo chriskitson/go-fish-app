@@ -11,10 +11,14 @@
                 <a
                     href="/login"
                     class="ml-3 text-sm text-primary"
-                    v-if="!user.loggedIn"
+                    v-if="!user.loggedIn && live"
                     >Login | Register</a
                 >
-                <span class="ml-3 text-sm text-primary" v-if="user.loggedIn">Welcome back</span>
+                <span
+                    class="ml-3 text-sm text-primary"
+                    v-if="user.loggedIn && live"
+                    >Welcome back</span
+                >
             </div>
         </div>
         <div class="flex flex-wrap items-center w-full max-w-5xl">
@@ -39,6 +43,6 @@
 
 <script>
 export default {
-    props: ["user"]
+    props: ["user", "live"]
 };
 </script>

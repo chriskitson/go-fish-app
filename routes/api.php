@@ -33,6 +33,8 @@ Route::get('venues', [VenueController::class, 'all']);
 Route::get('venues/{id}', [VenueController::class, 'all']);
 Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
 
+Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
+
 Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
 Route::post('book/{venue_id}/{ticket_id}/{date}', [BookingController::class, 'book']);
