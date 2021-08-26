@@ -14,11 +14,16 @@
                     v-if="!user.loggedIn && live"
                     >Login | Register</a
                 >
-                <span
-                    class="ml-3 text-sm text-primary"
-                    v-if="user.loggedIn && live"
+                <span class="ml-3 text-sm" v-if="user.loggedIn && live"
                     >Welcome back</span
                 >
+                <button
+                    @click="$emit('logout')"
+                    v-if="user.loggedIn && live"
+                    class="ml-3 text-sm text-primary"
+                >
+                    Log out
+                </button>
             </div>
         </div>
         <div class="flex flex-wrap items-center w-full max-w-5xl">

@@ -40,6 +40,8 @@
                     :title="ticketTitle"
                     :tickets="venueDetail.tickets"
                     :live="venueDetail.ticketsLoaded"
+                    :auth="false"
+                    :loggedIn="loggedIn"
                     display="4"
                     @book="bookTickets"
                 ></ticket-list-component>
@@ -56,6 +58,9 @@ export default {
             venues: state => state.venues,
             live: state => state.live,
             venueDetail: state => state.venueDetail,
+            loggedIn: state => state.user.loggedIn,
+            user: state => state.user,
+            dateSearch: state => state.dateSearch,
             ticketTitle: state =>
                 state.venueDetail.tickets.length > 0
                     ? `Tickets from £${
@@ -76,13 +81,19 @@ export default {
         getVenueTickets(id, date) {
             return this.$store.dispatch("VENUE_TICKETS_GET", {
                 id,
-                date
+                date,
+                user: this.user
             });
         },
         bookTickets(data) {
             const { ticket_id, venue_id } = data;
-            const date = this.$store.state.dateSearch;
-            window.location.href = `/book/${date}/${venue_id}/${ticket_id}`;
+            const date = this.dateSearch;
+            if (!this.loggedIn) {
+                localStorage.setItem("referrer", `/book/${date}/${venue_id}/${ticket_id}`);
+            }
+            window.location.href = this.loggedIn
+                ? `/book/${date}/${venue_id}/${ticket_id}`
+                : `/login`;
         }
     }
 };

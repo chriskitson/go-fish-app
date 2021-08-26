@@ -38,9 +38,9 @@ let mutations = {
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {
             ...state.venueDetail,
-            tickets: [ ticket ],
+            tickets: [ticket],
             ticketsLoaded: true
-        }
+        };
     },
     VENUE_SEARCH_RESULTS_SET(state, res) {
         state.venueSearchResults = res.results;
@@ -67,7 +67,7 @@ let mutations = {
         state.loginForm.messages = [];
         state.loginForm.errors = [];
         if (success === true) {
-            state.loginForm.messages = ["You have been successfully logged in"];
+            // state.loginForm.messages = ["You have been successfully logged in"];
             state.user = {
                 loggedIn: true,
                 access_token,
@@ -77,6 +77,12 @@ let mutations = {
             localStorage.setItem("access_token", access_token);
             localStorage.setItem("refresh_token", refresh_token);
             localStorage.setItem("token_type", token_type);
+            if (localStorage.getItem("referrer") !== null) {
+                window.location.href = localStorage.getItem("referrer");
+                localStorage.removeItem("referrer");
+            } else {
+                window.location.href = "/";
+            }
         } else {
             state.loginForm.errors = errors;
             state.user = {
@@ -86,6 +92,17 @@ let mutations = {
                 token_type: ""
             };
         }
+    },
+    LOGOUT(state, res) {
+        state.user = {
+            loggedIn: false,
+            access_token: "",
+            refresh_token: "",
+            token_type: ""
+        };
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("token_type");
     },
     REGISTER(state, res) {
         const { success, email, errors } = res;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\Booking;
+use Illuminate\Http\Request;
 use App\Http\Traits\BookingTrait;
 
 class BookingController extends Controller
@@ -20,11 +21,12 @@ class BookingController extends Controller
   {
   }
 
-  public function book($venue_id, $ticket_id, $date)
+  public function book(Request $request, $venue_id, $ticket_id, $date)
   {
 
-    // TODO - this will be authenicated by user id
-    $user_id = 1;
+    $user = $request->user();
+    $user_id = $user->id;
+    
     $date = gmdate("Y-m-d", $date / 1000);
 
     // get ticket info

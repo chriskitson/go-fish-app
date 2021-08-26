@@ -18,9 +18,12 @@
                 &pound;{{ ticket.cost }}
             </span>
         </div>
+        <div class="p-4 text-sm text-white border-b border-l border-r border-light text-dark" v-if="live && auth && !loggedIn">
+            <p>You must <a href="/login" class="text-primary">log in</a> in order to book.</p>
+        </div>
         <div
             class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
-            v-if="live"
+            v-if="live && (!auth || loggedIn)"
         >
             <p class="mb-4">{{ ticket.description }}</p>
 
@@ -71,6 +74,6 @@
 
 <script>
 export default {
-    props: ["ticket", "live", "display"]
+    props: ["ticket", "live", "display", "auth", "loggedIn"]
 };
 </script>

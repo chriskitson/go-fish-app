@@ -66,7 +66,9 @@ class VenueController extends Controller
   public function tickets(Request $request, $id)
   {
 
-    $user_id = 1;
+    $user = $request->user();
+    $user_id = isset($user) ? $user->id : 0;
+
     $date = gmdate("Y-m-d", $request->input("d") / 1000);
 
     // get all available ticket types
@@ -85,7 +87,9 @@ class VenueController extends Controller
   public function ticket(Request $request, $venue_id, $id)
   {
 
-    $user_id = 1;
+    $user = $request->user();
+    $user_id = isset($user) ? $user->id : 0;
+
     $date = gmdate("Y-m-d", $request->input("d") / 1000);
 
     // get all available ticket types

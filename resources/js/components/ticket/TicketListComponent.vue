@@ -1,7 +1,7 @@
 <template>
     <div class="w-full max-w-5xl mb-10">
         <h2 class="flex items-center mb-4 text-xl font-semibold">
-            {{ live ? title : 'Tickets loading...' }}
+            {{ live ? title : "Tickets loading..." }}
         </h2>
         <div
             class="flex flex-wrap items-center w-full space-y-4 py-50"
@@ -13,6 +13,8 @@
                 :live="live"
                 :ticket="ticket"
                 :display="display"
+                :auth="auth"
+                :loggedIn="loggedIn"
                 @book="$emit('book', $event)"
             ></ticket-item-component>
         </div>
@@ -45,6 +47,6 @@
 
 <script>
 export default {
-    props: ["title", "tickets", "live", "display"]
+    props: ["title", "tickets", "live", "display", "auth", "loggedIn"]
 };
 </script>

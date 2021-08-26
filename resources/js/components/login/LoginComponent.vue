@@ -1,6 +1,9 @@
 <template>
     <div class="container flex flex-col items-center flex-1 px-2 mx-auto">
-        <div class="w-full px-6 py-8 text-black bg-white rounded shadow-md">
+        <div
+            class="w-full px-6 py-8 text-black bg-white rounded shadow-md"
+            v-if="!loggedIn"
+        >
             <h1 class="mb-8 text-3xl text-center text-primary">
                 Login to GoFish!
             </h1>
@@ -41,6 +44,6 @@
 
 <script>
 export default {
-    props: ["login"]
+    props: ["login", "loggedIn"]
 };
 </script>

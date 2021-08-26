@@ -3,10 +3,12 @@
         <div class="grid grid-cols-2 gap-6 my-24">
             <login-component
                 :login="loginForm"
+                :loggedIn="loggedIn"
                 @login="login"
             ></login-component>
             <register-component
                 :register="registerForm"
+                :loggedIn="loggedIn"
                 @register="register"
             ></register-component>
         </div>
@@ -19,7 +21,8 @@ export default {
     computed: {
         ...mapState({
             loginForm: state => state.loginForm,
-            registerForm: state => state.registerForm
+            registerForm: state => state.registerForm,
+            loggedIn: state => state.user.loggedIn
         })
     },
     methods: {

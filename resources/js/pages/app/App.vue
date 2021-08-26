@@ -1,6 +1,10 @@
 <template>
     <main :class="`w-full ${bgColor}`" id="app">
-        <header-component :user="user" :live="live"></header-component>
+        <header-component
+            :user="user"
+            :live="live"
+            @logout="logout"
+        ></header-component>
         <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
             <top-search-component
                 :venueSearch="venueSearch"
@@ -61,10 +65,10 @@ export default {
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
         },
         updateLocation() {
-            if (this.$store.state.locationSearch.detail) {
+            if (this.locationSearch.detail) {
                 const {
                     geometry: { location }
-                } = this.$store.state.locationSearch.detail;
+                } = this.locationSearch.detail;
                 localStorage.removeItem("homeToken");
                 this.getLocationData(
                     `latitude=${location.lat()}&longitude=${location.lng()}`
@@ -82,6 +86,9 @@ export default {
             if (dateSearch && venueSearch.detail) {
                 window.location.href = `/search/${dateSearch}/${venueSearch.detail.place_id}`;
             }
+        },
+        logout() {
+            this.$store.dispatch("LOGOUT", this.user);
         }
     }
 };

@@ -42,7 +42,14 @@
                     :live="live"
                     :ticket="tickets[0]"
                     :display="true"
+                    :auth="true"
+                    :loggedIn="user.loggedIn"
                     @book="bookTickets"
+                ></ticket-item-component>
+                <ticket-item-component
+                    v-if="tickets.length === 0"
+                    :live="live"
+                    :display="true"
                 ></ticket-item-component>
             </div>
         </div>
@@ -57,7 +64,8 @@ export default {
             venues: state => state.venues,
             live: state => state.live,
             venueDetail: state => state.venueDetail,
-            tickets: state => state.venueDetail.tickets
+            tickets: state => state.venueDetail.tickets,
+            user: state => state.user
         })
     },
     mounted() {
@@ -69,7 +77,8 @@ export default {
             return this.$store.dispatch("VENUE_TICKET_GET", {
                 venue_id,
                 id,
-                date
+                date,
+                user: this.user
             });
         },
         bookTickets(data) {
@@ -77,7 +86,8 @@ export default {
             return this.$store.dispatch("TICKET_BOOK", {
                 ticket_id,
                 venue_id,
-                date
+                date,
+                user: this.user
             });
         }
     }

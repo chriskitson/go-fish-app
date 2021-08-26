@@ -1,5 +1,6 @@
 import { clientId, clientSecret } from "../config";
 import { router } from "../router";
+import { handleError, getTokenHeader } from "../utils";
 
 let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
@@ -29,9 +30,14 @@ let actions = {
     VENUE_SEARCH_SET({ commit }, detail) {
         commit("VENUE_SEARCH_SET", detail);
     },
-    VENUE_TICKETS_GET({ commit }, { id, date }) {
+    VENUE_TICKETS_GET({ commit }, { id, date, user }) {
         return axios
-            .get(`/api/venues/tickets/${id}?d=${date}`)
+            .get(
+                `/api/${
+                    user.loggedIn ? "auth/" : ""
+                }venues/tickets/${id}?d=${date}`,
+                getTokenHeader(user)
+            )
             .then(res => {
                 commit("VENUE_TICKETS_SET", res.data);
             })
@@ -43,9 +49,14 @@ let actions = {
                 // });
             });
     },
-    VENUE_TICKET_GET({ commit }, { venue_id, id, date }) {
+    VENUE_TICKET_GET({ commit }, { venue_id, id, date, user }) {
         return axios
-            .get(`/api/venues/ticket/${venue_id}/${id}?d=${date}`)
+            .get(
+                `/api/${
+                    user.loggedIn ? "auth/" : ""
+                }venues/ticket/${venue_id}/${id}?d=${date}`,
+                getTokenHeader(user)
+            )
             .then(res => {
                 commit("VENUE_TICKET_SET", res.data);
             })
@@ -72,18 +83,18 @@ let actions = {
                 // });
             });
     },
-    TICKET_BOOK({ commit }, { ticket_id, venue_id, date }) {
+    TICKET_BOOK({ commit }, { ticket_id, venue_id, date, user }) {
         return axios
-            .post(`/api/book/${venue_id}/${ticket_id}/${date}`)
+            .post(
+                `/api/auth/book/${venue_id}/${ticket_id}/${date}`,
+                {},
+                getTokenHeader(user)
+            )
             .then(res => {
                 commit("TICKET_BOOK", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                // handleError(err.response.data);
             });
     },
     LOGIN({ commit }, { email, password }) {
@@ -103,6 +114,22 @@ let actions = {
             })
             .catch(err => {
                 commit("LOGIN", {
+                    success: false,
+                    errors: [err.response.data.message]
+                });
+            });
+    },
+    LOGOUT({ commit }, user) {
+        return axios
+            .get(`/api/auth/logout`, getTokenHeader(user))
+            .then(res => {
+                commit("LOGOUT", {
+                    success: true,
+                    ...res.data
+                });
+            })
+            .catch(err => {
+                commit("LOGOUT", {
                     success: false,
                     errors: [err.response.data.message]
                 });
