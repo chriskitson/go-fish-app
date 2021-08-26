@@ -87,7 +87,8 @@ export default {
                 ticket_id,
                 venue_id,
                 date,
-                user: this.user
+                user: this.user,
+                url: this.$route.fullPath
             });
         }
     }

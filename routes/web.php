@@ -31,3 +31,7 @@ Route::get('/book/{date}/{venueid}/{ticketid}', function ($date, $venueid, $tick
 Route::get('/search/{date}/{location}', function ($date, $location) {
     return view('index', ['date' => $date, 'location' => $location]);
 });
+
+Route::get('/confirm', function () {
+    return view('index');
+});

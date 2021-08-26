@@ -54,6 +54,8 @@ let mutations = {
             state.venueDetail.tickets[ticket].status = status;
             state.venueDetail.tickets[ticket].availability = availability;
             state.venueDetail.tickets[ticket].user = user;
+            // redirect to stripe payment page
+            stripe.redirectToCheckout({ sessionId: res.session_id });
         }
     },
     LOGIN(state, res) {

@@ -18,7 +18,9 @@ class Booking extends Model
         'id',
         'ticket_id',
         'created_at',
-        'user_id'
+        'user_id',
+        'session',
+        'confirmed'
     ];
 
     protected $table = 'bookings';

@@ -83,11 +83,13 @@ let actions = {
                 // });
             });
     },
-    TICKET_BOOK({ commit }, { ticket_id, venue_id, date, user }) {
+    TICKET_BOOK({ commit }, { ticket_id, venue_id, date, user, url }) {
         return axios
             .post(
                 `/api/auth/book/${venue_id}/${ticket_id}/${date}`,
-                {},
+                {
+                    url
+                },
                 getTokenHeader(user)
             )
             .then(res => {
