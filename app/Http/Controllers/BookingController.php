@@ -70,7 +70,7 @@ class BookingController extends Controller
         // write booking to DB
         $booking = new Booking([
           "ticket_id" => $ticket_id,
-          "user_id" => 1,
+          "user_id" => $user_id,
           "session" => $payment_session
         ]);
         $booking->save();
