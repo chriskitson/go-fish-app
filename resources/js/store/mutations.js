@@ -80,8 +80,9 @@ let mutations = {
             localStorage.setItem("refresh_token", refresh_token);
             localStorage.setItem("token_type", token_type);
             if (localStorage.getItem("referrer") !== null) {
-                window.location.href = localStorage.getItem("referrer");
+                const ref = localStorage.getItem("referrer");
                 localStorage.removeItem("referrer");
+                window.location.href = ref;
             } else {
                 window.location.href = "/";
             }
