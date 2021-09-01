@@ -154,6 +154,41 @@ let actions = {
                     errors: [err.response.data.message]
                 });
             });
-    }
+    },
+    BASKET_GET({ commit }, user) {
+        return axios
+            .get(
+                `/api/auth/basket`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("BASKET_GET", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
+    BASKET_ADD({ commit }, { ticket_id, venue_id, date, user, qty }) {
+        return axios
+            .post(
+                `/api/auth/basket/${venue_id}/${ticket_id}/${date}?qty=${qty}`,
+                {},
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("BASKET_GET", res.data);
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
 };
 export default actions;

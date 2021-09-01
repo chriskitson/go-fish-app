@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <p>Thank you for your payment</p>
+        <h1 class="my-16 text-xl font-semibold">Thank you for your payment</h1>
     </div>
 </template>
 
@@ -13,9 +13,7 @@ export default {
             live: state => state.live
         })
     },
-    mounted() {
-
-    },
-    methods: { }
+    mounted() {},
+    methods: {}
 };
 </script>

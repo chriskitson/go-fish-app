@@ -4,7 +4,7 @@ import VIcon from "vue-tailwind-icons";
 import VueFilterDateFormat from "@vuejs-community/vue-filter-date-format";
 import VueFilterDateParse from "@vuejs-community/vue-filter-date-parse";
 
-import { router } from './router';
+import { router } from "./router";
 import store from "./store";
 import App from "./pages/app/App";
 
@@ -41,6 +41,11 @@ Vue.component(
 Vue.component(
     "alert-component",
     require("./components/shared/AlertComponent.vue").default
+);
+
+Vue.component(
+    "quantity-selector-component",
+    require("./components/shared/QuantitySelectorComponent.vue").default
 );
 
 Vue.component(
@@ -81,6 +86,16 @@ Vue.component(
 Vue.component(
     "ticket-item-component",
     require("./components/ticket/TicketItemComponent.vue").default
+);
+
+Vue.component(
+    "basket-list-component",
+    require("./components/basket/BasketListComponent.vue").default
+);
+
+Vue.component(
+    "basket-item-component",
+    require("./components/basket/BasketItemComponent.vue").default
 );
 
 Vue.component(

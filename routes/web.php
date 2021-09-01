@@ -24,8 +24,8 @@ Route::get('/venue/{venueid}', function ($venueid) {
     return view('index', ['venueid' => $venueid]);
 });
 
-Route::get('/book/{date}/{venueid}/{ticketid}', function ($date, $venueid, $ticketid) {
-    return view('index', ['date' => $date, 'venueid' => $venueid, 'ticketid' => $ticketid]);
+Route::get('/basket', function () {
+    return view('index');
 });
 
 Route::get('/search/{date}/{location}', function ($date, $location) {

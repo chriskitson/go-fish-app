@@ -34,13 +34,20 @@
                     >
                 </h1>
             </div>
-            <div class="flex items-center ml-5">
+            <div class="flex items-center flex-grow ml-5">
                 <a href="#" class="mr-3 text-sm text-primary">Hot Deals</a>
                 <a href="#" class="mr-3 text-sm text-primary"
                     >Fisheries Near Me</a
                 >
                 <a href="#" class="mr-3 text-sm text-primary">Best Fisheries</a>
                 <a href="#" class="mr-3 text-sm text-primary">Join GoFish</a>
+                <span class="flex-grow"></span>
+                <a
+                    href="/basket"
+                    class="px-5 py-2 text-lg font-semibold text-white rounded-full bg-primary"
+                    v-if="user.loggedIn && live"
+                    >Basket - {{ basketCount }}</a
+                >
             </div>
         </div>
     </header>
@@ -48,6 +55,6 @@
 
 <script>
 export default {
-    props: ["user", "live"]
+    props: ["user", "live", "basketCount"]
 };
 </script>

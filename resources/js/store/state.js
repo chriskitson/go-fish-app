@@ -8,6 +8,7 @@ let state = {
         refresh_token: "",
         token_type: ""
     },
+    basket: [],
     loginForm: {
         messages: [],
         errors: [],

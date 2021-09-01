@@ -3,6 +3,7 @@
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\BootstrapController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -46,6 +47,10 @@ Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets'])->mid
 Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket'])->middleware('auth:api');
 Route::post('auth/book/{venue_id}/{ticket_id}/{date}', [BookingController::class, 'book'])->middleware('auth:api');
 Route::get('auth/logout', [UserController::class, 'logout'])->middleware('auth:api');
+
+
+Route::get('auth/basket', [BasketController::class, 'get'])->middleware('auth:api');
+Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::class, 'add'])->middleware('auth:api');
 
 
 

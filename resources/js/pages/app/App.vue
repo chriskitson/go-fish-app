@@ -3,6 +3,7 @@
         <header-component
             :user="user"
             :live="live"
+            :basketCount="basketCount"
             @logout="logout"
         ></header-component>
         <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
@@ -36,11 +37,15 @@ export default {
                 state.path === "login" ? "bg-grey-light" : "bg-white",
             showSearch: state => state.path !== "login",
             user: state => state.user,
-            live: state => state.live
+            live: state => state.live,
+            basket: state => state.basket,
+            basketCount: state =>
+                state.basket.map(b => b.qty).reduce((a, b) => a + b, 0)
         })
     },
     mounted() {
         this.getUserPosition();
+        this.getBasket();
     },
     methods: {
         getUserPosition() {
@@ -57,6 +62,9 @@ export default {
                     this.getLocationData("");
                 }
             );
+        },
+        getBasket() {
+            this.$store.dispatch("BASKET_GET", this.user);
         },
         getLocationData(q) {
             this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);

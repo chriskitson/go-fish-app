@@ -121,6 +121,9 @@ let mutations = {
         } else {
             state.registerForm.errors = Object.values(errors).flat();
         }
+    },
+    BASKET_GET(state, res) {
+        state.basket = res; 
     }
 };
 

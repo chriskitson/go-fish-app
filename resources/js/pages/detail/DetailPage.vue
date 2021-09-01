@@ -86,14 +86,20 @@ export default {
             });
         },
         bookTickets(data) {
-            const { ticket_id, venue_id } = data;
-            const date = this.dateSearch;
             if (!this.loggedIn) {
-                localStorage.setItem("referrer", `/book/${date}/${venue_id}/${ticket_id}`);
+                localStorage.setItem("referrer", this.$route.fullPath);
+                window.location.href = "/login";
+            } else {
+                const { ticket_id, venue_id, qty } = data;
+                const date = this.dateSearch;
+                this.$store.dispatch("BASKET_ADD", {
+                    ticket_id,
+                    venue_id,
+                    date,
+                    qty,
+                    user: this.user
+                });
             }
-            window.location.href = this.loggedIn
-                ? `/book/${date}/${venue_id}/${ticket_id}`
-                : `/login`;
         }
     }
 };
