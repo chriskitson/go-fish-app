@@ -15,7 +15,7 @@
             <span
                 class="px-3 py-1 text-lg font-semibold text-white rounded-full bg-primary"
             >
-                &pound;{{ ticket.cost }}
+                {{ formatCurrency(ticket.cost) }}
             </span>
         </div>
         <div
@@ -35,6 +35,7 @@
 
             <div class="flex items-center w-full">
                 <quantity-selector-component
+                    class="mr-2"
                     v-if="ticket.availability"
                     :qty="qty"
                     @up="up"
@@ -87,10 +88,12 @@
 </template>
 
 <script>
+import { formatCurrency } from "../../utils";
 export default {
     props: ["ticket", "live", "display", "auth", "loggedIn"],
     data: () => ({
-        qty: 1
+        qty: 1,
+        formatCurrency
     }),
     methods: {
         up() {

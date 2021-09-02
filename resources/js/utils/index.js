@@ -12,3 +12,10 @@ export const handleError = err => {
         window.location.href = "/login";
     }
 };
+
+export const formatCurrency = num => {
+    return parseInt(num).toLocaleString("en-GB", {
+        style: "currency",
+        currency: "GBP"
+    });
+};

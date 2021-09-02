@@ -1,25 +1,23 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
+        <div class="grid grid-cols-4 gap-6 mt-10 mb-20">
             <div>
                 &nbsp;
             </div>
-            <div class="col-span-2">
-                <h1 class="mb-3 text-xl font-semibold">Basket</h1>
+            <div class="col-span-3">
                 <basket-list-component
-                    :title="ticketTitle"
+                    :basketTotal="basketTotal"
                     :items="basket"
-                    :live="true"
+                    :live="live"
                     :auth="false"
                     :loggedIn="loggedIn"
+                    :bookingFee="bookingFee"
                     display="4"
-                    @book="bookTickets"
+                    @checkout="checkout"
+                    @remove="removeTicket"
+                    @up="upTicket"
+                    @down="downTicket"
                 ></basket-list-component>
-                <basket-item-component
-                    v-if="basket.length === 0"
-                    :live="live"
-                    :display="true"
-                ></basket-item-component>
             </div>
         </div>
     </div>
@@ -32,23 +30,40 @@ export default {
         ...mapState({
             live: state => state.live,
             user: state => state.user,
-            basket: state => state.basket
+            loggedIn: state => state.user.loggedIn,
+            basket: state => state.basket,
+            basketTotal: state =>
+                state.basket
+                    .map(b => b.basket_qty * b.ticket_cost)
+                    .reduce((a, b) => a + b, 0),
+            bookingFee: state =>
+                state.basket
+                    .map(b => b.basket_qty * state.bookingFee)
+                    .reduce((a, b) => a + b, 0)
         })
     },
-    mounted() {
-
-    },
+    mounted() {},
     methods: {
-        // bookTickets(data) {
-        //     const { date, venue_id, ticket_id } = this.$route.params;
-        //     return this.$store.dispatch("TICKET_BOOK", {
-        //         ticket_id,
-        //         venue_id,
-        //         date,
-        //         user: this.user,
-        //         url: this.$route.fullPath
-        //     });
-        // }
+        checkout() {
+            console.log("checkout");
+        },
+        removeTicket({ id }) {
+            this.$store.dispatch("BASKET_REMOVE", { id, user: this.user });
+        },
+        upTicket({ id }) {
+            this.$store.dispatch("BASKET_QTY", {
+                direction: "up",
+                id,
+                user: this.user
+            });
+        },
+        downTicket({ id }) {
+            this.$store.dispatch("BASKET_QTY", {
+                direction: "down",
+                id,
+                user: this.user
+            });
+        }
     }
 };
 </script>

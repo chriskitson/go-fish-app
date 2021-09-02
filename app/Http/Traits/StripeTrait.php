@@ -20,7 +20,7 @@ trait StripeTrait {
         "quantity" => 1,
       ]],
       "payment_intent_data" => [
-        "application_fee_amount" => round(($amount / 100) * $_ENV["STRIPE_PAYMENT_FEE_PERCENTAGE"]),
+        "application_fee_amount" => round(($amount / 100) * $_ENV["TICKET_FEE_PERCENTAGE"]),
         "transfer_data" => [
           "destination" => $account_id,
         ],

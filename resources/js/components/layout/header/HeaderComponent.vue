@@ -44,9 +44,15 @@
                 <span class="flex-grow"></span>
                 <a
                     href="/basket"
-                    class="px-5 py-2 text-lg font-semibold text-white rounded-full bg-primary"
+                    class="flex items-center px-5 py-2 text-lg font-semibold text-primary"
                     v-if="user.loggedIn && live"
-                    >Basket - {{ basketCount }}</a
+                >
+                    <icon 
+                        name="shopping-cart"
+                        class="mr-2 w-7 h-7"
+                        v-if="live"
+                    />
+                    {{ basketTotal }}</a
                 >
             </div>
         </div>
@@ -55,6 +61,6 @@
 
 <script>
 export default {
-    props: ["user", "live", "basketCount"]
+    props: ["user", "live", "basketCount", "basketTotal"]
 };
 </script>

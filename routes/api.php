@@ -51,7 +51,6 @@ Route::get('auth/logout', [UserController::class, 'logout'])->middleware('auth:a
 
 Route::get('auth/basket', [BasketController::class, 'get'])->middleware('auth:api');
 Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::class, 'add'])->middleware('auth:api');
-
-
-
-
+Route::get('auth/basket/{id}/up', [BasketController::class, 'basket_increase'])->middleware('auth:api');
+Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease'])->middleware('auth:api');
+Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove'])->middleware('auth:api');

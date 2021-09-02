@@ -10,71 +10,39 @@
                 v-if="live"
             />
             <span class="flex-grow font-semibold text-white">
-                {{ live ? `${item.venue_name} - ${item.ticket_name}` : "&nbsp;" }}
+                {{
+                    live ? `${item.venue_name} - ${item.ticket_name}` : "&nbsp;"
+                }}
             </span>
             <span
                 class="px-3 py-1 text-lg font-semibold text-white rounded-full bg-primary"
             >
-                &pound;{{ item.cost }}
+                {{ formatCurrency(item.basket_qty * item.ticket_cost) }}
             </span>
-        </div>
-        <div
-            class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
-            v-if="live && auth && !loggedIn"
-        >
-            <p>
-                You must <a href="/login" class="text-primary">log in</a> in
-                order to book.
-            </p>
         </div>
         <div
             class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
             v-if="live && (!auth || loggedIn)"
         >
-            <p class="mb-4">{{ item.description }}</p>
+            <p class="mb-4">{{ item.ticket_description }}</p>
 
             <div class="flex items-center w-full">
                 <quantity-selector-component
-                    v-if="item.availability"
-                    :qty="qty"
-                    @up="up"
-                    @down="down"
+                    class="mr-2"
+                    :qty="item.basket_qty"
+                    @up="$emit('up', { id: item.basket_id })"
+                    @down="$emit('down', { id: item.basket_id })"
                 ></quantity-selector-component>
-
+                <span class="ml-2"
+                    >X {{ formatCurrency(item.ticket_cost) }} each</span
+                >
+                <span class="flex-1"></span>
                 <button
-                    @click="
-                        $emit('book', {
-                            ticket_id: item.id,
-                            venue_id: item.venue_id,
-                            qty
-                        })
-                    "
-                    class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md cursor-pointer bg-primary justify-content"
-                    v-if="item.availability"
+                    class="text-primary"
+                    @click="$emit('remove', { id: item.basket_id })"
                 >
-                    {{ item.user === 0 ? "Book now" : "Book again" }}
-                    <icon
-                        name="chevron-right"
-                        class="w-4 h-4 ml-2 text-lg text-white"
-                    />
+                    <icon name="trash" class="ml-2 w-7 h-7" />
                 </button>
-                <span
-                    class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md bg-light justify-content"
-                    v-if="!item.availability"
-                >
-                    Sold out
-                    <icon
-                        name="x-circle"
-                        class="w-4 h-4 ml-2 text-lg text-white"
-                    />
-                </span>
-                <span class="flex-1" v-if="item.status !== ''"></span>
-                <span
-                    class="px-3 py-1 border rounded-full border-primary text-primary"
-                    v-if="item.status !== ''"
-                >
-                    {{ item.status }}
-                </span>
             </div>
         </div>
         <div
@@ -87,18 +55,11 @@
 </template>
 
 <script>
+import { formatCurrency } from "../../utils";
 export default {
     props: ["item", "live", "display", "auth", "loggedIn"],
     data: () => ({
-        qty: 1
-    }),
-    methods: {
-        up() {
-            this.qty++;
-        },
-        down() {
-            this.qty--;
-        }
-    }
+        formatCurrency
+    })
 };
 </script>

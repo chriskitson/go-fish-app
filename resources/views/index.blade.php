@@ -10,6 +10,7 @@ if (isset($date) && isset($location)) {   // venue search
     $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;
 }
 $initial_state['path'] = Request::path();
+$initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
 @endphp
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">

@@ -123,7 +123,22 @@ let mutations = {
         }
     },
     BASKET_GET(state, res) {
-        state.basket = res; 
+        state.basket = res;
+    },
+    BASKET_REMOVE(state, id) {
+        const i = state.basket.findIndex(b => b.basket_id === id);
+        if (i > -1) {
+            state.basket.splice(i, 1);
+        }
+    },
+    BASKET_QTY(state, { direction, id }) {
+        const i = state.basket.findIndex(b => b.basket_id === id);
+        if (direction === "up") {
+            state.basket[i].basket_qty += 1;
+        }
+        if (direction === "down") {
+            state.basket[i].basket_qty -= 1;
+        }
     }
 };
 

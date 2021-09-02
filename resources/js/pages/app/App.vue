@@ -4,6 +4,7 @@
             :user="user"
             :live="live"
             :basketCount="basketCount"
+            :basketTotal="basketTotal"
             @logout="logout"
         ></header-component>
         <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
@@ -27,6 +28,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import { formatCurrency } from "../../utils";
 export default {
     computed: {
         ...mapState({
@@ -40,7 +42,13 @@ export default {
             live: state => state.live,
             basket: state => state.basket,
             basketCount: state =>
-                state.basket.map(b => b.qty).reduce((a, b) => a + b, 0)
+                state.basket.map(b => b.basket_qty).reduce((a, b) => a + b, 0),
+            basketTotal: state =>
+                formatCurrency(
+                    state.basket
+                        .map(b => b.basket_qty * b.ticket_cost)
+                        .reduce((a, b) => a + b, 0)
+                )
         })
     },
     mounted() {

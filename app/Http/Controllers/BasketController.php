@@ -20,25 +20,22 @@ class BasketController extends Controller
   {
   }
 
-  function get_basket($user_id) {
+  function get_basket($user_id)
+  {
     return Basket::where([
       ['user_id', '=', $user_id]
-    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id', 'basket.qty', 'tickets.id', 'tickets.name AS ticket_name', 'tickets.cost', 'venues.name AS venue_name')->get();
+    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id AS basket_id', 'basket.qty AS basket_qty', 'tickets.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.cost AS ticket_cost', 'venues.name AS venue_name', 'tickets.description as ticket_description', 'venues.id AS venue_id')->get();
   }
 
   public function get(Request $request)
   {
-
     $user = $request->user();
     $user_id = $user->id;
-
     return response()->json($this->get_basket($user_id));
   }
 
-
   public function add(Request $request)
   {
-
 
     $user = $request->user();
     $user_id = $user->id;
@@ -83,5 +80,68 @@ class BasketController extends Controller
         "availability" => false
       ), 500);
     }
+  }
+
+  public function basket_increase(Request $request, $id)
+  {
+    $user = $request->user();
+    $user_id = $user->id;
+
+    // look up ticket info
+    $basket = Basket::where([
+      ['id', '=', $id],
+      ['user_id', '=', $user_id]
+    ])->first();
+
+    // check ticket is available
+    if ($this->ticket_available($basket->venue_id, $basket->ticket_id, $basket->date, 1)) {
+
+      // increase qty
+      Basket::where([
+        ['id', '=', $id],
+        ['user_id', '=', $user_id]
+      ])->increment('qty', 1);
+
+      return response()->json(array(
+        "success" => true
+      ));
+    } else {
+      return response()->json(array(
+        "success" => false,
+        "availability" => false
+      ), 500);
+    }
+  }
+
+  public function basket_decrease(Request $request, $id)
+  {
+    $user = $request->user();
+    $user_id = $user->id;
+
+    // decrease qty
+    Basket::where([
+      ['id', '=', $id],
+      ['user_id', '=', $user_id]
+    ])->increment('qty', -1);
+
+    return response()->json(array(
+      "success" => true
+    ));
+  }
+
+  public function basket_remove(Request $request, $id)
+  {
+    $user = $request->user();
+    $user_id = $user->id;
+
+    // delete item
+    Basket::where([
+      ['id', '=', $id],
+      ['user_id', '=', $user_id]
+    ])->delete();
+
+    return response()->json(array(
+      "success" => true
+    ));
   }
 }

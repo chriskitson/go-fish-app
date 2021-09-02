@@ -190,5 +190,46 @@ let actions = {
                 // });
             });
     },
+    BASKET_QTY({ commit }, { direction, id, user }) {
+        return axios
+            .get(
+                `/api/auth/basket/${id}/${direction}`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                if (res.data.success === true) {
+                    commit("BASKET_QTY", {
+                        id,
+                        direction
+                    });
+                }
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
+    BASKET_REMOVE({ commit }, { id, user }) {
+        return axios
+            .delete(
+                `/api/auth/basket/${id}`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                if (res.data.success === true) {
+                    commit("BASKET_REMOVE", id);
+                }
+            })
+            .catch(err => {
+                // commit("ERRORS_SET", {
+                //     feature: "Get Suppliers",
+                //     status: err.response.status,
+                //     message: err.message
+                // });
+            });
+    },
 };
 export default actions;

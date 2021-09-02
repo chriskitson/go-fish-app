@@ -1,6 +1,7 @@
 let state = {
     live: false,
     path: "",
+    bookingFee: 0,
     venues: [],
     user: {
         loggedIn: false,
