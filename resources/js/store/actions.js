@@ -96,7 +96,7 @@ let actions = {
                 commit("BOOK", res.data);
             })
             .catch(err => {
-                // handleError(err.response.data);
+                // commit("BASKET_ERROR", err.data);
             });
     },
     LOGIN({ commit }, { email, password }) {
@@ -157,10 +157,7 @@ let actions = {
     },
     BASKET_GET({ commit }, user) {
         return axios
-            .get(
-                `/api/auth/basket`,
-                getTokenHeader(user)
-            )
+            .get(`/api/auth/basket`, getTokenHeader(user))
             .then(res => {
                 commit("BASKET_GET", res.data);
             })
@@ -183,19 +180,12 @@ let actions = {
                 commit("BASKET_GET", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                commit("BASKET_ERROR", err.response.data);
             });
     },
     BASKET_QTY({ commit }, { direction, id, user }) {
         return axios
-            .get(
-                `/api/auth/basket/${id}/${direction}`,
-                getTokenHeader(user)
-            )
+            .get(`/api/auth/basket/${id}/${direction}`, getTokenHeader(user))
             .then(res => {
                 if (res.data.success === true) {
                     commit("BASKET_QTY", {
@@ -214,10 +204,7 @@ let actions = {
     },
     BASKET_REMOVE({ commit }, { id, user }) {
         return axios
-            .delete(
-                `/api/auth/basket/${id}`,
-                getTokenHeader(user)
-            )
+            .delete(`/api/auth/basket/${id}`, getTokenHeader(user))
             .then(res => {
                 if (res.data.success === true) {
                     commit("BASKET_REMOVE", id);
@@ -230,6 +217,6 @@ let actions = {
                 //     message: err.message
                 // });
             });
-    },
+    }
 };
 export default actions;

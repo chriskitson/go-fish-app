@@ -77,7 +77,8 @@ class BasketController extends Controller
     } else {
       return response()->json(array(
         "success" => false,
-        "availability" => false
+        "availability" => false,
+        "ticket_id" => intval($request->ticket_id)
       ), 500);
     }
   }

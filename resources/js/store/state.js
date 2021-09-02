@@ -10,6 +10,8 @@ let state = {
         token_type: ""
     },
     basket: [],
+    basketErrors: [],
+    checkoutErrors: [],
     loginForm: {
         messages: [],
         errors: [],

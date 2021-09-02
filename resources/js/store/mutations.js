@@ -127,20 +127,34 @@ let mutations = {
             state.basket[i].basket_qty -= 1;
         }
     },
+    BASKET_ERROR(state, data) {
+        // const i = state.basket.findIndex(b => b.basket_id === id);
+        // if (i > -1) {
+        //     state.basket.splice(i, 1);
+        // }
+        if (data && !data.success && !data.availability && !!data.ticket_id) {
+            console.log(data.ticket_id);
+            const i = state.venueDetail.tickets.findIndex(t => t.id === data.ticket_id);
+            console.log(i);
+            if (i > -1) {
+                state.venueDetail.tickets[i].status = "Help!!!!";
+            }
+            state.basketErrors.push();
+        }
+    },
     BOOK(state, res) {
-        console.log(res);
         if (res.success === true) {
-            // const { ticket_id, availability, status, user } = res;
-            // const ticket = state.venueDetail.tickets.findIndex(
-            //     t => t.id === ticket_id
-            // );
-            // state.venueDetail.tickets[ticket].status = status;
-            // state.venueDetail.tickets[ticket].availability = availability;
-            // state.venueDetail.tickets[ticket].user = user;
+            state.basket = [];
+            state.basketErrors = [];
+            state.checkoutErrors = [];
             // redirect to stripe payment page
             stripe.redirectToCheckout({ sessionId: res.session_id });
         }
     },
+    CLEAR_ERRORS(state) {
+        state.basketErrors = [];
+        state.checkoutErrors = [];
+    }
 };
 
 export default mutations;
