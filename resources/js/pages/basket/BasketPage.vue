@@ -45,7 +45,10 @@ export default {
     mounted() {},
     methods: {
         checkout() {
-            console.log("checkout");
+            this.$store.dispatch("BOOK", {
+                user: this.user,
+                url: this.$route.fullPath
+            });
         },
         removeTicket({ id }) {
             this.$store.dispatch("BASKET_REMOVE", { id, user: this.user });

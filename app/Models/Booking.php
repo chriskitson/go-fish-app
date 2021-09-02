@@ -20,7 +20,9 @@ class Booking extends Model
         'created_at',
         'user_id',
         'session',
-        'confirmed'
+        'confirmed',
+        'date',
+        'cost'
     ];
 
     protected $table = 'bookings';

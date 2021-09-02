@@ -2,23 +2,29 @@
 
 namespace App\Http\Traits;
 
-trait StripeTrait {
+trait StripeTrait
+{
 
-  public function create_checkout_session($currency, $amount, $description, $image, $account_id, $url, $meta_data = []) {
+  public function create_checkout_session($items, $currency, $amount, $account_id, $url, $meta_data = [])
+  {
     \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
-    $checkout_session = \Stripe\Checkout\Session::create([
-      "payment_method_types" => ["card"],
-      "line_items" => [[
-        "price_data" => [
+    $checkout_items = [];
+    foreach ($items as $item) {
+      array_push($checkout_items, array(
+        "price_data" => array(
           "currency" => $currency,
-          "unit_amount" => $amount,
+          "unit_amount" => $item["cost"] * 100,
           "product_data" => [
-            "name" => $description,
+            "name" => $item["ticket"],
             // "images" => [ $image ],
           ],
-        ],
-        "quantity" => 1,
-      ]],
+        ),
+        "quantity" => $item["qty"]
+      ));
+    }
+    $checkout_session = \Stripe\Checkout\Session::create([
+      "payment_method_types" => ["card"],
+      "line_items" => $checkout_items,
       "payment_intent_data" => [
         "application_fee_amount" => round(($amount / 100) * $_ENV["TICKET_FEE_PERCENTAGE"]),
         "transfer_data" => [
@@ -33,5 +39,4 @@ trait StripeTrait {
     ]);
     return $checkout_session->id;
   }
-
 }

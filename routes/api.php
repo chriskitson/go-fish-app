@@ -45,7 +45,6 @@ Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
 Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets'])->middleware('auth:api');
 Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket'])->middleware('auth:api');
-Route::post('auth/book/{venue_id}/{ticket_id}/{date}', [BookingController::class, 'book'])->middleware('auth:api');
 Route::get('auth/logout', [UserController::class, 'logout'])->middleware('auth:api');
 
 
@@ -54,3 +53,5 @@ Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::clas
 Route::get('auth/basket/{id}/up', [BasketController::class, 'basket_increase'])->middleware('auth:api');
 Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease'])->middleware('auth:api');
 Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove'])->middleware('auth:api');
+
+Route::post('auth/book', [BookingController::class, 'book'])->middleware('auth:api');

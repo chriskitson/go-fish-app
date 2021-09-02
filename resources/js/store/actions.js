@@ -83,17 +83,17 @@ let actions = {
                 // });
             });
     },
-    TICKET_BOOK({ commit }, { ticket_id, venue_id, date, user, url }) {
+    BOOK({ commit }, { user, url }) {
         return axios
             .post(
-                `/api/auth/book/${venue_id}/${ticket_id}/${date}`,
+                `/api/auth/book`,
                 {
                     url
                 },
                 getTokenHeader(user)
             )
             .then(res => {
-                commit("TICKET_BOOK", res.data);
+                commit("BOOK", res.data);
             })
             .catch(err => {
                 // handleError(err.response.data);
