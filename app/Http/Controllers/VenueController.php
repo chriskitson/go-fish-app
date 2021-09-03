@@ -112,19 +112,18 @@ class VenueController extends Controller
 
     // determine location and check if cache exists
     $cache_exists = isset($location) && count(SearchCache::where([
-      ['id', '=', $location],
-      ['expires', '>=', date('Y-m-d')]
+      ['id', '=', $location]
     ])->get()) > 0;
 
     if ($cache_exists) { // load venues from cached results
 
       $req = SearchCache::where([
-        ['id', '=', $location],
-        ['expires', '>=', date('Y-m-d')]
+        ['id', '=', $location]
       ])->first();
 
       $search = $req->search;
       $results = json_decode($req->data);
+
     } else { // look up location based data search results
 
       // get search by place_id
