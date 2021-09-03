@@ -42,11 +42,7 @@ let actions = {
                 commit("VENUE_TICKETS_SET", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                handleError(err.response.data.message)
             });
     },
     VENUE_TICKET_GET({ commit }, { venue_id, id, date, user }) {
@@ -61,11 +57,7 @@ let actions = {
                 commit("VENUE_TICKET_SET", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                handleError(err.response.data.message)
             });
     },
     VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
@@ -76,11 +68,7 @@ let actions = {
                 router.push(`/search/${date}/${location}`);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                handleError(err.response.data.message)
             });
     },
     BOOK({ commit }, { user, url }) {
@@ -96,7 +84,7 @@ let actions = {
                 commit("BOOK", res.data);
             })
             .catch(err => {
-                // commit("BASKET_ERROR", err.data);
+                // TODO:
             });
     },
     LOGIN({ commit }, { email, password }) {
@@ -162,14 +150,11 @@ let actions = {
                 commit("BASKET_GET", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                handleError(err.response.data.message)
             });
     },
     BASKET_ADD({ commit }, { ticket_id, venue_id, date, user, qty }) {
+        commit("CLEAR_ERRORS");
         return axios
             .post(
                 `/api/auth/basket/${venue_id}/${ticket_id}/${date}?qty=${qty}`,
@@ -177,7 +162,7 @@ let actions = {
                 getTokenHeader(user)
             )
             .then(res => {
-                commit("BASKET_GET", res.data);
+                commit("BASKET_ADD", res.data);
             })
             .catch(err => {
                 commit("BASKET_ERROR", err.response.data);
@@ -195,11 +180,7 @@ let actions = {
                 }
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                commit("BASKET_ERROR", err.response.data);
             });
     },
     BASKET_REMOVE({ commit }, { id, user }) {
@@ -211,11 +192,7 @@ let actions = {
                 }
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                // TODO
             });
     }
 };

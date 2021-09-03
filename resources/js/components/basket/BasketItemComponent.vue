@@ -24,8 +24,17 @@
             class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
             v-if="live && (!auth || loggedIn)"
         >
+            <p class="mb-4">
+                <strong>Date of entry:</strong>
+                {{ formatDateDisplay(item.date) }}
+            </p>
             <p class="mb-4">{{ item.ticket_description }}</p>
-
+            <p v-if="item.error !== ''" class="mb-4">
+                <status-component
+                    :status="item.error"
+                    type="error"
+                ></status-component>
+            </p>
             <div class="flex items-center w-full">
                 <quantity-selector-component
                     class="mr-2"
@@ -55,11 +64,12 @@
 </template>
 
 <script>
-import { formatCurrency } from "../../utils";
+import { formatCurrency, formatDateDisplay } from "../../utils";
 export default {
     props: ["item", "live", "display", "auth", "loggedIn"],
     data: () => ({
-        formatCurrency
+        formatCurrency,
+        formatDateDisplay
     })
 };
 </script>

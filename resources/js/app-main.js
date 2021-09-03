@@ -44,6 +44,11 @@ Vue.component(
 );
 
 Vue.component(
+    "status-component",
+    require("./components/shared/StatusComponent.vue").default
+);
+
+Vue.component(
     "quantity-selector-component",
     require("./components/shared/QuantitySelectorComponent.vue").default
 );

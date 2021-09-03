@@ -19,3 +19,22 @@ export const formatCurrency = num => {
         currency: "GBP"
     });
 };
+
+export const formatDateDisplay = date => {
+    const fd = new Date(date);
+    return fd.toLocaleDateString("en-GB");
+};
+
+export const clearErrors = state => {
+    state.checkoutErrors = [];
+    state.venueDetail.tickets = state.venueDetail.tickets.map(t => ({
+        ...t,
+        error: "",
+        success: ""
+    }));
+    state.basket = state.basket.map(b => ({
+        ...b,
+        error: ""
+    }));
+    return state;
+};

@@ -41,7 +41,6 @@
                     @up="up"
                     @down="down"
                 ></quantity-selector-component>
-
                 <button
                     @click="
                         $emit('book', {
@@ -53,7 +52,7 @@
                     class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md cursor-pointer bg-primary justify-content"
                     v-if="ticket.availability"
                 >
-                    {{ ticket.user === 0 ? "Book now" : "Book again" }}
+                    {{ ticket.user === 0 ? "Add to cart" : "Add to cart again" }}
                     <icon
                         name="chevron-right"
                         class="w-4 h-4 ml-2 text-lg text-white"
@@ -69,13 +68,28 @@
                         class="w-4 h-4 ml-2 text-lg text-white"
                     />
                 </span>
-                <span class="flex-1" v-if="ticket.status !== ''"></span>
                 <span
-                    class="px-3 py-1 border rounded-full border-primary text-primary"
-                    v-if="ticket.status !== ''"
-                >
-                    {{ ticket.status }}
-                </span>
+                    class="flex-1"
+                    v-if="ticket.status !== '' || ticket.error !== '' || ticket.success !== ''"
+                ></span>
+                <status-component
+                    v-if="ticket.error !== ''"
+                    :status="ticket.error"
+                    type="error"
+                ></status-component>
+                <status-component
+                    v-if="ticket.success !== ''"
+                    :status="ticket.success"
+                    type="success"
+                ></status-component>
+                <status-component
+                    v-if="
+                        ticket.error === '' &&
+                            ticket.status !== '' &&
+                            ticket.success === ''
+                    "
+                    :status="ticket.status"
+                ></status-component>
             </div>
         </div>
         <div

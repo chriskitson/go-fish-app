@@ -24,7 +24,7 @@ class BasketController extends Controller
   {
     return Basket::where([
       ['user_id', '=', $user_id]
-    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id AS basket_id', 'basket.qty AS basket_qty', 'tickets.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.cost AS ticket_cost', 'venues.name AS venue_name', 'tickets.description as ticket_description', 'venues.id AS venue_id')->get();
+    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id AS basket_id', 'basket.qty AS basket_qty', 'tickets.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.cost AS ticket_cost', 'venues.name AS venue_name', 'tickets.description as ticket_description', 'venues.id AS venue_id', 'basket.date AS date')->get();
   }
 
   public function get(Request $request)
@@ -73,7 +73,12 @@ class BasketController extends Controller
       }
 
       // return updated basket for this user
-      return response()->json($this->get_basket($user_id));
+      return response()->json(array(
+        "success" => true,
+        "ticket_id" => intval($request->ticket_id),
+        "basket" => $this->get_basket($user_id),
+        "qty" => intval($request->qty)
+      ));
     } else {
       return response()->json(array(
         "success" => false,
@@ -95,7 +100,7 @@ class BasketController extends Controller
     ])->first();
 
     // check ticket is available
-    if ($this->ticket_available($basket->venue_id, $basket->ticket_id, $basket->date, 1)) {
+    if ($this->ticket_available($basket->venue_id, $basket->ticket_id, $basket->date, $basket->qty + 1)) {
 
       // increase qty
       Basket::where([
@@ -104,12 +109,14 @@ class BasketController extends Controller
       ])->increment('qty', 1);
 
       return response()->json(array(
-        "success" => true
+        "success" => true,
+        "basket_id" => $basket->id
       ));
     } else {
       return response()->json(array(
         "success" => false,
-        "availability" => false
+        "availability" => false,
+        "basket_id" => $basket->id
       ), 500);
     }
   }

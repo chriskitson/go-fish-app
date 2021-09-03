@@ -29,6 +29,8 @@ trait BookingTrait {
 
     if (isset($ticket)) {
 
+
+
       // get daily limit
       $daily_limit = $ticket->daily_limit;
 

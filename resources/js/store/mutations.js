@@ -1,3 +1,6 @@
+import { clearErrors } from "../utils";
+import { MESSAGES } from "../config/messages";
+
 let mutations = {
     BOOTSTRAP_DATA(state, data) {
         state.venues = data.venues;
@@ -31,14 +34,24 @@ let mutations = {
     VENUE_TICKETS_SET(state, tickets) {
         state.venueDetail = {
             ...state.venueDetail,
-            tickets,
+            tickets: tickets.map(t => ({
+                ...t,
+                error: "",
+                success: ""
+            })),
             ticketsLoaded: true
         };
     },
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {
             ...state.venueDetail,
-            tickets: [ticket],
+            tickets: [
+                {
+                    ...ticket,
+                    error: "",
+                    success: ""
+                }
+            ],
             ticketsLoaded: true
         };
     },
@@ -102,15 +115,30 @@ let mutations = {
                 ...state.loginForm,
                 email
             };
-            state.registerForm.messages = [
-                "Thank you for registering, you may now log in"
-            ];
+            state.registerForm.messages = [MESSAGES.LOGIN.Registered];
         } else {
             state.registerForm.errors = Object.values(errors).flat();
         }
     },
     BASKET_GET(state, res) {
-        state.basket = res;
+        state.basket = res.map(b => ({
+            ...b,
+            error: ""
+        }));
+    },
+    BASKET_ADD(state, { success, basket, ticket_id }) {
+        if (success) {
+            const i = state.venueDetail.tickets.findIndex(
+                t => t.id === ticket_id
+            );
+            if (i > -1) {
+                state.venueDetail.tickets[i].success = MESSAGES.BASKET.Added;
+            }
+            state.basket = basket.map(b => ({
+                ...b,
+                error: ""
+            }));
+        }
     },
     BASKET_REMOVE(state, id) {
         const i = state.basket.findIndex(b => b.basket_id === id);
@@ -127,33 +155,34 @@ let mutations = {
             state.basket[i].basket_qty -= 1;
         }
     },
-    BASKET_ERROR(state, data) {
-        // const i = state.basket.findIndex(b => b.basket_id === id);
-        // if (i > -1) {
-        //     state.basket.splice(i, 1);
-        // }
-        if (data && !data.success && !data.availability && !!data.ticket_id) {
-            console.log(data.ticket_id);
-            const i = state.venueDetail.tickets.findIndex(t => t.id === data.ticket_id);
-            console.log(i);
-            if (i > -1) {
-                state.venueDetail.tickets[i].status = "Help!!!!";
+    BASKET_ERROR(state, { success, availability, ticket_id, basket_id }) {
+        if (!success && !availability) {
+            if (!!ticket_id) {
+                const i = state.venueDetail.tickets.findIndex(
+                    t => t.id === ticket_id
+                );
+                if (i > -1) {
+                    state.venueDetail.tickets[i].error =
+                        MESSAGES.BASKET.NoQuantity;
+                }
             }
-            state.basketErrors.push();
+            if (!!basket_id) {
+                const i = state.basket.findIndex(b => b.basket_id === basket_id);
+                if (i > -1) {
+                    state.basket[i].error = MESSAGES.CHECKOUT.NoQuantity;
+                }
+            }
         }
     },
     BOOK(state, res) {
         if (res.success === true) {
-            state.basket = [];
-            state.basketErrors = [];
-            state.checkoutErrors = [];
+            state = clearErrors(state);
             // redirect to stripe payment page
             stripe.redirectToCheckout({ sessionId: res.session_id });
         }
     },
     CLEAR_ERRORS(state) {
-        state.basketErrors = [];
-        state.checkoutErrors = [];
+        state = clearErrors(state);
     }
 };
 
