@@ -90,7 +90,7 @@ class BookingController extends Controller
             "success" => true,
             "id" => $ticket_id,
             "venue" => $venue,
-            "ticket" => $venue->name . " - " . $ticket->name,
+            "ticket" => $venue->name . " - " . $ticket->name . " - " . $date,
             "ticket_id" => $ticket_id,
             "qty" => $qty,
             "cost" => $cost,

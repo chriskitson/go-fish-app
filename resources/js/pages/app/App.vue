@@ -61,7 +61,9 @@ export default {
     },
     mounted() {
         this.getUserPosition();
-        this.getBasket();
+        if (this.user.loggedIn) {
+            this.getBasket();
+        }
     },
     methods: {
         getUserPosition() {
