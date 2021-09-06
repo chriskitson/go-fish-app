@@ -59,4 +59,4 @@ Route::post('auth/book', [BookingController::class, 'book'])->middleware('auth:a
 
 
 // booking confirmation
-Route::get('book/confirm', [BookingController::class, 'confirm']);
+Route::post('book/confirm', [BookingController::class, 'confirm']);
