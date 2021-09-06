@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\Booking;
 use App\Models\Venue;
 use App\Models\Basket;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Traits\BookingTrait;
 use App\Http\Traits\StripeTrait;
@@ -56,6 +57,7 @@ class BookingController extends Controller
     // loop through tickets and attempt to create a ticket for each
     foreach ($items as $item) {
 
+      $basket_id = $item->id;
       $date = $item->date;
       $ticket_id = $item->ticket_id;
       $venue_id = $item->venue_id;
@@ -74,10 +76,10 @@ class BookingController extends Controller
         $cost = $ticket->cost;
 
         // count number of bookings
-        $bookings = count(Booking::where([
+        $bookings = count(Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->where([
           ['ticket_id', '=', $ticket_id],
           ['confirmed', true]
-        ])->whereDate('created_at', $date)->get());
+        ])->whereDate('bookings.created_at', $date)->get('bookings.id'));
 
         if ($daily_limit > 0 && $daily_limit >= ($bookings + $qty)) {
 
@@ -90,7 +92,7 @@ class BookingController extends Controller
             "success" => true,
             "id" => $ticket_id,
             "venue" => $venue,
-            "ticket" => $venue->name . " - " . $ticket->name . " - " . $date,
+            "ticket" => $venue->name . " - " . $ticket->name . " - " . date("d M Y", strtotime($date)),
             "ticket_id" => $ticket_id,
             "qty" => $qty,
             "cost" => $cost,
@@ -102,7 +104,7 @@ class BookingController extends Controller
           $booking_success = false;
           array_push($booking_responses, array(
             "success" => false,
-            "basket_id" => $ticket_id,
+            "basket_id" => $basket_id,
             "status" => "NO_AVAILABILITY"
           ));
         }
@@ -121,11 +123,15 @@ class BookingController extends Controller
       // work out application fee (based on % share of tickets only NOT booking fee)
       $application_fee = array_sum(array_map(function ($b) {
         return ((floatval($b["cost"]) * $b["qty"]) / 100) * $b["payment_fee"];
-      }, $booking_responses));
+      }, $booking_responses)) * 100;
 
       // work out booking fee (based on number of tickets)
       $booking_fee = array_sum(array_map(function ($b) {
         return intval($b["qty"]) * $_ENV["BOOKING_FEE"];
+      }, $booking_responses));
+
+      $qty = array_sum(array_map(function ($b) {
+        return intval($b["qty"]);
       }, $booking_responses));
 
       // venue account
@@ -147,8 +153,22 @@ class BookingController extends Controller
         );
       }, $booking_responses);
 
+      $total = array_sum(array_map(function ($b) {
+        return floatval($b["cost"]) * $b["qty"];
+      }, $booking_responses)) * 100;
+
       // generate stripe session for payments
       $payment_session = $this->create_checkout_session($user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
+
+      // create transaction record
+      $transaction = new Transaction([
+        "session" => $payment_session,
+        "qty" => $qty,
+        "total" => $total / 100,
+        "booking_fee" => $booking_fee,
+        "ticket_fee" => $application_fee / 100
+      ]);
+      $transaction->save();
 
       // commit all tickets to database
       foreach ($booking_responses as $booking) {
@@ -157,7 +177,7 @@ class BookingController extends Controller
             $booking = new Booking([
               "ticket_id" => $booking["ticket_id"],
               "user_id" => $user_id,
-              "session" => $payment_session,
+              "transaction_id" => $transaction->id,
               "date" => $date,
               "cost" => $booking["cost"]
             ]);

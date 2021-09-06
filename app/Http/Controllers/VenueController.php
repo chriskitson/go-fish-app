@@ -39,18 +39,18 @@ class VenueController extends Controller
 
   public function ticket_format($ticket, $date, $user_id)
   {
-    // count number of existing bookings
-    $bookings = count(Booking::where([
+
+    $bookings = count(Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->where([
       ['ticket_id', '=', $ticket["id"]],
       ['confirmed', true]
-    ])->whereDate('created_at', $date)->get());
+    ])->whereDate('bookings.created_at', $date)->get('bookings.id'));
 
     // count number of user bookings
-    $user_bookings = count(Booking::where([
+    $user_bookings = count(Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->where([
       ['ticket_id', '=', $ticket["id"]],
       ['user_id', '=', $user_id],
       ['confirmed', true]
-    ])->whereDate('created_at', $date)->get());
+    ])->whereDate('bookings.created_at', $date)->get('bookings.id'));
 
     $many_left = $ticket["daily_limit"] - $bookings;
 
@@ -186,10 +186,10 @@ class VenueController extends Controller
             // get daily limit
             $daily_limit = $ticket->daily_limit;
             // count number of bookings
-            $bookings = count(Booking::where([
+            $bookings = count(Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->where([
               ['ticket_id', '=', $ticket->id],
               ['confirmed', true]
-            ])->whereDate('created_at', $date)->get());
+            ])->whereDate('bookings.created_at', $date)->get('bookings.id'));
             // return available tickets
             return $daily_limit > 0 && $daily_limit > $bookings;
           })->values()->toArray();

@@ -157,7 +157,7 @@ let mutations = {
     },
     BASKET_ERROR(
         state,
-        { success, availability, ticket_id, basket_id, message }
+        { success, availability, ticket_id, basket_id, message, bookings }
     ) {
         if (!success && !!message && state.alerts.indexOf(message) === -1) {
             state.alerts.push(message);
@@ -178,6 +178,19 @@ let mutations = {
                 if (i > -1) {
                     state.basket[i].error = MESSAGES.CHECKOUT.NoQuantity;
                 }
+            }
+            if (bookings && bookings.length > 0) {
+                const failed = bookings.filter(b => !b.success);
+                failed.forEach(booking => {
+                    const i = state.basket.findIndex(
+                        b => b.basket_id == booking.basket_id
+                    );
+                    console.log(state.basket);
+                    console.log(booking.basket_id);
+                    if (i > -1) {
+                        state.basket[i].error = MESSAGES.CHECKOUT.NoQuantity;
+                    }
+                });
             }
         }
     },

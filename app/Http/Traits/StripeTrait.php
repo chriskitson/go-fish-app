@@ -9,7 +9,6 @@ trait StripeTrait
   {
     \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
     $checkout_items = [];
-    $checkout_intents = [];
     foreach ($items as $item) {
       array_push($checkout_items, array(
         "price_data" => array(
@@ -23,10 +22,6 @@ trait StripeTrait
         "quantity" => $item["qty"]
       ));
     }
-
-
-    // echo json_encode($checkout_intents);
-
     $checkout_session = \Stripe\Checkout\Session::create([
       "payment_method_types" => ["card"],
       "line_items" => $checkout_items,
