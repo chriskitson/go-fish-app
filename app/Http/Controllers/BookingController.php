@@ -199,4 +199,47 @@ class BookingController extends Controller
 
     
   }
+
+  public function confirm(Request $request) {
+    
+    $event = null;
+
+    try {
+        $event = \Stripe\Event::constructFrom($request);
+    } catch(\UnexpectedValueException $e) {
+        # handle invalid payload
+        return response()->json(array(
+          "success" => false,
+        ), 400);
+        exit();
+    }
+    
+    # handle event
+    switch ($event->type) {
+        case 'checkout.session.completed':
+            $session_id = $event->data->object->id;
+            $session_payment_status = $event->data->object->payment_status;
+            
+            # update session payment if paid
+            if ($session_payment_status === "paid") {
+
+
+              $transaction = Transaction::where([
+                ['session', '=', $session_id]
+              ])->first();
+
+              $transaction->confirmed = 1;
+              $transaction->transaction = 'bananas';
+              $transaction->save();
+              
+            }
+            
+            break;
+        default:
+            echo 'Received unknown event type ' . $event->type;
+    }
+    
+    http_response_code(200);
+  }
+  
 }

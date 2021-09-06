@@ -38,4 +38,5 @@ trait StripeTrait
     ]);
     return $checkout_session->id;
   }
+
 }

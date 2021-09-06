@@ -55,3 +55,8 @@ Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease']
 Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove'])->middleware('auth:api');
 
 Route::post('auth/book', [BookingController::class, 'book'])->middleware('auth:api');
+
+
+
+// booking confirmation
+Route::get('book/confirm', [BookingController::class, 'confirm']);
