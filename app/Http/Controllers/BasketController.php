@@ -42,6 +42,24 @@ class BasketController extends Controller
 
     $date = gmdate("Y-m-d", $request->date / 1000);
 
+    // get existing tickets from user basket
+    $items = Basket::where([
+      ['user_id', '=', $user_id]
+    ])->get()->toArray();
+
+    // verify all tickets are from the same venue
+    $venue_count = count(array_unique(array_map(function ($item) {
+      return $item["venue_id"];
+    }, $items)));
+
+    // ensure there isn't more than one venue
+    if ($venue_count > 1 || ($venue_count === 1 && intval($request->venue_id) !== intval($items[0]["venue_id"]))) {
+      return response()->json(array(
+        "success" => false,
+        "message" => "MULTIPLE_VENUES"
+      ), 500);
+    }
+
     if ($this->ticket_available($request->venue_id, $request->ticket_id, $date, $request->qty)) {
 
       // does this combo exist in db?

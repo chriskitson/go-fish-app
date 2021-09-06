@@ -49,6 +49,11 @@ Vue.component(
 );
 
 Vue.component(
+    "modal-component",
+    require("./components/shared/ModalComponent.vue").default
+);
+
+Vue.component(
     "quantity-selector-component",
     require("./components/shared/QuantitySelectorComponent.vue").default
 );

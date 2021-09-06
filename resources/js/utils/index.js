@@ -26,7 +26,7 @@ export const formatDateDisplay = date => {
 };
 
 export const clearErrors = state => {
-    state.checkoutErrors = [];
+    state.alerts = [];
     state.venueDetail.tickets = state.venueDetail.tickets.map(t => ({
         ...t,
         error: "",

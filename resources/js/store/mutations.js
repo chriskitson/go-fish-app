@@ -155,8 +155,13 @@ let mutations = {
             state.basket[i].basket_qty -= 1;
         }
     },
-    BASKET_ERROR(state, { success, availability, ticket_id, basket_id }) {
-        if (!success && !availability) {
+    BASKET_ERROR(
+        state,
+        { success, availability, ticket_id, basket_id, message }
+    ) {
+        if (!success && !!message && state.alerts.indexOf(message) === -1) {
+            state.alerts.push(message);
+        } else if (!success && !availability) {
             if (!!ticket_id) {
                 const i = state.venueDetail.tickets.findIndex(
                     t => t.id === ticket_id
@@ -167,7 +172,9 @@ let mutations = {
                 }
             }
             if (!!basket_id) {
-                const i = state.basket.findIndex(b => b.basket_id === basket_id);
+                const i = state.basket.findIndex(
+                    b => b.basket_id === basket_id
+                );
                 if (i > -1) {
                     state.basket[i].error = MESSAGES.CHECKOUT.NoQuantity;
                 }

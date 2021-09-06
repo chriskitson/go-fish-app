@@ -84,7 +84,7 @@ let actions = {
                 commit("BOOK", res.data);
             })
             .catch(err => {
-                // TODO:
+                commit("BASKET_ERROR", err.response.data);
             });
     },
     LOGIN({ commit }, { email, password }) {

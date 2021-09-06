@@ -24,6 +24,13 @@
             @set="setLocation"
             @update="updateLocation"
         ></location-component>
+        <modal-component
+            v-for="(alert, i) in alerts"
+            :key="`alert-${i}`"
+            :message="alert"
+            type="error"
+            @close="closeModal"
+        ></modal-component>
     </main>
 </template>
 <script>
@@ -41,6 +48,7 @@ export default {
             user: state => state.user,
             live: state => state.live,
             basket: state => state.basket,
+            alerts: state => state.alerts,
             basketCount: state =>
                 state.basket.map(b => b.basket_qty).reduce((a, b) => a + b, 0),
             basketTotal: state =>
@@ -105,6 +113,10 @@ export default {
         },
         logout() {
             this.$store.dispatch("LOGOUT", this.user);
+        },
+        closeModal(msg) {
+            const i = this.alerts.indexOf(msg);
+            this.alerts.splice(i, 1);
         }
     }
 };

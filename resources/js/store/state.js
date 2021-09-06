@@ -3,6 +3,7 @@ let state = {
     path: "",
     bookingFee: 0,
     venues: [],
+    alerts: [],
     user: {
         loggedIn: false,
         access_token: "",
@@ -10,7 +11,6 @@ let state = {
         token_type: ""
     },
     basket: [],
-    checkoutErrors: [],
     loginForm: {
         messages: [],
         errors: [],

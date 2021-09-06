@@ -41,10 +41,21 @@ class BookingController extends Controller
     $booking_responses = [];
     $booking_success = true;
 
+    // verify all tickets are from the same venue
+    $venue_count = count(array_unique(array_map(function ($item) {
+      return $item["venue_id"];
+    }, $items->toArray())));
+
+    if ($venue_count > 1) {
+      return response()->json(array(
+        "success" => false,
+        "message" => "MULTIPLE_VENUES"
+      ), 500);
+    }
+
     // loop through tickets and attempt to create a ticket for each
     foreach ($items as $item) {
 
-      // $date = gmdate("Y-m-d", $date / 1000);
       $date = $item->date;
       $ticket_id = $item->ticket_id;
       $venue_id = $item->venue_id;
@@ -73,7 +84,7 @@ class BookingController extends Controller
           // get venue info
           $venue = Venue::where([
             ['id', '=', $venue_id],
-          ])->get(["name", "account"])->first();
+          ])->get(["name", "account", "payment_fee"])->first();
 
           array_push($booking_responses, array(
             "success" => true,
@@ -83,13 +94,15 @@ class BookingController extends Controller
             "ticket_id" => $ticket_id,
             "qty" => $qty,
             "cost" => $cost,
-            "date" => $date
+            "date" => $date,
+            "account" => $venue->account,
+            "payment_fee" => $venue->payment_fee
           ));
         } else {
           $booking_success = false;
           array_push($booking_responses, array(
             "success" => false,
-            "id" => $ticket_id,
+            "basket_id" => $ticket_id,
             "status" => "NO_AVAILABILITY"
           ));
         }
@@ -97,28 +110,45 @@ class BookingController extends Controller
         $booking_success = false;
         array_push($booking_responses, array(
           "success" => false,
-          "id" => $ticket_id,
+          "basket_id" => $ticket_id,
           "status" => "TICKET_NOT_FOUND"
-        ));
+        ), 404);
       }
     }
 
     if ($booking_success) {
 
-      // work out booking fee
+      // work out application fee (based on % share of tickets only NOT booking fee)
+      $application_fee = array_sum(array_map(function ($b) {
+        return ((floatval($b["cost"]) * $b["qty"]) / 100) * $b["payment_fee"];
+      }, $booking_responses));
+
+      // work out booking fee (based on number of tickets)
       $booking_fee = array_sum(array_map(function ($b) {
         return intval($b["qty"]) * $_ENV["BOOKING_FEE"];
       }, $booking_responses));
 
-      // add booking fee
+      // venue account
+      $venue_account_id = $booking_responses[0]["account"];
+
+      // add booking fee to items
       array_push($booking_responses, array(
         "ticket" => "Booking fee",
         "qty" => 1,
         "cost" => $booking_fee
       ));
 
+      // prepare tickets for stripe
+      $items = array_map(function($r) {
+        return array(
+          "cost" =>  $r["cost"],
+          "ticket" =>  $r["ticket"],
+          "qty" => $r["qty"]
+        );
+      }, $booking_responses);
+
       // generate stripe session for payments
-      $payment_session = $this->create_checkout_session($booking_responses, "GBP", $ticket->cost * 100, $venue->account, $url);
+      $payment_session = $this->create_checkout_session($user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
 
       // commit all tickets to database
       foreach ($booking_responses as $booking) {
@@ -145,7 +175,7 @@ class BookingController extends Controller
       "bookings" => $booking_responses,
       "user" => $user_id,
       "session_id" => $payment_session
-    ), 200);
+    ), $booking_success ? 200 : 500);
 
     
   }
