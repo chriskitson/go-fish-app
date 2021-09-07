@@ -169,6 +169,7 @@ class BookingController extends Controller
         "ticket_fee" => $application_fee / 100
       ]);
       $transaction->save();
+      $transaction_id = $transaction->id;
 
       // commit all tickets to database
       foreach ($booking_responses as $booking) {
@@ -177,7 +178,7 @@ class BookingController extends Controller
             $booking = new Booking([
               "ticket_id" => $booking["ticket_id"],
               "user_id" => $user_id,
-              "transaction_id" => $transaction->id,
+              "transaction_id" => $transaction_id,
               "date" => $date,
               "cost" => $booking["cost"]
             ]);
@@ -193,7 +194,8 @@ class BookingController extends Controller
       "success" => $booking_success,
       "bookings" => $booking_responses,
       "user" => $user_id,
-      "session_id" => $payment_session
+      "session_id" => $payment_session,
+      "transaction_id" => $transaction_id 
     ), $booking_success ? 200 : 500);
   }
 
@@ -202,9 +204,7 @@ class BookingController extends Controller
 
     $event = null;
 
-    $json = $request->all();
-
-    if (!$this->verify_event($json, $_SERVER['HTTP_STRIPE_SIGNATURE'])) {
+    if (!$this->verify_event($request->getContent(), $_SERVER['HTTP_STRIPE_SIGNATURE'])) {
       // handle unverified
       return response()->json(array(
         "success" => false,
@@ -213,7 +213,7 @@ class BookingController extends Controller
     }
 
     try {
-      $event = \Stripe\Event::constructFrom($json);
+      $event = \Stripe\Event::constructFrom($request->all());
     } catch (\UnexpectedValueException $e) {
       // handle invalid payload
       return response()->json(array(

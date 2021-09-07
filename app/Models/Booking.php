@@ -21,6 +21,7 @@ class Booking extends Model
         'user_id',
         'session',
         'confirmed',
+        'transaction_id',
         'date',
         'cost'
     ];
