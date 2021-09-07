@@ -22,7 +22,8 @@ class Transaction extends Model
         'booking_fee',
         'ticket_fee',
         'confirmed',
-        'transaction'
+        'payment',
+        'receipt_link'
     ];
 
     protected $table = 'transactions';

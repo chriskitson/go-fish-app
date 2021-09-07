@@ -39,4 +39,23 @@ trait StripeTrait
     ]);
     return $checkout_session->id;
   }
+
+  public function verify_event($payload, $sig_header)
+  {
+    \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
+    $endpoint_secret = $_ENV["STRIPE_WH_SECRET"];
+    $event = null;
+    try {
+      $event = \Stripe\Webhook::constructEvent(
+        $payload,
+        $sig_header,
+        $endpoint_secret
+      );
+    } catch (\UnexpectedValueException $e) {
+      return false;
+    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+      return false;
+    }
+    return true;
+  }
 }

@@ -202,12 +202,23 @@ class BookingController extends Controller
 
     $event = null;
 
+    $json = $request->all();
+
+    if (!$this->verify_event($json, $_SERVER['HTTP_STRIPE_SIGNATURE'])) {
+      // handle unverified
+      return response()->json(array(
+        "success" => false,
+        "verify" => false
+      ), 400);
+    }
+
     try {
-      $event = \Stripe\Event::constructFrom($request->all());
+      $event = \Stripe\Event::constructFrom($json);
     } catch (\UnexpectedValueException $e) {
       // handle invalid payload
       return response()->json(array(
         "success" => false,
+        "verify" => true
       ), 400);
       exit();
     }
@@ -216,9 +227,11 @@ class BookingController extends Controller
     switch ($event->type) {
       case 'checkout.session.completed':
 
+        // clear basket and record payment intent
         $session_id = $event->data->object->id;
         $session_payment_status = $event->data->object->payment_status;
         $basket_id = intval($event->data->object->client_reference_id);
+        $payment_intent = $event->data->object->payment_intent;
 
         // update session payment if paid
         if ($session_payment_status === "paid") {
@@ -228,7 +241,7 @@ class BookingController extends Controller
           ])->first();
 
           $transaction->confirmed = 1;
-          $transaction->transaction = '';
+          $transaction->payment = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
           $transaction->save();
 
           // clear basket
@@ -238,6 +251,23 @@ class BookingController extends Controller
         }
 
         break;
+
+      case 'payment_intent.succeeded':
+
+          // record receipt for payment
+          $payment_intent_id = $event->data->object->id;
+          $payment_receipt_link = implode(", ", array_map(function($c) {
+            return $c->receipt_url;
+          }, $event->data->object->charges->data));
+  
+          $transaction = Transaction::where([
+            ['payment', '=', $payment_intent_id]
+          ])->first();
+
+          $transaction->receipt_link = $payment_receipt_link;
+          $transaction->save();
+  
+          break;
       default:
         echo 'Received unknown event type ' . $event->type;
     }

@@ -8,7 +8,7 @@ export const MESSAGES = {
   },
   CHECKOUT: {
     Added: "Added to basket",
-    NoQuantity: "Not enough tickets left. You cannot reduce your quantity."
+    NoQuantity: "Not enough tickets left. Please reduce your quantity."
   },
   ERRORS: {
     MULTIPLE_VENUES: 'You cannot have a ticket for more than one venue in your basket. Please purchase your existing tickets or remove them to purchase from another venue.'
