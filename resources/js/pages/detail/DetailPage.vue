@@ -45,6 +45,19 @@
                     display="4"
                     @book="bookTickets"
                 ></ticket-list-component>
+                <div class="flex items-center mt-10" v-if="loggedIn && basket.length > 0">
+                    <span class="flex-1"> </span>
+                    <a
+                        href="/basket"
+                        class="flex items-center px-4 py-2 text-lg font-semibold text-white bg-white rounded-md cursor-pointer bg-primary justify-content"
+                    >
+                        Proceed to Basket
+                        <icon
+                            name="chevron-right"
+                            class="w-5 h-5 ml-2 text-white"
+                        />
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -57,6 +70,7 @@ export default {
         ...mapState({
             venues: state => state.venues,
             live: state => state.live,
+            basket: state => state.basket,
             venueDetail: state => state.venueDetail,
             loggedIn: state => state.user.loggedIn,
             user: state => state.user,

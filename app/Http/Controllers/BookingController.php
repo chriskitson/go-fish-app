@@ -158,7 +158,7 @@ class BookingController extends Controller
       }, $booking_responses)) * 100;
 
       // generate stripe session for payments
-      $payment_session = $this->create_checkout_session($basket_id, $user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
+      $payment_session = $this->create_checkout_session($user_id, $user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
 
       // create transaction record
       $transaction = new Transaction([
@@ -195,7 +195,7 @@ class BookingController extends Controller
       "bookings" => $booking_responses,
       "user" => $user_id,
       "session_id" => $payment_session,
-      "transaction_id" => $transaction_id 
+      "transaction_id" => isset($transaction_id) ? $transaction_id : 0
     ), $booking_success ? 200 : 500);
   }
 
@@ -230,7 +230,7 @@ class BookingController extends Controller
         // clear basket and record payment intent
         $session_id = $event->data->object->id;
         $session_payment_status = $event->data->object->payment_status;
-        $basket_id = intval($event->data->object->client_reference_id);
+        $user_id = intval($event->data->object->client_reference_id);
         $payment_intent = $event->data->object->payment_intent;
 
         // update session payment if paid
@@ -246,7 +246,7 @@ class BookingController extends Controller
 
           // clear basket
           Basket::where([
-            ['id', '=', $basket_id]
+            ['user_id', '=', $user_id]
           ])->delete();
         }
 
