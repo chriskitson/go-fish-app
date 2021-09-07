@@ -20,43 +20,50 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+/*
+PUBLIC ENDPOINTS
+*/
 
-
+// login and registration
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('load', [BootstrapController::class, 'load']);
 
-// venues
+// venues (no user context)
 Route::get('venues', [VenueController::class, 'all']);
 Route::get('venues/{id}', [VenueController::class, 'all']);
 Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
 Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
 
-
-
-
 // search
 Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
-
-
-
-Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets'])->middleware('auth:api');
-Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket'])->middleware('auth:api');
-Route::get('auth/logout', [UserController::class, 'logout'])->middleware('auth:api');
-
-
-Route::get('auth/basket', [BasketController::class, 'get'])->middleware('auth:api');
-Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::class, 'add'])->middleware('auth:api');
-Route::get('auth/basket/{id}/up', [BasketController::class, 'basket_increase'])->middleware('auth:api');
-Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease'])->middleware('auth:api');
-Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove'])->middleware('auth:api');
-
-Route::post('auth/book', [BookingController::class, 'book'])->middleware('auth:api');
-
-
-
-// booking confirmation
+// booking confirmation (from Stripe)
 Route::post('book/confirm', [BookingController::class, 'confirm']);
+
+/*
+PROTECTED ENDPOINTS
+*/
+Route::group([
+    'middleware' => ['auth:api']
+], function () {
+    
+    // user
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('auth/logout', [UserController::class, 'logout']);
+
+    // venues (with user context)
+    Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets']);
+    Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
+    
+    // basket
+    Route::get('auth/basket', [BasketController::class, 'get']);
+    Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::class, 'add']);
+    Route::get('auth/basket/{id}/up', [BasketController::class, 'basket_increase']);
+    Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease']);
+    Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove']);
+    
+    // booking
+    Route::post('auth/book', [BookingController::class, 'book']);
+});

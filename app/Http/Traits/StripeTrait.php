@@ -5,7 +5,7 @@ namespace App\Http\Traits;
 trait StripeTrait
 {
 
-  public function create_checkout_session($email, $items, $currency, $account_id, $application_fee, $url, $meta_data = [])
+  public function create_checkout_session($basket_id, $email, $items, $currency, $account_id, $application_fee, $url, $meta_data = [])
   {
     \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
     $checkout_items = [];
@@ -24,6 +24,7 @@ trait StripeTrait
     }
     $checkout_session = \Stripe\Checkout\Session::create([
       "payment_method_types" => ["card"],
+      "client_reference_id" => $basket_id,
       "line_items" => $checkout_items,
       "customer_email" => $email,
       "payment_intent_data" => array(
@@ -31,12 +32,11 @@ trait StripeTrait
         "transfer_data" => [
           "destination" => $account_id,
         ]
-        ),
+      ),
       "mode" => "payment",
       "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm",
       "cancel_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . $url,
     ]);
     return $checkout_session->id;
   }
-
 }

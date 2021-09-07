@@ -145,7 +145,7 @@ class BookingController extends Controller
       ));
 
       // prepare tickets for stripe
-      $items = array_map(function($r) {
+      $items = array_map(function ($r) {
         return array(
           "cost" =>  $r["cost"],
           "ticket" =>  $r["ticket"],
@@ -158,7 +158,7 @@ class BookingController extends Controller
       }, $booking_responses)) * 100;
 
       // generate stripe session for payments
-      $payment_session = $this->create_checkout_session($user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
+      $payment_session = $this->create_checkout_session($basket_id, $user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
 
       // create transaction record
       $transaction = new Transaction([
@@ -185,7 +185,6 @@ class BookingController extends Controller
           }
         }
       };
-
     } else {
       $payment_session = "";
     }
@@ -196,50 +195,53 @@ class BookingController extends Controller
       "user" => $user_id,
       "session_id" => $payment_session
     ), $booking_success ? 200 : 500);
-
-    
   }
 
-  public function confirm(Request $request) {
-    
+  public function confirm(Request $request)
+  {
+
     $event = null;
 
     try {
-        $event = \Stripe\Event::constructFrom($request);
-    } catch(\UnexpectedValueException $e) {
-        # handle invalid payload
-        return response()->json(array(
-          "success" => false,
-        ), 400);
-        exit();
+      $event = \Stripe\Event::constructFrom($request->all());
+    } catch (\UnexpectedValueException $e) {
+      // handle invalid payload
+      return response()->json(array(
+        "success" => false,
+      ), 400);
+      exit();
     }
-    
-    # handle event
+
+    // handle event
     switch ($event->type) {
-        case 'checkout.session.completed':
-            $session_id = $event->data->object->id;
-            $session_payment_status = $event->data->object->payment_status;
-            
-            # update session payment if paid
-            if ($session_payment_status === "paid") {
+      case 'checkout.session.completed':
 
+        $session_id = $event->data->object->id;
+        $session_payment_status = $event->data->object->payment_status;
+        $basket_id = intval($event->data->object->client_reference_id);
 
-              $transaction = Transaction::where([
-                ['session', '=', $session_id]
-              ])->first();
+        // update session payment if paid
+        if ($session_payment_status === "paid") {
 
-              $transaction->confirmed = 1;
-              $transaction->transaction = 'bananas';
-              $transaction->save();
-              
-            }
-            
-            break;
-        default:
-            echo 'Received unknown event type ' . $event->type;
+          $transaction = Transaction::where([
+            ['session', '=', $session_id]
+          ])->first();
+
+          $transaction->confirmed = 1;
+          $transaction->transaction = '';
+          $transaction->save();
+
+          // clear basket
+          Basket::where([
+            ['id', '=', $basket_id]
+          ])->delete();
+        }
+
+        break;
+      default:
+        echo 'Received unknown event type ' . $event->type;
     }
-    
+
     http_response_code(200);
   }
-  
 }
