@@ -171,18 +171,17 @@ class BookingController extends Controller
       $transaction->save();
       $transaction_id = $transaction->id;
 
-      // commit all tickets to database
       foreach ($booking_responses as $booking) {
-        for ($i = 1; $i === intval($booking["qty"]); $i++) {
+        for ($t = 0 ; $t < intval($booking["qty"]); $t++){ 
           if (isset($booking["ticket_id"])) {
-            $booking = new Booking([
+            $new_booking = new Booking([
               "ticket_id" => $booking["ticket_id"],
               "user_id" => $user_id,
               "transaction_id" => $transaction_id,
               "date" => $date,
               "cost" => $booking["cost"]
             ]);
-            $booking->save();
+            $new_booking->save();
           }
         }
       };
