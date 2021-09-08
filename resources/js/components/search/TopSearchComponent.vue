@@ -4,14 +4,16 @@
             class="flex items-center w-auto h-12 max-w-5xl text-sm border rounded-lg border-light bg-primary"
         >
             <div
-                class="flex items-center h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg w-50 border-light"
+                class="flex items-center w-56 h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg border-light"
             >
                 <client-only>
                     <date-picker
                         :value="date"
                         type="date"
+                        :clearable="false"
                         v-on:change="$emit('change', $event)"
                         class="top-date-picker"
+                        format="DD/MM/YYYY"
                     ></date-picker>
                 </client-only>
             </div>

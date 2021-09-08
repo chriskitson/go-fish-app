@@ -105,6 +105,10 @@ class VenueController extends Controller
     return response()->json($ticket);
   }
 
+  function get_town_by_place_id($place_id) {
+    return $this->get_town($place_id, "place_id");
+  }
+
   function search($date, $location)
   {
 

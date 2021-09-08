@@ -8,6 +8,13 @@ if (isset($venueid)) {   // venue detail
 }
 if (isset($date) && isset($location)) {   // venue search
     $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;
+    $initial_state['venueSearch'] = array(
+        "search" => $venue->get_town_by_place_id($location, "place_id"),
+        "detail" => array(
+            "place_id" => $location
+        )
+    );
+    $initial_state['dateSearch'] = intval($date);
 }
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
@@ -25,7 +32,7 @@ $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
     </head>
     <body>
         {!! Ssr::entry('js/app-server.js')->context($initial_state)->render() !!}
-        <script>window.__INITIAL_STATE__='{!! str_replace("'", "\'", json_encode($initial_state)) !!}';</script>
+        <script>window.__INITIAL_STATE__='{!! json_encode($initial_state, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) !!}';</script>
         <script type="text/javascript">
             const stripe = Stripe("<?php echo $_ENV["STRIPE_KEY"]; ?>");
         </script>

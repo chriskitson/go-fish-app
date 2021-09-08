@@ -15,6 +15,12 @@ export const bindState = (context, state, client) => {
     if (context.bookingFee) {
         state.bookingFee = parseFloat(context.bookingFee);
     }
+    if (context.dateSearch) {
+        state.dateSearch = new Date(context.dateSearch);
+    }
+    if (context.venueSearch) {
+        state.venueSearch = context.venueSearch;
+    }
     if (client) {
         state.user = {
             ...state.user,
