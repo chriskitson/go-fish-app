@@ -40,7 +40,7 @@ let state = {
         search: "",
         detail: null
     },
-    dateSearch: new Date().getTime(),
+    dateSearch: new Date(),
     venueDetail: {
         id: 0,
         name: "",

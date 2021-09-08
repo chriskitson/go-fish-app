@@ -1,5 +1,3 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +8,8 @@
 
 .vbga-results li {
   @apply text-sm;
+}
+
+.top-date-picker input {
+  @apply border-0 shadow-none
 }

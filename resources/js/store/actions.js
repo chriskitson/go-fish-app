@@ -30,12 +30,15 @@ let actions = {
     VENUE_SEARCH_SET({ commit }, detail) {
         commit("VENUE_SEARCH_SET", detail);
     },
+    DATE_SET({ commit }, date) {
+        commit("DATE_SET", date);
+    },
     VENUE_TICKETS_GET({ commit }, { id, date, user }) {
         return axios
             .get(
                 `/api/${
                     user.loggedIn ? "auth/" : ""
-                }venues/tickets/${id}?d=${date}`,
+                }venues/tickets/${id}?d=${date.getTime()}`,
                 getTokenHeader(user)
             )
             .then(res => {
@@ -50,7 +53,7 @@ let actions = {
             .get(
                 `/api/${
                     user.loggedIn ? "auth/" : ""
-                }venues/ticket/${venue_id}/${id}?d=${date}`,
+                }venues/ticket/${venue_id}/${id}?d=${date.getTime()}`,
                 getTokenHeader(user)
             )
             .then(res => {
@@ -62,7 +65,7 @@ let actions = {
     },
     VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
         return axios
-            .get(`/api/search/${date}/${location}`)
+            .get(`/api/search/${date.getTime()}/${location}`)
             .then(res => {
                 commit("VENUE_SEARCH_RESULTS_SET", res.data);
                 router.push(`/search/${date}/${location}`);
@@ -157,7 +160,7 @@ let actions = {
         commit("CLEAR_ERRORS");
         return axios
             .post(
-                `/api/auth/basket/${venue_id}/${ticket_id}/${date}?qty=${qty}`,
+                `/api/auth/basket/${venue_id}/${ticket_id}/${date.getTime()}?qty=${qty}`,
                 {},
                 getTokenHeader(user)
             )

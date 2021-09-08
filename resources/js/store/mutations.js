@@ -13,6 +13,9 @@ let mutations = {
         state.live = true;
         localStorage.setItem("homeToken", data.token);
     },
+    DATE_SET(state, date) {
+        state.dateSearch = date;
+    },
     LOCATION_SEARCH_SHOW(state, show) {
         state.locationSearch = {
             ...state.locationSearch,

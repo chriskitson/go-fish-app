@@ -6,15 +6,14 @@
             <div
                 class="flex items-center h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg w-50 border-light"
             >
-                <span class="mr-2"
-                    ><icon name="calendar" class="w-6 h-6"
-                /></span>
-                <input
-                    type="text"
-                    class="h-8 px-2 w-30"
-                    placeholder=""
-                    :value="new Date(date) | dateFormat('DD/MM/YYYY')"
-                />
+                <client-only>
+                    <date-picker
+                        :value="date"
+                        type="date"
+                        v-on:change="$emit('change', $event)"
+                        class="top-date-picker"
+                    ></date-picker>
+                </client-only>
             </div>
             <div
                 class="flex items-center h-12 px-2 bg-white border-t border-b border-l w-96 border-light top"
@@ -59,10 +58,14 @@
 
 <script>
 import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
+import ClientOnly from "vue-client-only";
+import DatePicker from "vue2-datepicker";
 export default {
     props: ["venueSearch", "date"],
     components: {
-        GooglePlacesAutocomplete
+        GooglePlacesAutocomplete,
+        ClientOnly,
+        DatePicker
     }
 };
 </script>

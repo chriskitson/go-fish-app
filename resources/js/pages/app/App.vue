@@ -13,6 +13,7 @@
                 :date="dateSearch"
                 @set="setVenueLocation"
                 @search="searchVenues"
+                @change="change"
             ></top-search-component>
         </div>
         <router-view></router-view>
@@ -110,7 +111,7 @@ export default {
         searchVenues() {
             const { dateSearch, venueSearch } = this.$store.state;
             if (dateSearch && venueSearch.detail) {
-                window.location.href = `/search/${dateSearch}/${venueSearch.detail.place_id}`;
+                window.location.href = `/search/${dateSearch.getTime()}/${venueSearch.detail.place_id}`;
             }
         },
         logout() {
@@ -119,6 +120,9 @@ export default {
         closeModal(msg) {
             const i = this.alerts.indexOf(msg);
             this.alerts.splice(i, 1);
+        },
+        change(date) {
+            this.$store.dispatch("DATE_SET", date);
         }
     }
 };
