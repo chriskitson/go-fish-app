@@ -49,6 +49,11 @@ Vue.component(
 );
 
 Vue.component(
+    "date-navigation-component",
+    require("./components/shared/DateNavigationComponent.vue").default
+);
+
+Vue.component(
     "modal-component",
     require("./components/shared/ModalComponent.vue").default
 );

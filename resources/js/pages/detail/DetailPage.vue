@@ -36,6 +36,9 @@
                 </div>
             </div>
             <div class="col-span-2">
+                <date-navigation-component
+                    :date="currentDate"
+                ></date-navigation-component>
                 <ticket-list-component
                     :title="ticketTitle"
                     :tickets="venueDetail.tickets"
@@ -45,7 +48,14 @@
                     display="4"
                     @book="bookTickets"
                 ></ticket-list-component>
-                <div class="flex items-center mt-10" v-if="loggedIn && basket.length > 0">
+                <div
+                    class="flex items-center mt-10"
+                    v-if="
+                        loggedIn &&
+                            basket.length > 0 &&
+                            venueDetail.tickets.length > 0
+                    "
+                >
                     <span class="flex-1"> </span>
                     <a
                         href="/basket"
@@ -65,6 +75,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatDateDisplay } from "../../utils";
 export default {
     computed: {
         ...mapState({
@@ -81,8 +92,9 @@ export default {
                           state.venueDetail.tickets.sort(
                               (a, b) => a.cost - b.cost
                           )[0].cost
-                      }`
-                    : "No tickets available"
+                      } for ${formatDateDisplay(state.dateSearch)}:`
+                    : "No tickets available",
+            currentDate: state => formatDateDisplay(state.dateSearch)
         })
     },
     mounted() {

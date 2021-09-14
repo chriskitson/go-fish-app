@@ -7,7 +7,7 @@
             <div class="col-span-3">
                 <search-result-list-component
                     :results="venueSearchResults"
-                    title="Search Results"
+                    :title="title"
                 ></search-result-list-component>
             </div>
         </div>
@@ -16,13 +16,15 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatDateDisplay } from "../../utils";
 export default {
     computed: {
         ...mapState({
             venues: state => state.venues,
             live: state => state.live,
             venueDetail: state => state.venueDetail,
-            venueSearchResults: state => state.venueSearchResults
+            venueSearchResults: state => state.venueSearchResults,
+            title: state => `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:`
         })
     }
 };

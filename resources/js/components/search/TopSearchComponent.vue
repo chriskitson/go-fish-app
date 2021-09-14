@@ -11,6 +11,7 @@
                         :value="date"
                         type="date"
                         :clearable="false"
+                        :disabled-date="disableDate"
                         v-on:change="$emit('change', $event)"
                         class="top-date-picker"
                         format="DD/MM/YYYY"
@@ -68,6 +69,11 @@ export default {
         GooglePlacesAutocomplete,
         ClientOnly,
         DatePicker
+    },
+    methods: {
+        disableDate(date) {
+            return date < new Date();
+        }
     }
 };
 </script>
