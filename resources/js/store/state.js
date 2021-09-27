@@ -1,3 +1,6 @@
+const today = new Date();
+const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+
 let state = {
     live: false,
     path: "",
@@ -40,7 +43,7 @@ let state = {
         search: "",
         detail: null
     },
-    dateSearch: new Date(),
+    dateSearch: tomorrow,
     venueDetail: {
         id: 0,
         name: "",

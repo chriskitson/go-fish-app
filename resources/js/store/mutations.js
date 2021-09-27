@@ -34,7 +34,7 @@ let mutations = {
             detail
         };
     },
-    VENUE_TICKETS_SET(state, tickets) {
+    VENUE_TICKETS_SET(state, { tickets, date }) {
         state.venueDetail = {
             ...state.venueDetail,
             tickets: tickets.map(t => ({
@@ -44,6 +44,7 @@ let mutations = {
             })),
             ticketsLoaded: true
         };
+        state.dateSearch = date;
     },
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {

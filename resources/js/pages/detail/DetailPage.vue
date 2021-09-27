@@ -38,6 +38,9 @@
             <div class="col-span-2">
                 <date-navigation-component
                     :date="currentDate"
+                    :prevDisabled="dateSearch < new Date()"
+                    @back="dateBack"
+                    @forward="dateForward"
                 ></date-navigation-component>
                 <ticket-list-component
                     :title="ticketTitle"
@@ -99,8 +102,8 @@ export default {
     },
     mounted() {
         this.getVenueTickets(
-            this.$store.state.venueDetail.id,
-            this.$store.state.dateSearch
+            this.venueDetail.id,
+            this.dateSearch
         );
     },
     methods: {
@@ -126,6 +129,16 @@ export default {
                     user: this.user
                 });
             }
+        },
+        dateBack() {
+            const today = new Date(this.dateSearch);
+            const date = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+            this.getVenueTickets(this.venueDetail.id, date);
+        },
+        dateForward() {
+            const today = new Date(this.dateSearch);
+            const date = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+            this.getVenueTickets(this.venueDetail.id, date);
         }
     }
 };

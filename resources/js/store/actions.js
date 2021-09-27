@@ -42,7 +42,10 @@ let actions = {
                 getTokenHeader(user)
             )
             .then(res => {
-                commit("VENUE_TICKETS_SET", res.data);
+                commit("VENUE_TICKETS_SET", {
+                    tickets: res.data,
+                    date
+                });
             })
             .catch(err => {
                 handleError(err.response.data.message)
