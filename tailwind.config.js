@@ -15,7 +15,15 @@ module.exports = {
                 error: '#ff6961',
                 success: '#4FA64F',
                 grey: {
-                    light: '#EFEFEF'
+                    100: '#EFEFEF',
+                    200: '#c6c6c6',
+                    300: '#575656'
+                },
+                red: {
+                    200: '#bd1d1d'
+                },
+                orange: {
+                    200: '#f8aa00'
                 }
             }
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <div class="grid grid-cols-2 gap-6 my-24">
+        <div class="grid grid-cols-2 gap-6 px-4 my-24">
             <login-component
                 :login="loginForm"
                 :loggedIn="loggedIn"

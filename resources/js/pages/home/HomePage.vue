@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-5xl mx-auto">
+    <div class="w-full max-w-5xl px-4 mx-auto">
         <banner-component></banner-component>
         <venue-list-component
             title="Fisheries near me"

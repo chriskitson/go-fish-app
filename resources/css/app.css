@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply pt-4 m-auto text-center bg-grey-200;
+}
+
 .vbga-results {
   @apply absolute p-2 bg-white;
 }

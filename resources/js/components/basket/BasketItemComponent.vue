@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <div
-            class="flex items-center w-full h-12 px-2 border justify-items bg-secondary border-light"
+            class="flex items-center w-full h-12 px-2 border justify-items bg-grey-300 border-grey-300"
             v-if="live"
         >
             <icon
@@ -15,13 +15,13 @@
                 }}
             </span>
             <span
-                class="px-3 py-1 text-lg font-semibold text-white rounded-full bg-primary"
+                class="px-3 py-1 text-lg font-semibold text-white bg-orange-200 rounded-full"
             >
                 {{ formatCurrency(item.basket_qty * item.ticket_cost) }}
             </span>
         </div>
         <div
-            class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
+            class="p-4 text-sm text-white border-b border-l border-r border-grey-300 text-dark"
             v-if="live && (!auth || loggedIn)"
         >
             <p class="mb-4">
@@ -47,7 +47,7 @@
                 >
                 <span class="flex-1"></span>
                 <button
-                    class="text-primary"
+                    class="text-red-200"
                     @click="$emit('remove', { id: item.basket_id })"
                 >
                     <icon name="trash" class="ml-2 w-7 h-7" />
@@ -55,7 +55,7 @@
             </div>
         </div>
         <div
-            class="border h-44 bg-secondary border-light bg-opacity-10"
+            class="border h-44 bg-grey-200 border-grey-200 bg-opacity-10"
             v-if="!live"
         >
             &nbsp;

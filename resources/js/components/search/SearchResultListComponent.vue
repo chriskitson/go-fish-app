@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mb-10">
-        <h2 class="flex items-center mb-4 text-xl font-semibold">
+        <h2 class="flex items-center mb-4 text-xl font-semibold text-grey-300">
             {{ title }}
         </h2>
         <div v-if="results.length === 0">

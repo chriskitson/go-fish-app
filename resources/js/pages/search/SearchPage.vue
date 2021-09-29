@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
-        <div class="grid grid-cols-4 gap-6 mt-10 mb-20">
+        <div class="grid grid-cols-4 gap-6 px-4 mt-10 mb-20">
             <div>
                 &nbsp;
             </div>

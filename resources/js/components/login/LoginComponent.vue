@@ -4,7 +4,7 @@
             class="w-full px-6 py-8 text-black bg-white rounded shadow-md"
             v-if="!loggedIn"
         >
-            <h1 class="mb-8 text-3xl text-center text-primary">
+            <h1 class="mb-8 text-3xl text-center text-red-200">
                 Login to GoFish!
             </h1>
             <alert-component
@@ -19,21 +19,21 @@
             ></alert-component>
             <input
                 type="text"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="email"
                 placeholder="Email"
                 v-model="login.email"
             />
             <input
                 type="password"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="password"
                 placeholder="Password"
                 v-model="login.password"
             />
             <button
                 type="submit"
-                class="w-full py-3 my-1 text-center text-white rounded bg-primary hover:bg-secondary focus:outline-none"
+                class="w-full py-3 my-1 text-center text-white bg-red-200 rounded focus:outline-none"
                 @click="$emit('login')"
             >
                 Login

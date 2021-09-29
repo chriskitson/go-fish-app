@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <div
-            class="flex items-center w-full h-12 px-2 border justify-items bg-secondary border-light"
+            class="flex items-center w-full h-12 px-2 border justify-items bg-grey-300 border-grey-300"
             v-if="live"
         >
             <icon
@@ -13,22 +13,22 @@
                 {{ live ? ticket.name : "&nbsp;" }}
             </span>
             <span
-                class="px-3 py-1 text-lg font-semibold text-white rounded-full bg-primary"
+                class="px-3 py-1 text-lg font-semibold text-white bg-orange-200 rounded-full"
             >
                 {{ formatCurrency(ticket.cost) }}
             </span>
         </div>
         <div
-            class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
+            class="p-4 text-sm text-white border-b border-l border-r border-grey-200 text-dark"
             v-if="live && auth && !loggedIn"
         >
             <p>
-                You must <a href="/login" class="text-primary">log in</a> in
+                You must <a href="/login" class="text-red-200">log in</a> in
                 order to book.
             </p>
         </div>
         <div
-            class="p-4 text-sm text-white border-b border-l border-r border-light text-dark"
+            class="p-4 text-sm text-white border-b border-l border-r border-grey-300 text-dark"
             v-if="live && (!auth || loggedIn)"
         >
             <p class="mb-4">{{ ticket.description }}</p>
@@ -49,7 +49,7 @@
                             qty
                         })
                     "
-                    class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md cursor-pointer bg-primary justify-content"
+                    class="flex items-center px-4 py-2 font-semibold text-white bg-white bg-red-200 rounded-md cursor-pointer justify-content"
                     v-if="ticket.availability"
                 >
                     {{ ticket.user === 0 ? "Add to cart" : "Add to cart again" }}
@@ -59,7 +59,7 @@
                     />
                 </button>
                 <span
-                    class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md bg-light justify-content"
+                    class="flex items-center px-4 py-2 font-semibold text-white bg-white rounded-md bg-grey-300 justify-content"
                     v-if="!ticket.availability"
                 >
                     Sold out
@@ -93,7 +93,7 @@
             </div>
         </div>
         <div
-            class="border h-44 bg-secondary border-light bg-opacity-10"
+            class="border h-44 bg-grey-200 border-grey-200 bg-opacity-10"
             v-if="!live"
         >
             &nbsp;

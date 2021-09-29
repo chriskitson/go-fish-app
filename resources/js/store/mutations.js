@@ -42,9 +42,10 @@ let mutations = {
                 error: "",
                 success: ""
             })),
-            ticketsLoaded: true
+            ticketsLoaded: true,
+            date
         };
-        state.dateSearch = date;
+        // state.dateSearch = date;
     },
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {

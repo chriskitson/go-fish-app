@@ -23,7 +23,7 @@
                 <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div
-                            class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto rounded-full bg-secondary sm:mx-0 sm:h-10 sm:w-10"
+                            class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto text-white bg-red-200 rounded-full sm:mx-0 sm:h-10 sm:w-10"
                         >
                             <icon name="location-marker" class="w-6 h-6" />
                         </div>
@@ -90,7 +90,7 @@
                 >
                     <button
                         type="button"
-                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-orange-200 border border-transparent rounded-md shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="locationSearch.detail === null"
                         @click="$emit('update')"
                     >

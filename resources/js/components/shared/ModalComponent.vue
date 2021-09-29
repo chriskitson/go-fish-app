@@ -34,7 +34,7 @@
                                 `flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto rounded-full sm:mx-0 sm:h-10 sm:w-10${
                                     type === 'error' ? ' bg-error' : ''
                                 }${type === 'success' ? ' bg-success' : ''}${
-                                    !type || type === '' ? ' bg-secondary' : ''
+                                    !type || type === '' ? ' bg-grey-200' : ''
                                 }`
                             "
                         >

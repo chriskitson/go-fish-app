@@ -50,9 +50,10 @@ let state = {
         address: "",
         description: "",
         tickets: [],
-        ticketsLoaded: false
+        ticketsLoaded: false,
+        date: tomorrow
     },
-    venueSearchResults: []
+    venueSearchResults: [],
 };
 
 export default state;

@@ -1,5 +1,5 @@
 <template>
-    <main :class="`w-full ${bgColor}`" id="app">
+    <main :class="`m-auto bg-white text-left max-w-screen-lg ${bgColor}`" id="app">
         <header-component
             :user="user"
             :live="live"
@@ -7,7 +7,7 @@
             :basketTotal="basketTotal"
             @logout="logout"
         ></header-component>
-        <div class="w-full max-w-5xl mx-auto" v-if="showSearch">
+        <div class="max-w-5xl py-3 mx-auto bg-grey-100" v-if="showSearch">
             <top-search-component
                 :venueSearch="venueSearch"
                 :date="dateSearch"
@@ -44,7 +44,7 @@ export default {
             venueSearch: state => state.venueSearch,
             dateSearch: state => state.dateSearch,
             bgColor: state =>
-                state.path === "login" ? "bg-grey-light" : "bg-white",
+                state.path === "login" ? "bg-grey-100" : "",
             showSearch: state => state.path !== "login",
             user: state => state.user,
             live: state => state.live,

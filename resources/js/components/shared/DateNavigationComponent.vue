@@ -1,11 +1,11 @@
 <template>
     <div
-        class="flex items-center justify-center p-4 mb-8 font-semibold text-white rounded-md bg-primary"
+        class="flex items-center justify-center px-4 py-2 mb-8 font-semibold rounded-md text-grey-300 bg-grey-200"
     >
         <button
             @click="navigateBack"
             :disabled="prevDisabled"
-            :class="prevDisabled ? 'text-secondary' : 'text-white'"
+            :class="prevDisabled ? 'text-grey-100' : 'text-grey-300'"
         >
             <icon name="chevron-left" class="mr-2 w-7 h-7" />
         </button>

@@ -4,7 +4,7 @@
             class="w-full px-6 py-8 text-black bg-white rounded shadow-md"
             v-if="!loggedIn"
         >
-            <h1 class="mb-8 text-3xl text-center text-primary">New users</h1>
+            <h1 class="mb-8 text-3xl text-center text-red-200">New users</h1>
             <alert-component
                 v-if="register.errors.length > 0"
                 :message="register.errors.join(', ')"
@@ -17,50 +17,50 @@
             ></alert-component>
             <input
                 type="text"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="fullname"
                 placeholder="Full Name"
                 v-model="register.name"
             />
             <input
                 type="text"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="email"
                 placeholder="Email"
                 v-model="register.email"
             />
             <input
                 type="password"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="password"
                 placeholder="Password"
                 v-model="register.password"
             />
             <input
                 type="password"
-                class="block w-full p-3 mb-4 border rounded border-grey-light"
+                class="block w-full p-3 mb-4 border rounded border-grey-100"
                 name="confirm_password"
                 placeholder="Confirm Password"
                 v-model="register.confirm"
             />
             <button
                 type="submit"
-                class="w-full py-3 my-1 text-center text-white rounded bg-primary hover:bg-secondary focus:outline-none"
+                class="w-full py-3 my-1 text-center text-white bg-red-200 rounded focus:outline-none"
                 @click="$emit('register')"
             >
                 Create Account
             </button>
-            <div class="mt-4 text-sm text-center text-grey-dark">
+            <div class="mt-4 text-sm text-center text-grey-300">
                 By signing up, you agree to the
                 <a
-                    class="no-underline border-b border-grey-dark text-grey-dark"
+                    class="no-underline border-b border-grey-300 text-grey-300"
                     href="#"
                 >
                     Terms of Service
                 </a>
                 and
                 <a
-                    class="no-underline border-b border-grey-dark text-grey-dark"
+                    class="no-underline border-b border-grey-300 text-grey-300"
                     href="#"
                 >
                     Privacy Policy

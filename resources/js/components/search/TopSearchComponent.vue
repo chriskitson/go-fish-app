@@ -1,7 +1,7 @@
 <template>
-    <div class="flex items-center w-full mt-5">
+    <div class="flex items-center mx-4">
         <div
-            class="flex items-center w-auto h-12 max-w-5xl text-sm border rounded-lg border-light bg-primary"
+            class="flex items-center w-auto h-12 text-sm border rounded-lg border-light"
         >
             <div
                 class="flex items-center w-56 h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg border-light"
@@ -50,7 +50,7 @@
             </div>
 
             <button
-                class="h-12 px-8 text-white border rounded-lg bg-primary border-primary"
+                class="h-12 px-8 text-white border rounded-lg bg-orange-200 border-orange-200"
                 @click="$emit('search')"
             >
                 Search
