@@ -3,6 +3,9 @@
         <div v-if="live">
             <a :href="`/venue/${venue.id}`">{{ venue.name }} - {{ venue.distanceDisplay }}</a>
         </div>
+        <div class="flex items-center justify-center w-full h-full" v-if="!live">
+            <spinner-component />
+        </div>
     </div>
 </template>
 
