@@ -1,10 +1,10 @@
 <template>
     <div class="flex items-center mx-4">
         <div
-            class="flex items-center w-auto h-12 text-sm border rounded-lg border-light"
+            class="flex items-center w-auto h-12 text-sm border rounded-lg border-grey-200"
         >
             <div
-                class="flex items-center w-56 h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg border-light"
+                class="flex items-center w-56 h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg border-grey-200"
             >
                 <client-only>
                     <date-picker
@@ -19,7 +19,7 @@
                 </client-only>
             </div>
             <div
-                class="flex items-center h-12 px-2 bg-white border-t border-b border-l w-96 border-light top"
+                class="flex items-center h-12 px-2 bg-white border-t border-b border-l w-96 border-grey-200 top"
             >
                 <span class="mr-2"
                     ><icon name="location-marker" class="w-6 h-6"

@@ -21,7 +21,7 @@
             </span>
         </div>
         <div
-            class="p-4 text-sm text-white border-b border-l border-r border-grey-300 text-dark"
+            class="p-4 text-sm text-white border-b border-l border-r border-grey-300 text-grey-300"
             v-if="live && (!auth || loggedIn)"
         >
             <p class="mb-4">

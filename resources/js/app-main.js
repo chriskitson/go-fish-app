@@ -44,6 +44,11 @@ Vue.component(
 );
 
 Vue.component(
+    "spinner-component",
+    require("./components/shared/SpinnerComponent.vue").default
+);
+
+Vue.component(
     "status-component",
     require("./components/shared/StatusComponent.vue").default
 );

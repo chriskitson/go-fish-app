@@ -3,7 +3,7 @@
         class="flex flex-wrap items-center justify-center w-full bg-white border-b h-30"
     >
         <div
-            class="flex items-center justify-center w-full h-10 border-b border-light bg-grey-300"
+            class="flex items-center justify-center w-full h-10 border-b border-grey-200 bg-grey-300"
         >
             <div
                 class="flex flex-wrap items-center justify-end w-full max-w-5xl mr-4"

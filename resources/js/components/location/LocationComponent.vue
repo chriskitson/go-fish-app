@@ -77,7 +77,7 @@
                                             "
                                             type="search"
                                             placeholder="Enter your city, post code or location"
-                                            class="w-full px-4 py-2 border rounded-md border-light"
+                                            class="w-full px-4 py-2 border rounded-md border-grey-200"
                                         />
                                     </div>
                                 </google-places-autocomplete>
@@ -90,7 +90,7 @@
                 >
                     <button
                         type="button"
-                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-orange-200 border border-transparent rounded-md shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-orange-200 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="locationSearch.detail === null"
                         @click="$emit('update')"
                     >

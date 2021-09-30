@@ -26,7 +26,7 @@
                         Review
                     </button>
                 </div>
-                <div class="p-5 mt-10 border border-light text-dark">
+                <div class="p-5 mt-10 border border-grey-200 text-grey-300">
                     <h2 class="mb-2 font-semibold">Rules</h2>
                     <ul>
                         <li class="text-sm">Example rule</li>
