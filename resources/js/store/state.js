@@ -54,6 +54,7 @@ let state = {
         date: tomorrow
     },
     venueSearchResults: [],
+    userTickets: []
 };
 
 export default state;

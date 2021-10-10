@@ -50,13 +50,11 @@ let mutations = {
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {
             ...state.venueDetail,
-            tickets: [
-                {
-                    ...ticket,
-                    error: "",
-                    success: ""
-                }
-            ],
+            tickets: [{
+                ...ticket,
+                error: "",
+                success: ""
+            }],
             ticketsLoaded: true
         };
     },
@@ -161,8 +159,7 @@ let mutations = {
         }
     },
     BASKET_ERROR(
-        state,
-        { success, availability, ticket_id, basket_id, message, bookings }
+        state, { success, availability, ticket_id, basket_id, message, bookings }
     ) {
         if (!success && !!message && state.alerts.indexOf(message) === -1) {
             state.alerts.push(message);
@@ -208,6 +205,9 @@ let mutations = {
     },
     CLEAR_ERRORS(state) {
         state = clearErrors(state);
+    },
+    MY_TICKETS_GET(state, res) {
+        state.userTickets = res;
     }
 };
 

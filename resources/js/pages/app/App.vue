@@ -1,5 +1,5 @@
 <template>
-    <main :class="`m-auto bg-white text-left max-w-screen-lg ${bgColor}`" id="app">
+    <main :class="`md:mt-4 m-auto bg-white text-left max-w-screen-lg ${bgColor}`" id="app">
         <header-component
             :user="user"
             :live="live"
@@ -7,7 +7,7 @@
             :basketTotal="basketTotal"
             @logout="logout"
         ></header-component>
-        <div class="max-w-5xl py-3 mx-auto bg-grey-100" v-if="showSearch">
+        <div class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100" v-if="showSearch">
             <top-search-component
                 :venueSearch="venueSearch"
                 :date="dateSearch"

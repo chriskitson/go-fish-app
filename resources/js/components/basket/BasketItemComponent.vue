@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <div
-            class="flex items-center w-full h-12 px-2 border justify-items bg-grey-300 border-grey-300"
+            class="flex flex-col items-center w-full px-2 py-2 border md:py-0 md:h-12 justify-items bg-grey-300 border-grey-300 md:flex-row"
             v-if="live"
         >
             <icon
@@ -15,7 +15,7 @@
                 }}
             </span>
             <span
-                class="px-3 py-1 text-lg font-semibold text-white bg-orange-200 rounded-full"
+                class="px-3 py-1 mt-2 text-lg font-semibold text-white bg-orange-200 rounded-full md:mt-0"
             >
                 {{ formatCurrency(item.basket_qty * item.ticket_cost) }}
             </span>
@@ -35,7 +35,7 @@
                     type="error"
                 ></status-component>
             </p>
-            <div class="flex items-center w-full">
+            <div class="flex flex-col items-center w-full md:flex-row">
                 <quantity-selector-component
                     class="mr-2"
                     :qty="item.basket_qty"
@@ -47,7 +47,7 @@
                 >
                 <span class="flex-1"></span>
                 <button
-                    class="text-red-200"
+                    class="mt-2 text-red-200 md:mt-0"
                     @click="$emit('remove', { id: item.basket_id })"
                 >
                     <icon name="trash" class="ml-2 w-7 h-7" />

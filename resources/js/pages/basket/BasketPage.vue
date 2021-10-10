@@ -1,10 +1,10 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
         <div class="grid grid-cols-4 gap-6 mt-10 mb-20">
-            <div>
+            <div class="hidden col-span-4 md:block md:col-span-1">
                 &nbsp;
             </div>
-            <div class="col-span-3">
+            <div class="col-span-4 md:col-span-3">
                 <basket-list-component
                     :basketTotal="basketTotal"
                     :items="basket"

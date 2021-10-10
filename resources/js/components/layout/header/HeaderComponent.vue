@@ -6,7 +6,7 @@
             class="flex items-center justify-center w-full h-10 border-b border-grey-200 bg-grey-300"
         >
             <div
-                class="flex flex-wrap items-center justify-end w-full max-w-5xl mr-4"
+                class="flex flex-wrap items-center justify-center w-full mr-4 md:max-w-5xl md:justify-end"
             >
                 <a
                     href="/login"
@@ -14,10 +14,16 @@
                     v-if="!user.loggedIn && live"
                     >Login | Register</a
                 >
-                <span
+                <!-- <span
                     class="ml-3 text-sm text-white"
                     v-if="user.loggedIn && live"
                     >Welcome back</span
+                > -->
+                <a
+                    class="ml-3 text-sm text-white"
+                    v-if="user.loggedIn && live"
+                    href="/tickets"
+                    >My Tickets</a
                 >
                 <button
                     @click="$emit('logout')"
@@ -31,10 +37,12 @@
         <div class="flex flex-wrap items-center w-full max-w-5xl mx-4">
             <div class="flex items-center h-20 w-28">
                 <h1>
-                    <a href="/"><img src="/images/logo.png" alt="GoFish Logo" /></a>
+                    <a href="/"
+                        ><img src="/images/logo.png" alt="GoFish Logo"
+                    /></a>
                 </h1>
             </div>
-            <div class="flex items-center flex-grow ml-5">
+            <div class="flex items-center flex-grow hidden ml-5 lg:block">
                 <a href="#" class="mr-3 font-semibold text-md text-grey-300"
                     >Hot Deals</a
                 >
@@ -48,6 +56,8 @@
                     >Join GoFish</a
                 >
                 <span class="flex-grow"></span>
+            </div>
+            <div class="flex items-center justify-end flex-grow">
                 <a
                     href="/basket"
                     class="flex items-center px-5 py-2 text-lg font-semibold text-red-200"

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-32 h-9 custom-number-input">
+    <div :class="`w-full h-9 mb-2 custom-number-input md:w-32 md:mb-0`">
         <div
             class="relative flex flex-row w-full bg-transparent rounded-lg h-9"
         >

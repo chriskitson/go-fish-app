@@ -1,14 +1,12 @@
 export const getTokenHeader = user => {
     const { loggedIn, access_token, token_type } = user;
-    return loggedIn
-        ? {
-              headers: { Authorization: `${token_type} ${access_token}` }
-          }
-        : {};
+    return loggedIn ? {
+        headers: { Authorization: `${token_type} ${access_token}` }
+    } : {};
 };
 
 export const handleError = err => {
-    if (err?.message === "Unauthenticated.") {
+    if (err && err.message === "Unauthenticated.") {
         window.location.href = "/login";
     }
 };
@@ -23,6 +21,11 @@ export const formatCurrency = num => {
 export const formatDateDisplay = date => {
     const fd = new Date(date);
     return fd.toLocaleDateString("en-GB");
+};
+
+export const formatDateTimeDisplay = date => {
+    const fd = new Date(date);
+    return `${fd.toLocaleDateString("en-GB")} ${fd.toLocaleTimeString("en-GB")}`;
 };
 
 export const clearErrors = state => {

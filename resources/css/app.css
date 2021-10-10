@@ -1,19 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 body {
-  @apply pt-4 m-auto text-center bg-grey-200;
+    @apply m-auto text-center bg-grey-200;
 }
 
 .vbga-results {
-  @apply absolute p-2 bg-white;
+    @apply absolute p-2 bg-white;
 }
 
 .vbga-results li {
-  @apply text-sm;
+    @apply text-sm;
 }
 
 .top-date-picker input {
-  @apply border-0 shadow-none
+    @apply border-0 shadow-none
+}
+
+.mx-datepicker {
+    width: 100% !important;
 }

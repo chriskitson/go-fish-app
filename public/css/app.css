@@ -32987,7 +32987,6 @@ body {
   margin: auto;
   --tw-bg-opacity: 1;
   background-color: rgba(198, 198, 198, var(--tw-bg-opacity));
-  padding-top: 1rem;
   text-align: center;
 }
 
@@ -33007,6 +33006,10 @@ body {
   border-width: 0px;
   --tw-shadow: 0 0 #0000;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.mx-datepicker {
+  width: 100% !important;
 }
 
 @media (min-width: 640px) {

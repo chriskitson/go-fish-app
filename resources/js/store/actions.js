@@ -80,8 +80,7 @@ let actions = {
     BOOK({ commit }, { user, url }) {
         return axios
             .post(
-                `/api/auth/book`,
-                {
+                `/api/auth/book`, {
                     url
                 },
                 getTokenHeader(user)
@@ -163,8 +162,7 @@ let actions = {
         commit("CLEAR_ERRORS");
         return axios
             .post(
-                `/api/auth/basket/${venue_id}/${ticket_id}/${date.getTime()}?qty=${qty}`,
-                {},
+                `/api/auth/basket/${venue_id}/${ticket_id}/${date.getTime()}?qty=${qty}`, {},
                 getTokenHeader(user)
             )
             .then(res => {
@@ -200,6 +198,19 @@ let actions = {
             .catch(err => {
                 // TODO
             });
-    }
+    },
+    MY_TICKETS_GET({ commit }, { user }) {
+        return axios
+            .get(
+                `/api/auth/bookings/user`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("MY_TICKETS_GET", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message)
+            });
+    },
 };
 export default actions;

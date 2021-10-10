@@ -1,20 +1,20 @@
 <template>
-    <div class="w-full max-w-5xl mt-10">
+    <div class="w-full mt-10">
         <h2 class="flex items-center mb-2 text-xl font-semibold">
             {{ title }}
             <span
                 v-if="userPosition && userPosition.town !== ''"
                 class="flex items-center ml-2"
             >
-                - {{ userPosition.town }}
-                <a href="#" v-on:click.self.prevent="$emit('showLocation', true)" class="flex items-center ml-10 text-sm text-red-200"
+                <span class="hidden md:block"> - {{ userPosition.town }}</span>
+                <a href="#" v-on:click.self.prevent="$emit('showLocation', true)" class="flex items-center ml-4 text-sm text-red-200 md:ml-10"
                     ><icon name="location-marker" class="w-4 h-4 mr-2 text-red-200" /> Update my
                     location</a
                 >
             </span>
         </h2>
         <div
-            class="flex items-center justify-between w-full mx-auto space-x-4 py-50"
+            class="box-border flex flex-row flex-wrap items-center w-full py-50"
             v-if="live && venues"
         >
             <venue-item-component
@@ -30,7 +30,7 @@
             ></venue-item-component>
         </div>
         <div
-            class="flex items-center justify-between w-full mx-auto space-x-4 py-50"
+            class="flex flex-row items-center justify-between w-full mx-auto py-50"
             v-if="!live"
         >
             <venue-item-component :live="live"></venue-item-component>

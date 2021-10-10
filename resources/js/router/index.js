@@ -7,6 +7,7 @@ import Search from '../pages/search/SearchPage';
 import Login from '../pages/login/LoginPage';
 import Basket from '../pages/basket/BasketPage';
 import Confirm from '../pages/confirm/ConfirmPage';
+import MyTickets from '../pages/my-tickets/MyTicketsPage';
 
 Vue.use(VueRouter);
 
@@ -17,9 +18,10 @@ export const routes = [
     { path: '/basket', component: Basket, name: 'Basket' },
     { path: '/venue/:id', component: Detail, name: 'Detail' },
     { path: '/search/:date/:location', component: Search, name: 'Search' },
+    { path: '/tickets', component: MyTickets, name: 'My Tickets' },
 ];
 
 export const router = new VueRouter({
-  mode: 'history',
-  routes
+    mode: 'history',
+    routes
 });

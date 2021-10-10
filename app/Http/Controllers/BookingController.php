@@ -172,7 +172,7 @@ class BookingController extends Controller
       $transaction_id = $transaction->id;
 
       foreach ($booking_responses as $booking) {
-        for ($t = 0 ; $t < intval($booking["qty"]); $t++){ 
+        for ($t = 0; $t < intval($booking["qty"]); $t++) {
           if (isset($booking["ticket_id"])) {
             $new_booking = new Booking([
               "ticket_id" => $booking["ticket_id"],
@@ -253,24 +253,38 @@ class BookingController extends Controller
 
       case 'payment_intent.succeeded':
 
-          // record receipt for payment
-          $payment_intent_id = $event->data->object->id;
-          $payment_receipt_link = implode(", ", array_map(function($c) {
-            return $c->receipt_url;
-          }, $event->data->object->charges->data));
-  
-          $transaction = Transaction::where([
-            ['payment', '=', $payment_intent_id]
-          ])->first();
+        // record receipt for payment
+        $payment_intent_id = $event->data->object->id;
+        $payment_receipt_link = implode(", ", array_map(function ($c) {
+          return $c->receipt_url;
+        }, $event->data->object->charges->data));
 
-          $transaction->receipt_link = $payment_receipt_link;
-          $transaction->save();
-  
-          break;
+        $transaction = Transaction::where([
+          ['payment', '=', $payment_intent_id]
+        ])->first();
+
+        $transaction->receipt_link = $payment_receipt_link;
+        $transaction->save();
+
+        break;
       default:
         echo 'Received unknown event type ' . $event->type;
     }
 
     http_response_code(200);
+  }
+
+  public function user(Request $request)
+  {
+
+    $user = $request->user();
+    $user_id = isset($user) ? $user->id : 0;
+
+    $bookings = Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->join('tickets', 'tickets.id', 'bookings.ticket_id')->join('venues', 'venues.id', 'tickets.venue_id')->where([
+      ['user_id', '=', $user_id],
+      ['confirmed', true]
+    ])->orderBy('transactions.created_at','DESC')->get(['bookings.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.description AS ticket_description', 'venues.name AS venue_name', 'venues.id AS venue_id', 'bookings.cost AS cost', 'bookings.date AS ticket_date','transactions.created_at AS transaction_date'])->toArray();
+
+    return response()->json($bookings);
   }
 }

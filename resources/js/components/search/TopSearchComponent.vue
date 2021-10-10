@@ -1,10 +1,10 @@
 <template>
     <div class="flex items-center mx-4">
         <div
-            class="flex items-center w-auto h-12 text-sm border rounded-lg border-grey-200"
+            class="flex flex-row flex-wrap items-center w-auto w-full text-sm md:h-12"
         >
             <div
-                class="flex items-center w-56 h-12 px-2 bg-white border-t border-b rounded-tl-lg rounded-bl-lg border-grey-200"
+                class="flex items-center w-full h-12 px-2 mb-2 bg-white md:border-t md:border-b md:border-l md:mb-0 md:rounded-tl-lg md:rounded-bl-lg md:w-56 border-grey-200"
             >
                 <client-only>
                     <date-picker
@@ -13,19 +13,19 @@
                         :clearable="false"
                         :disabled-date="disableDate"
                         v-on:change="$emit('change', $event)"
-                        class="top-date-picker"
+                        class="w-full top-date-picker"
                         format="DD/MM/YYYY"
                     ></date-picker>
                 </client-only>
             </div>
             <div
-                class="flex items-center h-12 px-2 bg-white border-t border-b border-l w-96 border-grey-200 top"
+                class="flex items-center w-full h-12 px-2 mb-2 bg-white md:border-t md:border-b md:border-l md:w-96 border-grey-200 md:mb-0"
             >
                 <span class="mr-2"
                     ><icon name="location-marker" class="w-6 h-6"
                 /></span>
                 <google-places-autocomplete
-                    class="h-9 w-80"
+                    class="w-full h-9 md:w-80"
                     :value="venueSearch.search"
                     @resultChanged="placeDetail => $emit('set', placeDetail)"
                 >
@@ -48,9 +48,8 @@
                     </div>
                 </google-places-autocomplete>
             </div>
-
             <button
-                class="h-12 px-8 text-white border rounded-lg bg-orange-200 border-orange-200"
+                class="w-full h-12 px-8 text-white bg-orange-200 border border-orange-200 rounded-lg md:w-auto"
                 @click="$emit('search')"
             >
                 Search

@@ -66,4 +66,9 @@ Route::group([
     
     // booking
     Route::post('auth/book', [BookingController::class, 'book']);
+
+    // user tickets
+    Route::get('auth/bookings/user', [BookingController::class, 'user']);
+
+    
 });

@@ -1,7 +1,7 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
         <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
-            <div>
+            <div class="col-span-3 md:col-span-1">
                 <img
                     src="/images/river.jpg"
                     class="w-full mb-5 rounded-md"
@@ -35,7 +35,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-3 md:col-span-2">
                 <date-navigation-component
                     :date="currentDate"
                     :prevDisabled="venueDetail.date < new Date()"
@@ -62,9 +62,9 @@
                     <span class="flex-1"> </span>
                     <a
                         href="/basket"
-                        class="flex items-center px-4 py-2 text-lg font-semibold text-white bg-white bg-red-200 rounded-md cursor-pointer justify-content"
+                        class="flex items-center w-full px-4 py-2 text-lg font-semibold text-center text-white bg-white bg-red-200 rounded-md cursor-pointer justify-content md:w-auto"
                     >
-                        Proceed to Basket
+                        <span class="flex-1">Proceed to Basket</span>
                         <icon
                             name="chevron-right"
                             class="w-5 h-5 ml-2 text-white"
@@ -100,10 +100,7 @@ export default {
         })
     },
     mounted() {
-        this.getVenueTickets(
-            this.venueDetail.id,
-            this.venueDetail.date
-        );
+        this.getVenueTickets(this.venueDetail.id, this.venueDetail.date);
     },
     methods: {
         getVenueTickets(id, date) {

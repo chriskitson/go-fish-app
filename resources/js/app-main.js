@@ -109,6 +109,16 @@ Vue.component(
 );
 
 Vue.component(
+    "user-ticket-list-component",
+    require("./components/user-ticket/UserTicketListComponent.vue").default
+);
+
+Vue.component(
+    "user-ticket-item-component",
+    require("./components/user-ticket/UserTicketItemComponent.vue").default
+);
+
+Vue.component(
     "basket-list-component",
     require("./components/basket/BasketListComponent.vue").default
 );
