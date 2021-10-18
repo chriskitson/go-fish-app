@@ -21,22 +21,19 @@ export const bindState = (context, state, client) => {
     if (context.venueSearch) {
         state.venueSearch = context.venueSearch;
     }
+    if (context.manageVenues) {
+        state.manageVenues = context.manageVenues;
+    }
     if (client) {
         state.user = {
             ...state.user,
             loggedIn: localStorage.getItem("access_token") !== null,
-            access_token:
-                localStorage.getItem("access_token") !== null
-                    ? localStorage.getItem("access_token")
-                    : "",
-            refresh_token:
-                localStorage.getItem("refresh_token") !== null
-                    ? localStorage.getItem("refresh_token")
-                    : "",
-            token_type:
-                localStorage.getItem("token_type") !== null
-                    ? localStorage.getItem("token_type")
-                    : ""
+            access_token: localStorage.getItem("access_token") !== null ?
+                localStorage.getItem("access_token") : "",
+            refresh_token: localStorage.getItem("refresh_token") !== null ?
+                localStorage.getItem("refresh_token") : "",
+            token_type: localStorage.getItem("token_type") !== null ?
+                localStorage.getItem("token_type") : ""
         };
     }
 

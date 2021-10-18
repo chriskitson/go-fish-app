@@ -68,8 +68,8 @@ class BootstrapController extends Controller
 
         // set distances on venue collection, then convert to array
         $venues->map(function ($venue, $index) use ($distances) {
-          $venue->distance = $distances[$index]["distance"]["value"];
-          $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+          $venue->distance = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["value"] : 0;
+          $venue->distanceDisplay = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["text"] : "";
         });
 
         // convert to array and sort
@@ -106,6 +106,13 @@ class BootstrapController extends Controller
       }
     }
 
+    $user = $request->user();
+    if (isset($user)) {
+      $response->user = array(
+        "userType" => $user->user_type,
+        "globalAdmin" => $user->global_admin === 1
+      );
+    };
 
     return response()->json($response);
   }

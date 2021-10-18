@@ -27,7 +27,7 @@ class VenueController extends Controller
 
   public function all()
   {
-    $venues = Venue::get();
+    $venues = Venue::orderBy('name', 'ASC')->get();
     return response()->json($venues);
   }
 
@@ -35,6 +35,20 @@ class VenueController extends Controller
   {
     $venue = Venue::find($id, ['id', 'name', 'address', 'description']);
     return response()->json($venue);
+  }
+
+  public function get_detail($id)
+  {
+    $venue = Venue::find($id);
+    return response()->json($venue);
+  }
+
+  public function get_tickets_detail($id)
+  {
+    $tickets = Ticket::where([
+      ['venue_id', '=', $id]
+    ])->get();
+    return response()->json($tickets);
   }
 
   public function ticket_format($ticket, $date, $user_id)
@@ -105,7 +119,8 @@ class VenueController extends Controller
     return response()->json($ticket);
   }
 
-  function get_town_by_place_id($place_id) {
+  function get_town_by_place_id($place_id)
+  {
     return $this->get_town($place_id, "place_id");
   }
 
@@ -127,7 +142,6 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-
     } else { // look up location based data search results
 
       // get search by place_id

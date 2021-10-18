@@ -10,7 +10,7 @@
             >
                 <a
                     href="/login"
-                    class="ml-3 text-sm text-white"
+                    class="ml-6 text-sm text-white"
                     v-if="!user.loggedIn && live"
                     >Login | Register</a
                 >
@@ -20,7 +20,13 @@
                     >Welcome back</span
                 > -->
                 <a
-                    class="ml-3 text-sm text-white"
+                    class="ml-6 text-sm text-white"
+                    v-if="user.loggedIn && user.globalAdmin && live"
+                    href="/manage-venues"
+                    >Manage Venues</a
+                >
+                <a
+                    class="ml-6 text-sm text-white"
                     v-if="user.loggedIn && live"
                     href="/tickets"
                     >My Tickets</a
@@ -28,7 +34,7 @@
                 <button
                     @click="$emit('logout')"
                     v-if="user.loggedIn && live"
-                    class="ml-3 text-sm text-white"
+                    class="ml-6 text-sm text-white"
                 >
                     Log out
                 </button>

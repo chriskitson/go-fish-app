@@ -17,7 +17,7 @@ trait GoogleMapTrait {
         return in_array("postal_town", $a["types"]);
       }));
 
-      $town = isset($town_filter) ? $town_filter["long_name"] : "";
+      $town = isset($town_filter["long_name"]) ? $town_filter["long_name"] : "";
 
       return $town;
     }
@@ -45,7 +45,10 @@ trait GoogleMapTrait {
       foreach ($destinations_batched as $batch) {
         $dest = implode("|", $batch);
         $distances_res = Http::get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $dest . "&key=" . $key);
-        $distances =  array_merge($distances, $distances_res->json()["rows"][0]["elements"]);
+        $distances_results = array_filter($distances_res->json()["rows"][0]["elements"], function($d) {
+          return !isset($d["status"]) || $d["status"] !== "ZERO_RESULTS";
+        });
+        $distances =  array_merge($distances, $distances_results);
       }
 
       return $distances;

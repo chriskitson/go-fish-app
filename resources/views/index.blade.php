@@ -6,6 +6,10 @@ if (isset($venueid)) {   // venue detail
     $initial_state['venueDetail'] = $venue->get($venueid)->original;
     $initial_state['ticketDetail'] = $venue->get($venueid)->original;
 }
+if (isset($venuemanageid)) {
+    $initial_state['venueDetail'] = $venue->get_detail($venuemanageid)->original;
+    $initial_state['venueDetail']['tickets'] = $venue->get_tickets_detail($venuemanageid)->original;
+}
 if (isset($date) && isset($location)) {   // venue search
     $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;
     $initial_state['venueSearch'] = array(
@@ -18,6 +22,9 @@ if (isset($date) && isset($location)) {   // venue search
 }
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
+if ($initial_state['path'] === 'manage-venues') {
+    $initial_state['manageVenues'] = $venue->all()->original;
+}
 @endphp
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">

@@ -11,7 +11,9 @@ let state = {
         loggedIn: false,
         access_token: "",
         refresh_token: "",
-        token_type: ""
+        token_type: "",
+        userType: 0,
+        globalAdmin: false
     },
     basket: [],
     loginForm: {
@@ -54,7 +56,8 @@ let state = {
         date: tomorrow
     },
     venueSearchResults: [],
-    userTickets: []
+    userTickets: [],
+    manageVenues: []
 };
 
 export default state;

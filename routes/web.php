@@ -39,3 +39,11 @@ Route::get('/confirm', function () {
 Route::get('/tickets', function () {
     return view('index');
 });
+
+Route::get('/manage-venues', function () {
+    return view('index');
+});
+
+Route::get('/manage-venues/{id}', function ($id) {
+    return view('index', ['venuemanageid' => $id]);
+});

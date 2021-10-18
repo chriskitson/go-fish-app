@@ -85,8 +85,12 @@ export default {
         getBasket() {
             this.$store.dispatch("BASKET_GET", this.user);
         },
-        getLocationData(q) {
-            this.$store.dispatch("BOOTSTRAP_DATA_FETCH", q);
+        getLocationData(queryString) {
+            const { user } = this;
+            this.$store.dispatch("BOOTSTRAP_DATA_FETCH", {
+                user,
+                queryString
+            });
         },
         showLocationSearch(show) {
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);

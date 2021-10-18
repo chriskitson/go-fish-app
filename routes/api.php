@@ -56,6 +56,7 @@ Route::group([
     // venues (with user context)
     Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets']);
     Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
+    Route::get('auth/venues/get', [VenueController::class, 'all']);
     
     // basket
     Route::get('auth/basket', [BasketController::class, 'get']);
@@ -70,5 +71,7 @@ Route::group([
     // user tickets
     Route::get('auth/bookings/user', [BookingController::class, 'user']);
 
+    // load (with user context)
+    Route::get('auth/load', [BootstrapController::class, 'load']);
     
 });

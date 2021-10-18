@@ -3,12 +3,14 @@ import { router } from "../router";
 import { handleError, getTokenHeader } from "../utils";
 
 let actions = {
-    BOOTSTRAP_DATA_FETCH({ commit }, queryString) {
+    BOOTSTRAP_DATA_FETCH({ commit }, { queryString, user }) {
         axios
             .get(
-                `/api/load?${queryString}&c=${localStorage.getItem(
-                    "homeToken"
-                ) || ""}`
+                `/api/${
+                    user.loggedIn ? "auth/" : ""
+                }load?${queryString}&c=${localStorage.getItem("homeToken") ||
+                    ""}`,
+                getTokenHeader(user)
             )
             .then(res => {
                 commit("BOOTSTRAP_DATA", res.data);
@@ -48,7 +50,7 @@ let actions = {
                 });
             })
             .catch(err => {
-                handleError(err.response.data.message)
+                handleError(err.response.data.message);
             });
     },
     VENUE_TICKET_GET({ commit }, { venue_id, id, date, user }) {
@@ -63,7 +65,7 @@ let actions = {
                 commit("VENUE_TICKET_SET", res.data);
             })
             .catch(err => {
-                handleError(err.response.data.message)
+                handleError(err.response.data.message);
             });
     },
     VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
@@ -74,7 +76,7 @@ let actions = {
                 router.push(`/search/${date}/${location}`);
             })
             .catch(err => {
-                handleError(err.response.data.message)
+                handleError(err.response.data.message);
             });
     },
     BOOK({ commit }, { user, url }) {
@@ -155,7 +157,7 @@ let actions = {
                 commit("BASKET_GET", res.data);
             })
             .catch(err => {
-                handleError(err.response.data.message)
+                handleError(err.response.data.message);
             });
     },
     BASKET_ADD({ commit }, { ticket_id, venue_id, date, user, qty }) {
@@ -201,16 +203,13 @@ let actions = {
     },
     MY_TICKETS_GET({ commit }, { user }) {
         return axios
-            .get(
-                `/api/auth/bookings/user`,
-                getTokenHeader(user)
-            )
+            .get(`/api/auth/bookings/user`, getTokenHeader(user))
             .then(res => {
                 commit("MY_TICKETS_GET", res.data);
             })
             .catch(err => {
-                handleError(err.response.data.message)
+                handleError(err.response.data.message);
             });
-    },
+    }
 };
 export default actions;

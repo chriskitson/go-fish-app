@@ -11,6 +11,10 @@ let mutations = {
             detail: null
         };
         state.live = true;
+        state.user = {
+            ...state.user,
+            ...data.user
+        };
         localStorage.setItem("homeToken", data.token);
     },
     DATE_SET(state, date) {

@@ -8,6 +8,8 @@ import Login from '../pages/login/LoginPage';
 import Basket from '../pages/basket/BasketPage';
 import Confirm from '../pages/confirm/ConfirmPage';
 import MyTickets from '../pages/my-tickets/MyTicketsPage';
+import ManageVenues from '../pages/manage-venues/ManageVenuesPage';
+import ManageVenue from '../pages/manage-venue/ManageVenuePage';
 
 Vue.use(VueRouter);
 
@@ -19,6 +21,8 @@ export const routes = [
     { path: '/venue/:id', component: Detail, name: 'Detail' },
     { path: '/search/:date/:location', component: Search, name: 'Search' },
     { path: '/tickets', component: MyTickets, name: 'My Tickets' },
+    { path: '/manage-venues', component: ManageVenues, name: 'Manage Venues' },
+    { path: '/manage-venues/:id', component: ManageVenue, name: 'Manage Venue' },
 ];
 
 export const router = new VueRouter({
