@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Venue;
 use App\Models\RequestCache;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Traits\GoogleMapTrait;
 
@@ -26,7 +27,7 @@ class BootstrapController extends Controller
     $lng = $request->input('longitude');
 
     $response = array();
-    
+
     // determine location based on cache token
     $cache_exists = isset($c) && count(RequestCache::where([
       ['id', '=', $c],
@@ -102,23 +103,20 @@ class BootstrapController extends Controller
           "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
         ]);
         $cache->save();
-
       }
     }
 
-    if (isset($response)) {
+    if (Auth::check()) {
       $user = $request->user();
-      if (isset($user)) {
-        $response->user = array(
-          "userType" => $user->user_type,
-          "globalAdmin" => $user->global_admin === 1
-        );
-      } else {
-        $response->user = array(
-          "userType" => 0,
-          "globalAdmin" => false
-        );
-      }
+      $response->user = array(
+        "userType" => $user->user_type,
+        "globalAdmin" => $user->global_admin === 1
+      );
+    } else {
+      $response->user = array(
+        "userType" => 0,
+        "globalAdmin" => false
+      );
     }
 
     return response()->json($response);
