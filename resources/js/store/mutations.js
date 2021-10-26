@@ -2,6 +2,14 @@ import { clearErrors } from "../utils";
 import { MESSAGES } from "../config/messages";
 
 let mutations = {
+    // Generic
+    CLEAR_ERRORS(state) {
+        state = clearErrors(state);
+    },
+    SET_LOADING(state, loading) {
+        state.loading = loading;
+    },
+    // Load user data
     BOOTSTRAP_DATA(state, data) {
         state.venues = data.venues;
         state.userPosition = data.userPosition;
@@ -17,54 +25,7 @@ let mutations = {
         };
         localStorage.setItem("homeToken", data.token);
     },
-    DATE_SET(state, date) {
-        state.dateSearch = date;
-    },
-    LOCATION_SEARCH_SHOW(state, show) {
-        state.locationSearch = {
-            ...state.locationSearch,
-            show
-        };
-    },
-    LOCATION_SEARCH_SET(state, detail) {
-        state.locationSearch = {
-            ...state.locationSearch,
-            detail
-        };
-    },
-    VENUE_SEARCH_SET(state, detail) {
-        state.venueSearch = {
-            ...state.venueSearch,
-            detail
-        };
-    },
-    VENUE_TICKETS_SET(state, { tickets, date }) {
-        state.venueDetail = {
-            ...state.venueDetail,
-            tickets: tickets.map(t => ({
-                ...t,
-                error: "",
-                success: ""
-            })),
-            ticketsLoaded: true,
-            date
-        };
-        // state.dateSearch = date;
-    },
-    VENUE_TICKET_SET(state, ticket) {
-        state.venueDetail = {
-            ...state.venueDetail,
-            tickets: [{
-                ...ticket,
-                error: "",
-                success: ""
-            }],
-            ticketsLoaded: true
-        };
-    },
-    VENUE_SEARCH_RESULTS_SET(state, res) {
-        state.venueSearchResults = res.results;
-    },
+    // User register and login
     LOGIN(state, res) {
         const {
             success,
@@ -127,6 +88,58 @@ let mutations = {
             state.registerForm.errors = Object.values(errors).flat();
         }
     },
+    // Location
+    LOCATION_SEARCH_SHOW(state, show) {
+        state.locationSearch = {
+            ...state.locationSearch,
+            show
+        };
+    },
+    LOCATION_SEARCH_SET(state, detail) {
+        state.locationSearch = {
+            ...state.locationSearch,
+            detail
+        };
+    },
+    // Venue tickets
+    VENUE_TICKETS_SET(state, { tickets, date }) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            tickets: tickets.map(t => ({
+                ...t,
+                error: "",
+                success: ""
+            })),
+            ticketsLoaded: true,
+            date
+        };
+        // state.dateSearch = date;
+    },
+    VENUE_TICKET_SET(state, ticket) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            tickets: [{
+                ...ticket,
+                error: "",
+                success: ""
+            }],
+            ticketsLoaded: true
+        };
+    },
+    // Venue Search
+    VENUE_SEARCH_SET(state, detail) {
+        state.venueSearch = {
+            ...state.venueSearch,
+            detail
+        };
+    },
+    DATE_SET(state, date) {
+        state.dateSearch = date;
+    },
+    VENUE_SEARCH_RESULTS_SET(state, res) {
+        state.venueSearchResults = res.results;
+    },
+    // Basket
     BASKET_GET(state, res) {
         state.basket = res.map(b => ({
             ...b,
@@ -207,11 +220,55 @@ let mutations = {
             stripe.redirectToCheckout({ sessionId: res.session_id });
         }
     },
-    CLEAR_ERRORS(state) {
-        state = clearErrors(state);
-    },
+    // My Tickets
     MY_TICKETS_GET(state, res) {
         state.userTickets = res;
+    },
+    // Manage Venues
+    VENUE_DETAILS_UPDATE(state, venue) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            ...venue
+        };
+        state.loading = false;
+    },
+    VENUE_TICKET_ADD(state) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            tickets: [
+                ...state.venueDetail.tickets,
+                {
+                    id: 0,
+                    name: "",
+                    description: "",
+                    cost: "",
+                    daily_limit: 10
+                }
+            ]
+        };
+        state.manageVenueNewTicket = true;
+    },
+    VENUE_TICKET_SAVE(state, ticket) {
+        // remove empty ticket
+        const findEmptyTicket = state.venueDetail.tickets.findIndex(t => t.id === 0);
+        if (findEmptyTicket > -1) {
+            state.venueDetail.tickets.splice(findEmptyTicket, 1);
+        }
+        // find update or add new ticket
+        const findTicket = state.venueDetail.tickets.findIndex(t => t.id === ticket.id);
+        if (findTicket > -1) {
+            state.venueDetail.tickets[findTicket] = ticket;
+        } else {
+            state.venueDetail.tickets.push(ticket);
+        }
+        state.loading = false;
+    },
+    VENUE_TICKET_DELETE(state, { id }) {
+        const findTicket = state.venueDetail.tickets.findIndex(t => t.id == id);
+        if (findTicket > -1) {
+            state.venueDetail.tickets.splice(findTicket, 1);
+        }
+        state.loading = false;
     }
 };
 

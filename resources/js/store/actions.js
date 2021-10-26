@@ -210,6 +210,53 @@ let actions = {
             .catch(err => {
                 handleError(err.response.data.message);
             });
+    },
+    VENUE_TICKET_ADD({ commit }) {
+        commit("VENUE_TICKET_ADD");
+    },
+    VENUE_DETAILS_UPDATE({ commit }, { venue, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .put(
+                `/api/auth/venues/${venue.id}/details`,
+                venue,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUE_DETAILS_UPDATE", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_TICKET_SAVE({ commit }, { venue_id, ticket, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .put(
+                `/api/auth/venues/${venue_id}/ticket`,
+                ticket,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUE_TICKET_SAVE", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_TICKET_DELETE({ commit }, { venue_id, id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(
+                `/api/auth/venues/${venue_id}/ticket/${id}`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUE_TICKET_DELETE", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
     }
 };
 export default actions;

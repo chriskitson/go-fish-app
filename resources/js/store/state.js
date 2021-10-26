@@ -3,6 +3,7 @@ const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
 let state = {
     live: false,
+    loading: false,
     path: "",
     bookingFee: 0,
     venues: [],
@@ -57,7 +58,8 @@ let state = {
     },
     venueSearchResults: [],
     userTickets: [],
-    manageVenues: []
+    manageVenues: [],
+    manageVenueNewTicket: false
 };
 
 export default state;

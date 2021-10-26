@@ -44,7 +44,7 @@ class BootstrapController extends Controller
     } else {  // look up location based data
 
       $town = "";
-      $response = "";
+      // $response = "";
       $venues_array = [];
 
       // get all venues
@@ -92,7 +92,7 @@ class BootstrapController extends Controller
             "longitude" => $lng,
             "town" => $town
           ),
-          "token" => $cache_id
+          "token" => $cache_id,
         );
 
         // write to cache expiring in 1 week
@@ -106,13 +106,20 @@ class BootstrapController extends Controller
       }
     }
 
-    $user = $request->user();
-    if (isset($user)) {
-      $response->user = array(
-        "userType" => $user->user_type,
-        "globalAdmin" => $user->global_admin === 1
-      );
-    };
+    if (isset($response) && isset($request->user)) {
+      $user = $request->user();
+      if (isset($user)) {
+        $response->user = array(
+          "userType" => $user->user_type,
+          "globalAdmin" => $user->global_admin === 1
+        );
+      } else {
+        $response->user = array(
+          "userType" => 0,
+          "globalAdmin" => false
+        );
+      }
+    }
 
     return response()->json($response);
   }

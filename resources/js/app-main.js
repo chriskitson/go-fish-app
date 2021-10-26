@@ -44,6 +44,11 @@ Vue.component(
 );
 
 Vue.component(
+    "page-spinner-component",
+    require("./components/shared/PageSpinnerComponent.vue").default
+);
+
+Vue.component(
     "spinner-component",
     require("./components/shared/SpinnerComponent.vue").default
 );
