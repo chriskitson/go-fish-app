@@ -249,17 +249,27 @@ let mutations = {
         state.manageVenueNewTicket = true;
     },
     VENUE_TICKET_SAVE(state, ticket) {
-        // remove empty ticket
-        const findEmptyTicket = state.venueDetail.tickets.findIndex(t => t.id === 0);
-        if (findEmptyTicket > -1) {
-            state.venueDetail.tickets.splice(findEmptyTicket, 1);
-        }
-        // find update or add new ticket
-        const findTicket = state.venueDetail.tickets.findIndex(t => t.id === ticket.id);
-        if (findTicket > -1) {
-            state.venueDetail.tickets[findTicket] = ticket;
+        state.manageVenueErrorFields = [];
+        if (ticket.response) {
+            state.manageVenueErrorFields = Object.keys(ticket.response);
         } else {
-            state.venueDetail.tickets.push(ticket);
+            // remove empty ticket
+            const findEmptyTicket = state.venueDetail.tickets.findIndex(
+                t => t.id === 0
+            );
+            if (findEmptyTicket > -1) {
+                state.venueDetail.tickets.splice(findEmptyTicket, 1);
+            }
+            // find update or add new ticket
+            const findTicket = state.venueDetail.tickets.findIndex(
+                t => t.id === ticket.id
+            );
+            if (findTicket > -1) {
+                state.venueDetail.tickets[findTicket] = ticket;
+            } else {
+                state.venueDetail.tickets.push(ticket);
+            }
+            state.manageVenueNewTicket = false;
         }
         state.loading = false;
     },

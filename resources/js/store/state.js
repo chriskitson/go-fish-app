@@ -59,7 +59,8 @@ let state = {
     venueSearchResults: [],
     userTickets: [],
     manageVenues: [],
-    manageVenueNewTicket: false
+    manageVenueNewTicket: false,
+    manageVenueErrorFields: []
 };
 
 export default state;

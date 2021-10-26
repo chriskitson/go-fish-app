@@ -1,12 +1,12 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
-        <div class="grid grid-cols-2 gap-6 mt-10 mb-20">
-            <div class="col-span-2">
+        <div class="mt-10 mb-20 md:grid md:grid-cols-2 md:gap-6">
+            <div class="mb-4 md:col-span-2 md:mb-0">
                 <h2 class="text-xl font-semibold text-red-200">
                     {{ venue.name }}
                 </h2>
             </div>
-            <div>
+            <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Description</label
                 >
@@ -16,7 +16,7 @@
                     :disabled="loading"
                 ></textarea>
             </div>
-            <div>
+            <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Rules</label
                 >
@@ -26,7 +26,7 @@
                     :disabled="loading"
                 ></textarea>
             </div>
-            <div>
+            <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Address</label
                 >
@@ -36,7 +36,7 @@
                     :disabled="loading"
                 ></textarea>
             </div>
-            <div>
+            <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Google Maps Place Id</label
                 >
@@ -48,7 +48,7 @@
                 />
             </div>
 
-            <div class="flex items-center justify-end col-span-2">
+            <div class="flex items-center justify-end col-span-2 mb-8 md:mb-0">
                 <button
                     @click="updateDetails"
                     class="flex items-center justify-center px-3 py-2 ml-2 text-sm text-white bg-orange-200 rounded-lg disabled:opacity-50"
@@ -59,7 +59,7 @@
                 </button>
             </div>
 
-            <div class="col-span-2">
+            <div class="md:col-span-2">
                 <hr class="mb-5" />
                 <h2 class="text-xl font-semibold text-red-200">
                     Tickets ({{ venue.tickets.length }})
@@ -68,15 +68,15 @@
                     v-for="ticket in venue.tickets"
                     :key="`ticket-${ticket.id}`"
                 >
-                    <div class="grid grid-cols-2 gap-6 mt-10">
-                        <div>
+                    <div class="mt-10 md:grid md:grid-cols-2 md:gap-6">
+                        <div class="mb-8 md:mb-0">
                             <label
                                 class="block mb-2 font-semibold text-grey-300"
                                 >Ticket Name</label
                             >
                             <input
                                 type="text"
-                                class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('name') > -1 ? ' border-red-200'  : ''}`"
                                 v-model="ticket.name"
                                 :disabled="loading"
                             />
@@ -86,7 +86,7 @@
                             >
                             <input
                                 type="text"
-                                class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('cost') > -1 ? ' border-red-200'  : ''}`"
                                 v-model="ticket.cost"
                                 :disabled="loading"
                             />
@@ -96,19 +96,19 @@
                             >
                             <input
                                 type="number"
-                                class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('daily_limit') > -1 ? ' border-red-200'  : ''}`"
                                 v-model="ticket.daily_limit"
                                 :disabled="loading"
                             />
                         </div>
-                        <div>
+                        <div class="mb-8 md:mb-0">
                             <label
                                 class="block mb-2 font-semibold text-grey-300"
                                 >Ticket Description</label
                             >
                             <textarea
                                 v-model="ticket.description"
-                                class="w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                                :class="`w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('description') > -1 ? ' border-red-200'  : ''}`"
                                 :disabled="loading"
                             ></textarea>
                         </div>
@@ -163,7 +163,8 @@ export default {
             loggedIn: state => state.user.loggedIn,
             user: state => state.user,
             manageVenueNewTicket: state => state.manageVenueNewTicket,
-            loading: state => state.loading
+            loading: state => state.loading,
+            manageVenueErrorFields: state => state.manageVenueErrorFields
         })
     },
     methods: {

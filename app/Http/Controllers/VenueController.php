@@ -33,14 +33,18 @@ class VenueController extends Controller
   }
 
   public function get($id)
-  {
-    $venue = Venue::find($id, ["id", "name", "address", "description"]);
+  { // for front end website display
+    $venue = Venue::find($id, ["id", "name", "address", "description","rules"]);
+    $venue->description = str_replace("\n", "<br/>", $venue->description);
+    $venue->rules = str_replace("\n", "<br/>", $venue->rules);
     return response()->json($venue);
   }
 
   public function get_detail($id)
-  {
+  { // for admin display
     $venue = Venue::find($id);
+    $venue->description = str_replace("\n", "\\n", $venue->description);
+    $venue->rules = str_replace("\n", "\\n", $venue->rules);
     return response()->json($venue);
   }
 

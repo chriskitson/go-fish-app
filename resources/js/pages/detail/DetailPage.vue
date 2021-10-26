@@ -11,7 +11,7 @@
                 <p class="mb-10 text-sm font-semibold">
                     {{ venueDetail.address }}
                 </p>
-                <p class="text-sm">{{ venueDetail.description }}</p>
+                <p class="text-sm" v-html="venueDetail.description"></p>
                 <div class="flex mt-5">
                     <button
                         class="flex items-center justify-center px-3 py-1 mr-2 text-sm text-white bg-red-200 rounded-lg"
@@ -28,11 +28,7 @@
                 </div>
                 <div class="p-5 mt-10 border border-grey-200 text-grey-300">
                     <h2 class="mb-2 font-semibold">Rules</h2>
-                    <ul>
-                        <li class="text-sm">Example rule</li>
-                        <li class="text-sm">Example rule</li>
-                        <li class="text-sm">Example rule</li>
-                    </ul>
+                    <div v-html="venueDetail.rules"></div>
                 </div>
             </div>
             <div class="col-span-3 md:col-span-2">

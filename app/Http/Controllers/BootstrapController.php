@@ -106,7 +106,7 @@ class BootstrapController extends Controller
       }
     }
 
-    if (isset($response) && isset($request->user)) {
+    if (isset($response)) {
       $user = $request->user();
       if (isset($user)) {
         $response->user = array(
