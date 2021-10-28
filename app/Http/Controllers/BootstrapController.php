@@ -26,7 +26,7 @@ class BootstrapController extends Controller
     $lat = $request->input('latitude');
     $lng = $request->input('longitude');
 
-    $response = array();
+    $response = (object)[];
 
     // determine location based on cache token
     $cache_exists = isset($c) && count(RequestCache::where([
@@ -86,7 +86,7 @@ class BootstrapController extends Controller
         $cache_id = Str::uuid();
 
         // create response array
-        $response = array(
+        $response = (object) array(
           "venues" => array_slice($venues_array, 0, 4),
           "userPosition" => array(
             "latitude" => $lat,
