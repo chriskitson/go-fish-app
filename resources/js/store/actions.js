@@ -16,11 +16,7 @@ let actions = {
                 commit("BOOTSTRAP_DATA", res.data);
             })
             .catch(err => {
-                // commit("ERRORS_SET", {
-                //     feature: "Get Suppliers",
-                //     status: err.response.status,
-                //     message: err.message
-                // });
+                commit("LOGOUT", null);
             });
     },
     LOCATION_SEARCH_SHOW({ commit }, show) {
