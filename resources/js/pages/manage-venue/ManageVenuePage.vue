@@ -8,6 +8,33 @@
             </div>
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
+                    >Image</label
+                >
+                <input
+                    type="file"
+                    accept="image/*"
+                    @change="uploadImage($event)"
+                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :disabled="loading"
+                />
+                <img
+                    v-if="venue.image"
+                    :src="venue.image"
+                    :alt="`${venue.name} image`"
+                    class="w-full"
+                />
+                <button
+                    @click="deleteImage()"
+                    v-if="venue.image"
+                    class="flex items-center justify-center px-3 py-2 mt-4 ml-2 text-sm text-white rounded-lg bg-grey-200 disabled:opacity-50"
+                    :disabled="loading"
+                >
+                    <icon name="trash" class="w-4 h-4 mr-2" />
+                    Delete image
+                </button>
+            </div>
+            <div class="mb-8 md:mb-0">
+                <label class="block mb-2 font-semibold text-grey-300"
                     >Description</label
                 >
                 <textarea
@@ -76,7 +103,15 @@
                             >
                             <input
                                 type="text"
-                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('name') > -1 ? ' border-red-200'  : ''}`"
+                                :class="
+                                    `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${
+                                        ticket.id === 0 &&
+                                        manageVenueErrorFields.indexOf('name') >
+                                            -1
+                                            ? ' border-red-200'
+                                            : ''
+                                    }`
+                                "
                                 v-model="ticket.name"
                                 :disabled="loading"
                             />
@@ -86,7 +121,15 @@
                             >
                             <input
                                 type="text"
-                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('cost') > -1 ? ' border-red-200'  : ''}`"
+                                :class="
+                                    `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${
+                                        ticket.id === 0 &&
+                                        manageVenueErrorFields.indexOf('cost') >
+                                            -1
+                                            ? ' border-red-200'
+                                            : ''
+                                    }`
+                                "
                                 v-model="ticket.cost"
                                 :disabled="loading"
                             />
@@ -96,7 +139,16 @@
                             >
                             <input
                                 type="number"
-                                :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('daily_limit') > -1 ? ' border-red-200'  : ''}`"
+                                :class="
+                                    `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${
+                                        ticket.id === 0 &&
+                                        manageVenueErrorFields.indexOf(
+                                            'daily_limit'
+                                        ) > -1
+                                            ? ' border-red-200'
+                                            : ''
+                                    }`
+                                "
                                 v-model="ticket.daily_limit"
                                 :disabled="loading"
                             />
@@ -108,7 +160,16 @@
                             >
                             <textarea
                                 v-model="ticket.description"
-                                :class="`w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200${ticket.id === 0 && manageVenueErrorFields.indexOf('description') > -1 ? ' border-red-200'  : ''}`"
+                                :class="
+                                    `w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200${
+                                        ticket.id === 0 &&
+                                        manageVenueErrorFields.indexOf(
+                                            'description'
+                                        ) > -1
+                                            ? ' border-red-200'
+                                            : ''
+                                    }`
+                                "
                                 :disabled="loading"
                             ></textarea>
                         </div>
@@ -207,6 +268,22 @@ export default {
             this.$store.dispatch("VENUE_TICKET_DELETE", {
                 venue_id: this.venue.id,
                 id,
+                user
+            });
+        },
+        uploadImage(event) {
+            const { user } = this;
+            const image = event.target.files[0];
+            this.$store.dispatch("VENUE_IMAGE_UPLOAD", {
+                venue_id: this.venue.id,
+                image,
+                user
+            });
+        },
+        deleteImage() {
+            const { user } = this;
+            this.$store.dispatch("VENUE_IMAGE_DELETE", {
+                venue_id: this.venue.id,
                 user
             });
         }

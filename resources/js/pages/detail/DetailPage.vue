@@ -3,9 +3,10 @@
         <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
             <div class="col-span-3 md:col-span-1">
                 <img
-                    src="/images/river.jpg"
+                    v-if="venueDetail.image"
+                    :src="venueDetail.image"
                     class="w-full mb-5 rounded-md"
-                    alt=""
+                    :alt="`${venueDetail.name} image`"
                 />
                 <h1 class="text-xl font-semibold">{{ venueDetail.name }}</h1>
                 <p class="mb-10 text-sm font-semibold">

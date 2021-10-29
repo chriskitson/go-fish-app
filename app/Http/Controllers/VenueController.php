@@ -10,6 +10,7 @@ use App\Http\Traits\GoogleMapTrait;
 use App\Http\Traits\BookingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class VenueController extends Controller
 {
@@ -34,7 +35,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description","rules"]);
+    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"]);
     $venue->description = str_replace("\n", "<br/>", $venue->description);
     $venue->rules = str_replace("\n", "<br/>", $venue->rules);
     return response()->json($venue);
@@ -303,13 +304,12 @@ class VenueController extends Controller
       );
 
       if ($request->id > 0) { // update existing ticket
-        
+
         Ticket::where([
           ["id", "=", $request->id],
           ["venue_id", "=", $venue_id],
         ])->update($fields);
         $ticket_id = $request->id;
-
       } else {  // add new ticket
 
         $ticket = new Ticket($fields);
@@ -333,12 +333,11 @@ class VenueController extends Controller
     if ($is_admin || $is_global_admin) {
 
       if ($ticket_id > 0) { // delete existing ticket
-        
+
         Ticket::where([
           ["id", "=", $ticket_id],
           ["venue_id", "=", $venue_id],
         ])->delete();
-
       }
 
       return response()->json(array(
@@ -348,4 +347,66 @@ class VenueController extends Controller
       return response("Unauthorized", 401);
     }
   }
+
+  public function upload_image(Request $request, $venue_id)
+  {
+
+    $user = $request->user();
+    $is_admin = false; // TODO
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_admin || $is_global_admin) {
+
+      $validator = Validator::make($request->all(), [
+        'image' => 'required|image:jpeg,png,jpg,gif,svg|max:2048'
+      ]);
+
+      if ($validator->fails()) {
+        return response("Invalid image", 400);
+      }
+
+      $upload_folder = 'venues/' . $venue_id;
+      $image = $request->file('image');
+      $image_uploaded_path = $image->store($upload_folder, 'public');
+      $image_url = Storage::disk('public')->url($image_uploaded_path);
+
+      // update database
+      Venue::where([
+        ["id", "=", $venue_id]
+      ])->update(array(
+        "image" => $image_url
+      ));
+
+      $image_response = array(
+        "image_name" => basename($image_uploaded_path),
+        "image_url" => $image_url,
+        "mime" => $image->getClientMimeType()
+      );
+
+      return response($image_response, 200);
+
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
+  public function delete_image(Request $request, $venue_id) {
+
+    $user = $request->user();
+    $is_admin = false; // TODO
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_admin || $is_global_admin) {
+    
+      Venue::where([
+        ["id", "=", $venue_id]
+      ])->update(array(
+        "image" => ""
+      ));
+
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
 }

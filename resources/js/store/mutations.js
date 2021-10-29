@@ -279,6 +279,13 @@ let mutations = {
             state.venueDetail.tickets.splice(findTicket, 1);
         }
         state.loading = false;
+    },
+    VENUE_IMAGE_UPLOAD(state, { venue_id, image_url }) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            image: image_url
+        };
+        state.loading = false;
     }
 };
 

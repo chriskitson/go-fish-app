@@ -78,7 +78,8 @@ let actions = {
     BOOK({ commit }, { user, url }) {
         return axios
             .post(
-                `/api/auth/book`, {
+                `/api/auth/book`,
+                {
                     url
                 },
                 getTokenHeader(user)
@@ -160,7 +161,8 @@ let actions = {
         commit("CLEAR_ERRORS");
         return axios
             .post(
-                `/api/auth/basket/${venue_id}/${ticket_id}/${date.getTime()}?qty=${qty}`, {},
+                `/api/auth/basket/${venue_id}/${ticket_id}/${date.getTime()}?qty=${qty}`,
+                {},
                 getTokenHeader(user)
             )
             .then(res => {
@@ -222,6 +224,7 @@ let actions = {
                 commit("VENUE_DETAILS_UPDATE", res.data);
             })
             .catch(err => {
+                commit("SET_LOADING", false);
                 handleError(err.response.data.message);
             });
     },
@@ -237,6 +240,7 @@ let actions = {
                 commit("VENUE_TICKET_SAVE", res.data);
             })
             .catch(err => {
+                commit("SET_LOADING", false);
                 handleError(err.response.data.message);
             });
     },
@@ -251,6 +255,46 @@ let actions = {
                 commit("VENUE_TICKET_DELETE", res.data);
             })
             .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_IMAGE_UPLOAD({ commit }, { venue_id, image, user }) {
+        commit("SET_LOADING", true);
+
+        let formData = new FormData();
+        formData.append("image", image);
+
+        return axios
+            .post(
+                `/api/auth/venues/${venue_id}/image`,
+                formData,
+                getTokenHeader(user, "multipart/form-data")
+            )
+            .then(res => {
+                commit("VENUE_IMAGE_UPLOAD", {
+                    ...res.data,
+                    venue_id
+                });
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                console.log(err.response.data);
+                handleError(err.response.data);
+            });
+    },
+    VENUE_IMAGE_DELETE({ commit }, { venue_id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(`/api/auth/venues/${venue_id}/image`, getTokenHeader(user))
+            .then(res => {
+                commit("VENUE_IMAGE_UPLOAD", {
+                    image_url: "",
+                    venue_id
+                });
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
                 handleError(err.response.data.message);
             });
     }

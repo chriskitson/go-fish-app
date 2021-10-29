@@ -1,8 +1,13 @@
-export const getTokenHeader = user => {
+export const getTokenHeader = (user, contentType = "application/json") => {
     const { loggedIn, access_token, token_type } = user;
-    return loggedIn ? {
-        headers: { Authorization: `${token_type} ${access_token}` }
-    } : {};
+    return loggedIn
+        ? {
+              headers: {
+                  Authorization: `${token_type} ${access_token}`,
+                  "Content-Type": contentType
+              }
+          }
+        : { "Content-Type": contentType };
 };
 
 export const handleError = err => {
@@ -25,7 +30,9 @@ export const formatDateDisplay = date => {
 
 export const formatDateTimeDisplay = date => {
     const fd = new Date(date);
-    return `${fd.toLocaleDateString("en-GB")} ${fd.toLocaleTimeString("en-GB")}`;
+    return `${fd.toLocaleDateString("en-GB")} ${fd.toLocaleTimeString(
+        "en-GB"
+    )}`;
 };
 
 export const clearErrors = state => {
