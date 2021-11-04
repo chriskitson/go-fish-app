@@ -244,6 +244,21 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
+    VENUE_DELETE({ commit }, { id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(
+                `/api/auth/venues/${id}`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUE_DELETE", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
     VENUE_TICKET_SAVE({ commit }, { venue_id, ticket, user }) {
         commit("SET_LOADING", true);
         if (venue_id > 0) {

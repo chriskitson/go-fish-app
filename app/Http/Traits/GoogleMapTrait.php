@@ -45,9 +45,13 @@ trait GoogleMapTrait {
       foreach ($destinations_batched as $batch) {
         $dest = implode("|", $batch);
         $distances_res = Http::get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $dest . "&key=" . $key);
-        $distances_results = array_filter($distances_res->json()["rows"][0]["elements"], function($d) {
-          return !isset($d["status"]) || $d["status"] !== "ZERO_RESULTS";
-        });
+        if (count($distances_res->json()["rows"]) > 0) {
+          $distances_results = array_filter($distances_res->json()["rows"][0]["elements"], function($d) {
+            return !isset($d["status"]) || $d["status"] !== "ZERO_RESULTS";
+          });
+        } else {
+          $distances_results = [];
+        }
         $distances =  array_merge($distances, $distances_results);
       }
 

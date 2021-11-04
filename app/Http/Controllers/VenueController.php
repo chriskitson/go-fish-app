@@ -29,13 +29,13 @@ class VenueController extends Controller
 
   public function all()
   {
-    $venues = Venue::orderBy("name", "ASC")->get();
+    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get();
     return response()->json($venues);
   }
 
   public function names()
   {
-    $venues = Venue::orderBy("name", "ASC")->get(["id", "name"]);
+    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get(["id", "name"]);
     return response()->json($venues);
   }
 
@@ -237,6 +237,27 @@ class VenueController extends Controller
     ));
   }
 
+  public function delete(Request $request, $id) {
+    $user = $request->user();
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_global_admin && $id > 0) { // soft delete venue
+
+      Venue::where([
+        ["id", "=", $id]
+      ])->update(array(
+        "deleted" => 1
+      ));
+
+      return response()->json(array(
+        "id" => $id
+      ));
+
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
   public function create_venue(Request $request)
   {
     $user = $request->user();
@@ -247,6 +268,7 @@ class VenueController extends Controller
       $validators = [
         "name" => ["required", "string"],
         "description" => ["required", "string"],
+        "image" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
         "place_id" => ["required", "string", "max:45"],
@@ -264,7 +286,8 @@ class VenueController extends Controller
         "description" => $request->description,
         "rules" => $request->rules,
         "address" => $request->address,
-        "place_id" => $request->place_id
+        "place_id" => $request->place_id,
+        "image" => $request->image
       );
 
       $venue = new Venue($fields);
@@ -418,7 +441,7 @@ class VenueController extends Controller
         return response("Invalid image", 400);
       }
 
-      $upload_folder = 'venues/' . $venue_id;
+      $upload_folder = 'venues';
       $image = $request->file('image');
       $image_uploaded_path = $image->store($upload_folder, 'public');
       $image_url = Storage::disk('public')->url($image_uploaded_path);

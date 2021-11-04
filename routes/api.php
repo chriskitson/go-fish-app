@@ -81,5 +81,6 @@ Route::group([
     Route::delete('auth/venues/{venue_id}/ticket/{id}', [VenueController::class, 'delete_ticket']);
     Route::post('auth/venues/{id}/image', [VenueController::class, 'upload_image']);
     Route::delete('auth/venues/{id}/image', [VenueController::class, 'delete_image']);
+    Route::delete('auth/venues/{id}', [VenueController::class, 'delete']);
     
 });

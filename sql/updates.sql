@@ -22,3 +22,9 @@
 ALTER TABLE `users` 
 ADD COLUMN `user_type` BIT NULL DEFAULT 1 AFTER `updated_at`,
 ADD COLUMN `global_admin` BIT NULL DEFAULT 0 AFTER `user_type`;
+
+
+
+ALTER TABLE `venues` 
+ADD COLUMN `deleted` BIT(1) NULL DEFAULT 0 AFTER `rules`;
+

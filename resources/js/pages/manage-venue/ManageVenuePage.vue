@@ -6,6 +6,11 @@
                     {{ venue.name }}
                 </h2>
             </div>
+            <div class="mb-4 md:col-span-2 md:mb-0">
+                <h3 class="text-xl font-semibold text-red-200">
+                    Details
+                </h3>
+            </div>
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Name</label
@@ -70,7 +75,6 @@
                     Location
                 </h3>
             </div>
-
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Address</label
@@ -259,7 +263,8 @@ export default {
                 rules,
                 address,
                 place_id,
-                name
+                name,
+                image
             } = this.venue;
             if (id > 0) {
                 // update
@@ -282,7 +287,8 @@ export default {
                     description,
                     rules,
                     address,
-                    place_id
+                    place_id,
+                    image
                 };
                 this.$store.dispatch("VENUE_DETAILS_CREATE", {
                     venue,

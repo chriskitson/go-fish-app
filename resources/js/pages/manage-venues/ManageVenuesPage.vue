@@ -12,12 +12,18 @@
                     </a>
                 </div>
                 <ul>
-                    <li v-for="venue in venues" :key="venue.id">
+                    <li v-for="venue in venues" :key="venue.id" class="flex items-center justify-center p-2 mb-4">
                         <a
                             :href="`/manage-venues/${venue.id}`"
-                            class="text-red-200 hover:underline"
+                            class="flex-1 text-red-200 hover:underline"
                             >{{ venue.name }}</a
                         >
+                        <button
+                            @click="deleteVenue(venue.id)"
+                            class="flex items-center justify-center px-3 py-2 text-sm text-white rounded-lg bg-grey-200 disabled:opacity-50"
+                        >
+                            <icon name="trash" class="w-4 h-4" />
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -38,6 +44,15 @@ export default {
             user: state => state.user,
             userTickets: state => state.userTickets
         })
+    },
+    methods: {
+        deleteVenue(id) {
+            const { user } = this;
+            this.$store.dispatch("VENUE_DELETE", {
+                id,
+                user
+            });
+        }
     }
 };
 </script>
