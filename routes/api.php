@@ -75,6 +75,7 @@ Route::group([
     Route::get('auth/load', [BootstrapController::class, 'load']);
 
     // manage venues
+    Route::post('auth/venues', [VenueController::class, 'create_venue']);
     Route::put('auth/venues/{id}/details', [VenueController::class, 'manage_details']);
     Route::put('auth/venues/{id}/ticket', [VenueController::class, 'manage_ticket']);
     Route::delete('auth/venues/{venue_id}/ticket/{id}', [VenueController::class, 'delete_ticket']);

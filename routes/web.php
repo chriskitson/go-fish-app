@@ -47,3 +47,7 @@ Route::get('/manage-venues', function () {
 Route::get('/manage-venues/{id}', function ($id) {
     return view('index', ['venuemanageid' => $id]);
 });
+
+Route::get('/add-venue', function () {
+    return view('index');
+});

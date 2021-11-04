@@ -33,6 +33,12 @@ class VenueController extends Controller
     return response()->json($venues);
   }
 
+  public function names()
+  {
+    $venues = Venue::orderBy("name", "ASC")->get(["id", "name"]);
+    return response()->json($venues);
+  }
+
   public function get($id)
   { // for front end website display
     $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"]);
@@ -231,16 +237,15 @@ class VenueController extends Controller
     ));
   }
 
-  public function manage_details(Request $request, $venue_id)
+  public function create_venue(Request $request)
   {
-
     $user = $request->user();
-    $is_admin = false; // TODO
     $is_global_admin = $user->global_admin == 1;
 
-    if ($is_admin || $is_global_admin) {
+    if ($is_global_admin) {
 
       $validators = [
+        "name" => ["required", "string"],
         "description" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
@@ -255,6 +260,54 @@ class VenueController extends Controller
       }
 
       $fields = array(
+        "name" => $request->name,
+        "description" => $request->description,
+        "rules" => $request->rules,
+        "address" => $request->address,
+        "place_id" => $request->place_id
+      );
+
+      $venue = new Venue($fields);
+      $venue->save();
+      $venue_id = $venue->id;
+
+      Venue::where([
+        ["id", "=", $venue_id]
+      ])->update($fields);
+
+      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "place_id"]));
+
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
+  public function manage_details(Request $request, $venue_id)
+  {
+
+    $user = $request->user();
+    $is_admin = false; // TODO
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_admin || $is_global_admin) {
+
+      $validators = [
+        "name" => ["required", "string"],
+        "description" => ["required", "string"],
+        "rules" => ["required", "string"],
+        "address" => ["required", "string", "max:255"],
+        "place_id" => ["required", "string", "max:45"],
+      ];
+
+      $validator = Validator::make($request->all(), $validators);
+
+      if ($validator->fails()) {
+        $response["response"] = $validator->messages();
+        return $response;
+      }
+
+      $fields = array(
+        "name" => $request->name,
         "description" => $request->description,
         "rules" => $request->rules,
         "address" => $request->address,
@@ -265,7 +318,7 @@ class VenueController extends Controller
         ["id", "=", $venue_id]
       ])->update($fields);
 
-      return response()->json(Venue::find($venue_id, ["description", "rules", "address", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["name", "description", "rules", "address", "place_id"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -384,29 +437,27 @@ class VenueController extends Controller
       );
 
       return response($image_response, 200);
-
     } else {
       return response("Unauthorized", 401);
     }
   }
 
-  public function delete_image(Request $request, $venue_id) {
+  public function delete_image(Request $request, $venue_id)
+  {
 
     $user = $request->user();
     $is_admin = false; // TODO
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
-    
+
       Venue::where([
         ["id", "=", $venue_id]
       ])->update(array(
         "image" => ""
       ));
-
     } else {
       return response("Unauthorized", 401);
     }
   }
-
 }

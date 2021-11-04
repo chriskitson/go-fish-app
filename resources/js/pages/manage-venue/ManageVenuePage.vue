@@ -1,10 +1,21 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
         <div class="mt-10 mb-20 md:grid md:grid-cols-2 md:gap-6">
-            <div class="mb-4 md:col-span-2 md:mb-0">
+            <div class="mb-4 md:col-span-2 md:mb-0" v-if="editMode">
                 <h2 class="text-xl font-semibold text-red-200">
                     {{ venue.name }}
                 </h2>
+            </div>
+            <div class="mb-8 md:mb-0">
+                <label class="block mb-2 font-semibold text-grey-300"
+                    >Name</label
+                >
+                <input
+                    type="text"
+                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :disabled="loading"
+                    v-model="venue.name"
+                />
             </div>
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
@@ -53,6 +64,13 @@
                     :disabled="loading"
                 ></textarea>
             </div>
+            <div class="mb-4 md:col-span-2 md:mb-0">
+                <hr class="mb-5" />
+                <h3 class="text-xl font-semibold text-red-200">
+                    Location
+                </h3>
+            </div>
+
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Address</label
@@ -82,7 +100,7 @@
                     :disabled="loading"
                 >
                     <icon name="save" class="w-4 h-4 mr-2" />
-                    Update details
+                    {{ editMode ? "Update details" : "Create Venue" }}
                 </button>
             </div>
 
@@ -91,6 +109,10 @@
                 <h2 class="text-xl font-semibold text-red-200">
                     Tickets ({{ venue.tickets.length }})
                 </h2>
+                <div v-if="!editMode" class="my-4">
+                    You need to add venue details above and click create venue
+                    before adding any tickets.
+                </div>
                 <div
                     v-for="ticket in venue.tickets"
                     :key="`ticket-${ticket.id}`"
@@ -184,7 +206,6 @@
                             <icon name="trash" class="w-4 h-4 mr-2" />
                             Delete ticket
                         </button>
-
                         <button
                             @click="saveTicket(ticket)"
                             class="flex items-center justify-center px-3 py-2 ml-2 text-sm text-white bg-orange-200 rounded-lg disabled:opacity-50"
@@ -199,7 +220,7 @@
                 <div class="flex items-center justify-end">
                     <button
                         @click="addNewTicket"
-                        :disabled="manageVenueNewTicket || loading"
+                        :disabled="manageVenueNewTicket || loading || !editMode"
                         class="flex items-center justify-center px-3 py-2 text-sm text-white bg-red-200 rounded-lg disabled:opacity-50"
                     >
                         <icon name="plus" class="w-4 h-4 mr-2" />
@@ -225,24 +246,49 @@ export default {
             user: state => state.user,
             manageVenueNewTicket: state => state.manageVenueNewTicket,
             loading: state => state.loading,
-            manageVenueErrorFields: state => state.manageVenueErrorFields
+            manageVenueErrorFields: state => state.manageVenueErrorFields,
+            editMode: state => state.venueDetail?.id > 0
         })
     },
     methods: {
         updateDetails() {
             const { user } = this;
-            const { id, description, rules, address, place_id } = this.venue;
-            const venue = {
+            const {
                 id,
                 description,
                 rules,
                 address,
-                place_id
-            };
-            this.$store.dispatch("VENUE_DETAILS_UPDATE", {
-                venue,
-                user
-            });
+                place_id,
+                name
+            } = this.venue;
+            if (id > 0) {
+                // update
+                const venue = {
+                    id,
+                    name,
+                    description,
+                    rules,
+                    address,
+                    place_id
+                };
+                this.$store.dispatch("VENUE_DETAILS_UPDATE", {
+                    venue,
+                    user
+                });
+            } else {
+                // create
+                const venue = {
+                    name,
+                    description,
+                    rules,
+                    address,
+                    place_id
+                };
+                this.$store.dispatch("VENUE_DETAILS_CREATE", {
+                    venue,
+                    user
+                });
+            }
         },
         addNewTicket() {
             this.$store.dispatch("VENUE_TICKET_ADD");

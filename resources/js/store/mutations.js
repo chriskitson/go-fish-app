@@ -232,6 +232,13 @@ let mutations = {
         };
         state.loading = false;
     },
+    VENUE_DETAILS_CREATE(state, venue) {
+        state.venueDetail = {
+            ...state.venueDetail,
+            ...venue
+        };
+        state.loading = false;
+    },
     VENUE_TICKET_ADD(state) {
         state.venueDetail = {
             ...state.venueDetail,

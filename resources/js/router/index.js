@@ -23,6 +23,7 @@ export const routes = [
     { path: '/tickets', component: MyTickets, name: 'My Tickets' },
     { path: '/manage-venues', component: ManageVenues, name: 'Manage Venues' },
     { path: '/manage-venues/:id', component: ManageVenue, name: 'Manage Venue' },
+    { path: '/add-venue', component: ManageVenue, name: 'Add Venue' },
 ];
 
 export const router = new VueRouter({

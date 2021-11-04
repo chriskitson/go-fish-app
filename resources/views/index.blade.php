@@ -23,7 +23,7 @@ if (isset($date) && isset($location)) {   // venue search
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
 if ($initial_state['path'] === 'manage-venues') {
-    $initial_state['manageVenues'] = $venue->all()->original;
+    $initial_state['manageVenues'] = $venue->names()->original;
 }
 @endphp
 <!doctype html>
