@@ -52,7 +52,25 @@ class VenueController extends Controller
     $venue = Venue::find($id);
     $venue->description = str_replace("\n", "\\n", $venue->description);
     $venue->rules = str_replace("\n", "\\n", $venue->rules);
-    return response()->json($venue);
+    $fields = array(
+      "id" => $venue->id,
+      "name" => $venue->name,
+      "image" => $venue->image,
+      "address" => $venue->address,
+      "description" => $venue->description,
+      "place_id" => $venue->place_id,
+      "rules" => $venue->rules,
+      "days" => array(
+        "sunday" => $venue->open_sunday == 1,
+        "monday" => $venue->open_monday == 1,
+        "tuesday" => $venue->open_tuesday == 1,
+        "wednesday" => $venue->open_wednesday == 1,
+        "thursday" => $venue->open_thursday == 1,
+        "friday" => $venue->open_friday == 1,
+        "saturday" => $venue->open_saturday == 1
+      )
+    );
+    return response()->json($fields);
   }
 
   public function get_tickets_detail($id)
@@ -287,7 +305,14 @@ class VenueController extends Controller
         "rules" => $request->rules,
         "address" => $request->address,
         "place_id" => $request->place_id,
-        "image" => $request->image
+        "image" => $request->image,
+        "open_sunday" => $request->open_sunday,
+        "open_monday" => $request->open_monday,
+        "open_tuesday" => $request->open_tuesday,
+        "open_wednesday" => $request->open_wednesday,
+        "open_thursday" => $request->open_thursday,
+        "open_friday" => $request->open_friday,
+        "open_saturday" => $request->open_saturday
       );
 
       $venue = new Venue($fields);
@@ -334,7 +359,14 @@ class VenueController extends Controller
         "description" => $request->description,
         "rules" => $request->rules,
         "address" => $request->address,
-        "place_id" => $request->place_id
+        "place_id" => $request->place_id,
+        "open_sunday" => $request->open_sunday,
+        "open_monday" => $request->open_monday,
+        "open_tuesday" => $request->open_tuesday,
+        "open_wednesday" => $request->open_wednesday,
+        "open_thursday" => $request->open_thursday,
+        "open_friday" => $request->open_friday,
+        "open_saturday" => $request->open_saturday
       );
 
       Venue::where([
@@ -360,7 +392,7 @@ class VenueController extends Controller
         "id" => ["required", "integer"],
         "name" => ["required", "string", "max:255"],
         "description" => ["required", "string", "max:255"],
-        "daily_limit" => ["required", "integer", "max:255"],
+        "daily_limit" => ["required", "integer"],
         "cost" => ["required", "regex:/^\d+(\.\d{1,2})?$/"],
       ];
 

@@ -28,3 +28,13 @@ ADD COLUMN `global_admin` BIT NULL DEFAULT 0 AFTER `user_type`;
 ALTER TABLE `venues` 
 ADD COLUMN `deleted` BIT(1) NULL DEFAULT 0 AFTER `rules`;
 
+ALTER TABLE `go_fish_app`.`venues` 
+ADD COLUMN `open_sunday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_monday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_tuesday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_wednesday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_thursday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_friday` BIT(1) NULL DEFAULT 0,
+ADD COLUMN `open_saturday` BIT(1) NULL DEFAULT 0;
+
+

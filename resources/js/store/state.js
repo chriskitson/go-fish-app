@@ -1,3 +1,5 @@
+import vueFilterDateFormatEsm from "@vuejs-community/vue-filter-date-format";
+
 const today = new Date();
 const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
@@ -54,7 +56,16 @@ let state = {
         description: "",
         tickets: [],
         ticketsLoaded: false,
-        date: tomorrow
+        date: tomorrow,
+        days: {
+            sunday: false,
+            monday: false,
+            tuesday: false,
+            wednesday: false,
+            thursday: false,
+            friday: false,
+            saturday: false
+        }
     },
     venueSearchResults: [],
     userTickets: [],

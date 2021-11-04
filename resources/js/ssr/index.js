@@ -19,7 +19,7 @@ export const bindState = (context, state, client) => {
         state.dateSearch = new Date(context.dateSearch);
     }
     if (context.venueSearch) {
-        state.venueSearch = context.venueSearch;
+        state.venueSearch = context.venueSearch; 
     }
     if (context.manageVenues) {
         state.manageVenues = context.manageVenues;

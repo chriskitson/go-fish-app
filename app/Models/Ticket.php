@@ -19,7 +19,8 @@ class Ticket extends Model
         'venue_id',
         'name',
         'description',
-        'cost'
+        'cost',
+        'daily_limit'
     ];
 
     protected $table = 'tickets';

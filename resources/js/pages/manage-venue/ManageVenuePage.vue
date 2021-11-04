@@ -72,6 +72,56 @@
             <div class="mb-4 md:col-span-2 md:mb-0">
                 <hr class="mb-5" />
                 <h3 class="text-xl font-semibold text-red-200">
+                    Opening Days
+                </h3>
+            </div>
+            <div class="mb-8 md:mb-0 md:col-span-2">
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.sunday" type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Sunday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.monday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Monday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.tuesday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Tuesday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.wednesday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Wednesday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.thursday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Thursday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.friday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Friday</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="inline-flex items-center">
+                        <input v-model="venue.days.saturday"  type="checkbox" class="form-checkbox" />
+                        <span class="ml-2">Saturday</span>
+                    </label>
+                </div>
+            </div>
+            <div class="mb-4 md:col-span-2 md:mb-0">
+                <hr class="mb-5" />
+                <h3 class="text-xl font-semibold text-red-200">
                     Location
                 </h3>
             </div>
@@ -301,7 +351,8 @@ export default {
                 address,
                 place_id,
                 name,
-                image
+                image,
+                days
             } = this.venue;
             if (id > 0) {
                 // update
@@ -311,7 +362,14 @@ export default {
                     description,
                     rules,
                     address,
-                    place_id
+                    place_id,
+                    open_sunday: days.sunday,
+                    open_monday: days.monday,
+                    open_tuesday: days.tuesday,
+                    open_wednesday: days.wednesday,
+                    open_thursday: days.thursday,
+                    open_friday: days.friday,
+                    open_saturday: days.saturday
                 };
                 this.$store.dispatch("VENUE_DETAILS_UPDATE", {
                     venue,
@@ -325,7 +383,8 @@ export default {
                     rules,
                     address,
                     place_id,
-                    image
+                    image,
+                    days
                 };
                 this.$store.dispatch("VENUE_DETAILS_CREATE", {
                     venue,

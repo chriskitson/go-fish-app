@@ -22,7 +22,14 @@ class Venue extends Model
         'description',
         'place_id',
         'distance',
-        'deleted'
+        'deleted',
+        'open_sunday',
+        'open_monday',
+        'open_tuesday',
+        'open_wednesday',
+        'open_thursday',
+        'open_friday',
+        'open_saturday'
     ];
 
     protected $table = 'venues';
