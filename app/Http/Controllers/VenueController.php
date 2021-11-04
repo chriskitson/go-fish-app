@@ -27,6 +27,12 @@ class VenueController extends Controller
   {
   }
 
+  public function get_day($day)
+  {
+    $days_of_week = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+    return $days_of_week[$day];
+  }
+
   public function all()
   {
     $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get();
@@ -116,11 +122,14 @@ class VenueController extends Controller
     $user_id = isset($user) ? $user->id : 0;
 
     $date = gmdate("Y-m-d", $request->input("d") / 1000);
+    $date_day_of_week = intval(gmdate("w", $request->input("d") / 1000));
+    $date_day_of_week = $this->get_day($date_day_of_week);
 
     // get all available ticket types
-    $tickets = Ticket::where([
-      ["venue_id", "=", $id]
-    ])->orderBy("name", "ASC")->get(["id", "name", "description", "cost", "daily_limit", "venue_id"]);
+    $tickets = Ticket::join("venues", "tickets.venue_id", "venues.id")->where([
+      ["venue_id", "=", $id],
+      ["open_" . $date_day_of_week, "=", True]
+    ])->orderBy("name", "ASC")->get(["tickets.id", "tickets.name", "tickets.description", "tickets.cost", "tickets.daily_limit", "venue_id"]);
 
     // set avaibility based on bookings
     $tickets = $tickets->map(function ($ticket) use ($user_id, $date) {
@@ -158,6 +167,8 @@ class VenueController extends Controller
   {
 
     $date = gmdate("Y-m-d", $date / 1000);
+    $date_day_of_week = intval(gmdate("w", strtotime($date)));
+    $date_day_of_week = $this->get_day($date_day_of_week);
 
     // determine location and check if cache exists
     $cache_exists = isset($location) && count(SearchCache::where([
@@ -178,7 +189,10 @@ class VenueController extends Controller
       $search = $this->get_address($location, "place_id");
 
       // get all venues
-      $venues = Venue::get(["id", "name", "address", "place_id"]);
+      $venues = Venue::where([
+        ["place_id", "!=", ""],
+        ["deleted", "=", 0]
+      ])->get(["id", "name", "address", "place_id"]);
 
       // set origin
       $origin = "place_id:" . $location;
@@ -228,9 +242,10 @@ class VenueController extends Controller
           $venue_id = $result->id;
 
           // check tickets
-          $tickets = Ticket::where([
-            ["venue_id", "=", $venue_id]
-          ])->get()->filter(function ($ticket) use ($date) {
+          $tickets = Ticket::join("venues", "tickets.venue_id", "venues.id")->where([
+            ["venue_id", "=", $venue_id],
+            ["open_" . $date_day_of_week, "=", True]
+          ])->get("tickets.*")->filter(function ($ticket) use ($date) {
             // get daily limit
             $daily_limit = $ticket->daily_limit;
             // count number of bookings
@@ -255,7 +270,8 @@ class VenueController extends Controller
     ));
   }
 
-  public function delete(Request $request, $id) {
+  public function delete(Request $request, $id)
+  {
     $user = $request->user();
     $is_global_admin = $user->global_admin == 1;
 
@@ -270,7 +286,6 @@ class VenueController extends Controller
       return response()->json(array(
         "id" => $id
       ));
-
     } else {
       return response("Unauthorized", 401);
     }
@@ -324,7 +339,6 @@ class VenueController extends Controller
       ])->update($fields);
 
       return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "place_id"]));
-
     } else {
       return response("Unauthorized", 401);
     }
