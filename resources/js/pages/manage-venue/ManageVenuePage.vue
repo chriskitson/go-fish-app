@@ -75,6 +75,34 @@
                     Location
                 </h3>
             </div>
+            <div class="mb-8 md:mb-0 md:col-span-2">
+                <label class="block mb-2 font-semibold text-grey-300"
+                    >Find Location</label
+                >
+                <google-places-autocomplete
+                    class="w-full h-9x"
+                    :value="venueSearch.search"
+                    @resultChanged="findVenue"
+                >
+                    <div slot="input" slot-scope="{ context, events, actions }">
+                        <input
+                            v-model="context.input"
+                            @focus="events.inputHasReceivedFocus"
+                            @input="events.inputHasChanged"
+                            @keydown.enter.prevent="actions.selectItemFromList"
+                            @keydown.down.prevent="
+                                actions.shiftResultsSelection
+                            "
+                            @keydown.up.prevent="
+                                actions.unshiftResultsSelection
+                            "
+                            type="search"
+                            placeholder="Enter a city, post code or location"
+                            class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                        />
+                    </div>
+                </google-places-autocomplete>
+            </div>
             <div class="mb-8 md:mb-0">
                 <label class="block mb-2 font-semibold text-grey-300"
                     >Address</label
@@ -82,7 +110,7 @@
                 <textarea
                     v-model="venue.address"
                     class="w-full h-32 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
-                    :disabled="loading"
+                    :disabled="true"
                 ></textarea>
             </div>
             <div class="mb-8 md:mb-0">
@@ -92,7 +120,7 @@
                 <input
                     type="text"
                     class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
-                    :disabled="loading"
+                    :disabled="true"
                     v-model="venue.place_id"
                 />
             </div>
@@ -239,7 +267,11 @@
 
 <script>
 import { mapState } from "vuex";
+import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
 export default {
+    components: {
+        GooglePlacesAutocomplete
+    },
     computed: {
         ...mapState({
             venue: state => state.venueDetail,
@@ -251,10 +283,15 @@ export default {
             manageVenueNewTicket: state => state.manageVenueNewTicket,
             loading: state => state.loading,
             manageVenueErrorFields: state => state.manageVenueErrorFields,
-            editMode: state => state.venueDetail?.id > 0
+            editMode: state => state.venueDetail?.id > 0,
+            venueSearch: state => state.venueSearch
         })
     },
     methods: {
+        findVenue({ place_id, formatted_address }) {
+            this.venue.place_id = place_id;
+            this.venue.address = formatted_address;
+        },
         updateDetails() {
             const { user } = this;
             const {
