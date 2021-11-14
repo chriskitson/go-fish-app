@@ -57,6 +57,7 @@ let state = {
         tickets: [],
         ticketsLoaded: false,
         date: tomorrow,
+        account: "",
         days: {
             sunday: false,
             monday: false,

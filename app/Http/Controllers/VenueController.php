@@ -66,6 +66,7 @@ class VenueController extends Controller
       "description" => $venue->description,
       "place_id" => $venue->place_id,
       "rules" => $venue->rules,
+      "account" => $venue->account,
       "days" => array(
         "sunday" => $venue->open_sunday == 1,
         "monday" => $venue->open_monday == 1,
@@ -356,6 +357,7 @@ class VenueController extends Controller
       $validators = [
         "name" => ["required", "string"],
         "description" => ["required", "string"],
+        "account" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
         "place_id" => ["required", "string", "max:45"],
@@ -371,6 +373,7 @@ class VenueController extends Controller
       $fields = array(
         "name" => $request->name,
         "description" => $request->description,
+        "account" => $request->account,
         "rules" => $request->rules,
         "address" => $request->address,
         "place_id" => $request->place_id,
@@ -387,7 +390,7 @@ class VenueController extends Controller
         ["id", "=", $venue_id]
       ])->update($fields);
 
-      return response()->json(Venue::find($venue_id, ["name", "description", "rules", "address", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "place_id"]));
     } else {
       return response("Unauthorized", 401);
     }

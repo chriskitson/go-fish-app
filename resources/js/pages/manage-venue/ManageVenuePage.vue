@@ -119,6 +119,24 @@
                     </label>
                 </div>
             </div>
+
+            <div class="mb-4 md:col-span-2 md:mb-0">
+                <hr class="mb-5" />
+                <h3 class="text-xl font-semibold text-red-200">
+                    Payment
+                </h3>
+            </div>
+            <div class="mb-8 md:mb-0">
+                <label class="block mb-2 font-semibold text-grey-300"
+                    >Stripe Account</label
+                >
+                <input
+                    type="text"
+                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :disabled="loading"
+                    v-model="venue.account"
+                />
+            </div>
             <div class="mb-4 md:col-span-2 md:mb-0">
                 <hr class="mb-5" />
                 <h3 class="text-xl font-semibold text-red-200">
@@ -348,6 +366,7 @@ export default {
                 id,
                 description,
                 rules,
+                account,
                 address,
                 place_id,
                 name,
@@ -362,6 +381,7 @@ export default {
                     description,
                     rules,
                     address,
+                    account,
                     place_id,
                     open_sunday: days.sunday,
                     open_monday: days.monday,
@@ -380,6 +400,7 @@ export default {
                 const venue = {
                     name,
                     description,
+                    account,
                     rules,
                     address,
                     place_id,
