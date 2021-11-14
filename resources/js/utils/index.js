@@ -35,7 +35,6 @@ export const formatLongDateDisplay = date => {
 
 export const formatDateDisplay = date => {
     const fd = new Date(date);
-    return "bananas";
     return fd.toLocaleDateString("en-GB");
 };
 
