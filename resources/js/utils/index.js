@@ -23,8 +23,19 @@ export const formatCurrency = num => {
     });
 };
 
+export const formatLongDateDisplay = date => {
+    const fd = new Date(date);
+    return fd.toLocaleDateString("en-GB", {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
+
 export const formatDateDisplay = date => {
     const fd = new Date(date);
+    return "bananas";
     return fd.toLocaleDateString("en-GB");
 };
 

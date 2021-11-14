@@ -75,7 +75,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { formatDateDisplay } from "../../utils";
+import { formatDateDisplay, formatLongDateDisplay } from "../../utils";
 export default {
     computed: {
         ...mapState({
@@ -93,7 +93,7 @@ export default {
                           )[0].cost
                       } for ${formatDateDisplay(state.venueDetail.date)}:`
                     : "No tickets available",
-            currentDate: state => formatDateDisplay(state.venueDetail.date)
+            currentDate: state => formatLongDateDisplay(state.venueDetail.date)
         })
     },
     mounted() {

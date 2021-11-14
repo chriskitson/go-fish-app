@@ -12,5 +12,8 @@ export const MESSAGES = {
   },
   ERRORS: {
     MULTIPLE_VENUES: 'You cannot have a ticket for more than one venue in your basket. Please purchase your existing tickets or remove them to purchase from another venue.'
+  },
+  VENUE: {
+    SoldOut: "There are no tickets availble for this venue on this date. The venue could be closed or tickets have sold out."
   }
 };

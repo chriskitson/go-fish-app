@@ -19,7 +19,7 @@
             ></ticket-item-component>
         </div>
         <div v-if="live && tickets.length === 0">
-            There are no tickets availble for this venue on this date.
+            {{ MESSAGES.VENUE.SoldOut }}
         </div>
         <div
             class="flex flex-wrap items-center w-full space-y-4 py-50"
@@ -46,7 +46,11 @@
 </template>
 
 <script>
+import { MESSAGES } from '../../config/messages';
 export default {
-    props: ["title", "tickets", "live", "display", "auth", "loggedIn"]
+    props: ["title", "tickets", "live", "display", "auth", "loggedIn"],
+    data: () => ({
+        MESSAGES
+    })
 };
 </script>
