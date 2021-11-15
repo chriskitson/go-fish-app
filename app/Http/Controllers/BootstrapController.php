@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Venue;
+use App\Models\Category;
 use App\Models\RequestCache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -118,6 +119,9 @@ class BootstrapController extends Controller
         "globalAdmin" => false
       );
     }
+
+    // add categories
+    $response->categories = Category::inRandomOrder()->limit(5)->get(["id", "name", "image"])->toArray();
 
     return response()->json($response);
   }

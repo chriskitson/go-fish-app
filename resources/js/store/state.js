@@ -9,6 +9,7 @@ let state = {
     path: "",
     bookingFee: 0,
     venues: [],
+    categories: [],
     alerts: [],
     user: {
         loggedIn: false,
@@ -72,7 +73,8 @@ let state = {
     userTickets: [],
     manageVenues: [],
     manageVenueNewTicket: false,
-    manageVenueErrorFields: []
+    manageVenueErrorFields: [],
+    venueCategory: []
 };
 
 export default state;

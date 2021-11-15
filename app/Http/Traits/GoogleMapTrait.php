@@ -34,6 +34,18 @@ trait GoogleMapTrait {
       
     }
 
+    public function get_address_data($origin, $key = "latlng") {
+      // Ref: https://github.com/alexpechkarev/google-maps
+
+      // get user location based on lat lng
+      $response = \GoogleMaps::load('geocoding')
+        ->setParamByKey($key, $origin)
+        ->get('results');
+
+      return $response["results"][0];
+      
+    }
+
     public function calculate_distances($origin, $destinations) {
       // use google apis to get distances
       $key = env('GOOGLE_MAP_KEY', '');

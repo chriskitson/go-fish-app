@@ -23,6 +23,7 @@ let mutations = {
             ...state.user,
             ...data.user
         };
+        state.categories = data.categories;
         localStorage.setItem("homeToken", data.token);
     },
     // User register and login

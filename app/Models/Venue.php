@@ -29,7 +29,8 @@ class Venue extends Model
         'open_wednesday',
         'open_thursday',
         'open_friday',
-        'open_saturday'
+        'open_saturday',
+        'place_meta'
     ];
 
     protected $table = 'venues';

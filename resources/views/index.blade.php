@@ -20,6 +20,9 @@ if (isset($date) && isset($location)) {   // venue search
     );
     $initial_state['dateSearch'] = intval($date);
 }
+if (isset($categoryid)) {
+    $initial_state['venueCategory'] = $venue->get_category($categoryid)->original;
+}
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
 if ($initial_state['path'] === 'manage-venues') {

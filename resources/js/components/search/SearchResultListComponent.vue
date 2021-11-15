@@ -12,6 +12,7 @@
                     v-for="result in results"
                     :key="`result-${result.id}`"
                     :result="result"
+                    :date="date"
                 ></search-result-item-component>
             </div>
         </div>
@@ -20,6 +21,6 @@
 
 <script>
 export default {
-    props: ["title", "results"]
+    props: ["title", "results", "date"]
 };
 </script>

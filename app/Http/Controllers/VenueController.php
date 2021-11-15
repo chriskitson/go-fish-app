@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
+use App\Models\Category;
 use App\Models\Ticket;
 use App\Models\Booking;
 use App\Models\SearchCache;
@@ -12,6 +13,7 @@ use App\Http\Traits\BookingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class VenueController extends Controller
 {
@@ -28,7 +30,8 @@ class VenueController extends Controller
   {
   }
 
-  public function clear_cache() {
+  public function clear_cache()
+  {
     SearchCache::truncate();
     RequestCache::truncate();
   }
@@ -199,7 +202,7 @@ class VenueController extends Controller
       $venues = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0]
-      ])->get(["id", "name", "address", "place_id"]);
+      ])->get(["id", "name", "address", "place_id", "image"]);
 
       // set origin
       $origin = "place_id:" . $location;
@@ -548,5 +551,79 @@ class VenueController extends Controller
     } else {
       return response("Unauthorized", 401);
     }
+  }
+
+  public function get_category($id)
+  {
+
+    $category = Category::find($id, ["key", "value", "results", "results_updated"]);
+
+    if (isset($category)) {
+
+      $category_key = $category->key;
+      $category_value = $category->value;
+
+      // are results older than 24 hours?
+      if (time() - strtotime($category->results_updated) > 60 * 60 * 24) {
+        
+        // get all venues
+        $venues = Venue::where([
+          ["place_id", "!=", ""],
+          ["deleted", "=", 0]
+        ])->get(["id", "name", "address", "place_id", "image", "place_meta"])->toArray();
+
+        // check if meta exist (if not, then fetch and save for future use)
+        foreach ($venues as $venue) {
+          if (!isset($venue->place_meta) || $venue->place_meta === "") {
+            $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
+            $venue["place_meta"] = $place_meta;
+            Venue::where([
+              ["id", "=", $venue["id"]]
+            ])->update(array(
+              "place_meta" => $place_meta
+            ));
+          }
+        }
+
+        // filter venues based on location category
+        $venues = array_filter($venues, function ($venue) use ($category_key, $category_value) {
+          $place_meta = json_decode($venue["place_meta"]);
+          $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
+            return in_array($category_key, $component->types);
+          }));
+          if ($place_component_match) {
+            return $place_component_match->long_name === $category_value;
+          } else {
+            return false;
+          }
+        });
+
+        // map venues to display fields
+        $venues = array_map(function ($v) {
+          return array(
+            "id" => $v["id"],
+            "name" => $v["name"],
+            "address" => $v["address"],
+            "image" => $v["image"]
+          );
+        }, $venues);
+
+        // cache results
+        Category::find($id)->update(array(
+          "results" => json_encode($venues),
+          "results_updated" => Carbon::now()
+        ));
+
+      } else {
+
+        // use cached results
+        $venues = json_decode($category->results);
+
+      }
+    } else {
+      $venues = [];
+    }
+
+    return response()->json($venues);
   }
 }

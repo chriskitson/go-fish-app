@@ -10,6 +10,7 @@ import Confirm from '../pages/confirm/ConfirmPage';
 import MyTickets from '../pages/my-tickets/MyTicketsPage';
 import ManageVenues from '../pages/manage-venues/ManageVenuesPage';
 import ManageVenue from '../pages/manage-venue/ManageVenuePage';
+import Category from '../pages/category/CategoryPage';
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,7 @@ export const routes = [
     { path: '/manage-venues', component: ManageVenues, name: 'Manage Venues' },
     { path: '/manage-venues/:id', component: ManageVenue, name: 'Manage Venue' },
     { path: '/add-venue', component: ManageVenue, name: 'Add Venue' },
+    { path: '/category/:id', component: Category, name: 'Category' },
 ];
 
 export const router = new VueRouter({

@@ -38,3 +38,22 @@ ADD COLUMN `open_friday` BIT(1) NULL DEFAULT 0,
 ADD COLUMN `open_saturday` BIT(1) NULL DEFAULT 0;
 
 
+ALTER TABLE `venues` 
+ADD COLUMN `place_meta` LONGTEXT NULL AFTER `open_saturday`;
+
+CREATE TABLE `categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NULL,
+  `key` VARCHAR(45) NULL,
+  `value` VARCHAR(45) NULL,
+  `results` LONGTEXT NULL,
+  `results_updated` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `categories` 
+ADD COLUMN `created_at` DATETIME NULL AFTER `results_updated`,
+ADD COLUMN `updated_at` DATETIME NULL AFTER `created_at`;
+
+ALTER TABLE `categories` 
+ADD COLUMN `image` VARCHAR(255) NULL AFTER `name`;
+

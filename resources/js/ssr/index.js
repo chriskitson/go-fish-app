@@ -24,6 +24,9 @@ export const bindState = (context, state, client) => {
     if (context.manageVenues) {
         state.manageVenues = context.manageVenues;
     }
+    if (context.venueCategory) {
+        state.venueCategory = context.venueCategory;
+    }
     if (client) {
         state.user = {
             ...state.user,

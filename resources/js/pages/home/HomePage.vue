@@ -10,7 +10,7 @@
         ></venue-list-component>
         <category-list-component
             title="Explore Northern Ireland"
-            :categories="counties"
+            :categories="categories"
             :live="true"
             display="5"
         ></category-list-component>
@@ -32,57 +32,31 @@ export default {
             live: state => state.live,
             userPosition: state => state.userPosition,
             locationSearch: state => state.locationSearch,
-            venueDetail: state => state.venueDetail
+            venueDetail: state => state.venueDetail,
+            categories: state => state.categories
         })
     },
     data: () => ({
-        counties: [
-            {
-                id: 1,
-                name: "County Antrim",
-                img: "/images/river.jpg"
-            },
-            {
-                id: 1,
-                name: "County Fermanagh",
-                img: "/images/river.jpg"
-            },
-            {
-                id: 1,
-                name: "County Armagh",
-                img: "/images/river.jpg"
-            },
-            {
-                id: 1,
-                name: "County Down",
-                img: "/images/river.jpg"
-            },
-            {
-                id: 1,
-                name: "Belfast",
-                img: "/images/river.jpg"
-            }
-        ],
         types: [
             {
                 id: 1,
                 name: "Sea fishing",
-                img: "/images/river.jpg"
+                image: "/images/river.jpg"
             },
             {
                 id: 1,
                 name: "Trout",
-                img: "/images/river.jpg"
+                image: "/images/river.jpg"
             },
             {
                 id: 1,
                 name: "Salmon",
-                img: "/images/river.jpg"
+                image: "/images/river.jpg"
             },
             {
                 id: 1,
                 name: "Fly fishing",
-                img: "/images/river.jpg"
+                image: "/images/river.jpg"
             }
         ]
     }),
