@@ -9,7 +9,7 @@
         >
             <category-item-component
                 v-for="(cat, i) in categories"
-                :key="i"
+                :key="`home-cat-${i}`"
                 :live="live"
                 :category="cat"
                 :display="display"

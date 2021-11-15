@@ -19,7 +19,7 @@
         >
             <venue-item-component
                 v-for="(venue, i) in venues"
-                :key="i"
+                :key="`home-venue-${i}`"
                 :live="live"
                 :venue="venue"
             ></venue-item-component>
