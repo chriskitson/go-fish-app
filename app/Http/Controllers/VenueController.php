@@ -332,6 +332,7 @@ class VenueController extends Controller
         "address" => $request->address,
         "place_id" => $request->place_id,
         "image" => $request->image,
+        "account" => $request->account,
         "open_sunday" => $request->open_sunday,
         "open_monday" => $request->open_monday,
         "open_tuesday" => $request->open_tuesday,

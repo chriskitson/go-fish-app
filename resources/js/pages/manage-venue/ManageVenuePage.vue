@@ -462,7 +462,13 @@ export default {
                     address,
                     place_id,
                     image,
-                    days
+                    open_sunday: days.sunday,
+                    open_monday: days.monday,
+                    open_tuesday: days.tuesday,
+                    open_wednesday: days.wednesday,
+                    open_thursday: days.thursday,
+                    open_friday: days.friday,
+                    open_saturday: days.saturday
                 };
                 this.$store.dispatch("VENUE_DETAILS_CREATE", {
                     venue,

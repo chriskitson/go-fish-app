@@ -4,7 +4,7 @@
             {{ title }}
         </h2>
         <div
-            class="flex flex-row flex-wrap items-center w-full mx-auto py-50"
+            :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-${display}`"
             v-if="live"
         >
             <category-item-component
@@ -22,7 +22,7 @@
             ></category-item-component>
         </div>
         <div
-            class="flex flex-col flex-wrap items-center justify-between w-full mx-auto py-50"
+            :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-${display}`"
             v-if="!live"
         >
             <category-item-component :live="live" :display="display"></category-item-component>

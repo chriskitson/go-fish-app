@@ -14,7 +14,7 @@
             </span>
         </h2>
         <div
-            class="box-border flex flex-row flex-wrap items-center w-full py-50"
+            :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4`"
             v-if="live && venues"
         >
             <venue-item-component
@@ -30,7 +30,7 @@
             ></venue-item-component>
         </div>
         <div
-            class="flex flex-row items-center justify-between w-full mx-auto py-50"
+            :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4`"
             v-if="!live"
         >
             <venue-item-component :live="live"></venue-item-component>
