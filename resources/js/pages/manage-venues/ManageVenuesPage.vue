@@ -12,7 +12,7 @@
                     </a>
                 </div>
                 <ul>
-                    <li v-for="venue in venues" :key="venue.id" class="flex items-center justify-center p-2 mb-4">
+                    <li v-for="(venue, index) in venues" :key="venue.id" :class="`flex items-center justify-center p-2 mb-2${index % 2 ? ' bg-white' : ' bg-grey-100'}`">
                         <a
                             :href="`/manage-venues/${venue.id}`"
                             class="flex-1 text-red-200 hover:underline"
@@ -20,7 +20,7 @@
                         >
                         <button
                             @click="deleteVenue(venue.id)"
-                            class="flex items-center justify-center px-3 py-2 text-sm text-white rounded-lg bg-grey-200 disabled:opacity-50"
+                            class="flex items-center justify-center px-3 py-2 text-sm text-white bg-orange-200 rounded-lg disabled:opacity-50"
                         >
                             <icon name="trash" class="w-4 h-4" />
                         </button>

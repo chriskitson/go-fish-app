@@ -228,18 +228,28 @@ let mutations = {
         state.userTickets = res;
     },
     // Manage Venues
-    VENUE_DETAILS_UPDATE(state, venue) {
-        state.venueDetail = {
-            ...state.venueDetail,
-            ...venue
-        };
+    VENUE_DETAILS_UPDATE(state, { success, venue, errors }) {
+        state.manageVenueErrorFields = [];
+        if (success === true) {
+            state.venueDetail = {
+                ...state.venueDetail,
+                ...venue
+            };
+        } else {
+            state.manageVenueErrorFields = Object.keys(errors);
+        }
         state.loading = false;
     },
-    VENUE_DETAILS_CREATE(state, venue) {
-        state.venueDetail = {
-            ...state.venueDetail,
-            ...venue
-        };
+    VENUE_DETAILS_CREATE(state, { success, venue, errors }) {
+        state.manageVenueErrorFields = [];
+        if (success === true) {
+            state.venueDetail = {
+                ...state.venueDetail,
+                ...venue
+            };
+        } else {
+            state.manageVenueErrorFields = Object.keys(errors);
+        }
         state.loading = false;
     },
     VENUE_DELETE(state, { id }) {

@@ -6,6 +6,7 @@ use App\Models\Venue;
 use App\Models\Ticket;
 use App\Models\Booking;
 use App\Models\SearchCache;
+use App\Models\RequestCache;
 use App\Http\Traits\GoogleMapTrait;
 use App\Http\Traits\BookingTrait;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ class VenueController extends Controller
    */
   public function __construct()
   {
+  }
+
+  public function clear_cache() {
+    SearchCache::truncate();
+    RequestCache::truncate();
   }
 
   public function get_day($day)
@@ -284,6 +290,9 @@ class VenueController extends Controller
         "deleted" => 1
       ));
 
+      // clear cached requests
+      $this->clear_cache();
+
       return response()->json(array(
         "id" => $id
       ));
@@ -302,6 +311,7 @@ class VenueController extends Controller
       $validators = [
         "name" => ["required", "string"],
         "description" => ["required", "string"],
+        "account" => ["required", "string"],
         "image" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
@@ -311,8 +321,8 @@ class VenueController extends Controller
       $validator = Validator::make($request->all(), $validators);
 
       if ($validator->fails()) {
-        $response["response"] = $validator->messages();
-        return $response;
+        $error_response = $validator->messages();
+        return response()->json($error_response, 400);
       }
 
       $fields = array(
@@ -338,6 +348,9 @@ class VenueController extends Controller
       Venue::where([
         ["id", "=", $venue_id]
       ])->update($fields);
+
+      // clear cached requests
+      $this->clear_cache();
 
       return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "place_id"]));
     } else {
@@ -366,8 +379,8 @@ class VenueController extends Controller
       $validator = Validator::make($request->all(), $validators);
 
       if ($validator->fails()) {
-        $response["response"] = $validator->messages();
-        return $response;
+        $error_response = $validator->messages();
+        return response()->json($error_response, 400);
       }
 
       $fields = array(
@@ -389,6 +402,9 @@ class VenueController extends Controller
       Venue::where([
         ["id", "=", $venue_id]
       ])->update($fields);
+
+      // clear cached requests
+      $this->clear_cache();
 
       return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "place_id"]));
     } else {

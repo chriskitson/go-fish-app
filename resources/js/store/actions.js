@@ -221,11 +221,16 @@ let actions = {
                 getTokenHeader(user)
             )
             .then(res => {
-                commit("VENUE_DETAILS_CREATE", res.data);
+                commit("VENUE_DETAILS_CREATE", {
+                    success: true,
+                    venue: res.data
+                });
             })
             .catch(err => {
-                commit("SET_LOADING", false);
-                handleError(err.response.data.message);
+                commit("VENUE_DETAILS_CREATE", {
+                    success: false,
+                    errors: err.response.data
+                });
             });
     },
     VENUE_DETAILS_UPDATE({ commit }, { venue, user }) {
@@ -237,11 +242,16 @@ let actions = {
                 getTokenHeader(user)
             )
             .then(res => {
-                commit("VENUE_DETAILS_UPDATE", res.data);
+                commit("VENUE_DETAILS_UPDATE", {
+                    success: true,
+                    venue: res.data
+                });
             })
             .catch(err => {
-                commit("SET_LOADING", false);
-                handleError(err.response.data.message);
+                commit("VENUE_DETAILS_UPDATE", {
+                    success: false,
+                    errors: err.response.data
+                });
             });
     },
     VENUE_DELETE({ commit }, { id, user }) {

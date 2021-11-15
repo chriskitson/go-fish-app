@@ -17,7 +17,11 @@
                 >
                 <input
                     type="text"
-                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :class="
+                        `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                            'name'
+                        )}`
+                    "
                     :disabled="loading"
                     v-model="venue.name"
                 />
@@ -30,7 +34,11 @@
                     type="file"
                     accept="image/*"
                     @change="uploadImage($event)"
-                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :class="
+                        `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                            'image'
+                        )}`
+                    "
                     :disabled="loading"
                 />
                 <img
@@ -55,7 +63,11 @@
                 >
                 <textarea
                     v-model="venue.description"
-                    class="w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :class="
+                        `w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                            'description'
+                        )}`
+                    "
                     :disabled="loading"
                 ></textarea>
             </div>
@@ -65,7 +77,11 @@
                 >
                 <textarea
                     v-model="venue.rules"
-                    class="w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :class="
+                        `w-full h-56 p-4 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                            'rules'
+                        )}`
+                    "
                     :disabled="loading"
                 ></textarea>
             </div>
@@ -78,43 +94,71 @@
             <div class="mb-8 md:mb-0 md:col-span-2">
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.sunday" type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.sunday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Sunday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.monday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.monday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Monday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.tuesday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.tuesday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Tuesday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.wednesday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.wednesday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Wednesday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.thursday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.thursday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Thursday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.friday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.friday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Friday</span>
                     </label>
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input v-model="venue.days.saturday"  type="checkbox" class="form-checkbox" />
+                        <input
+                            v-model="venue.days.saturday"
+                            type="checkbox"
+                            class="form-checkbox"
+                        />
                         <span class="ml-2">Saturday</span>
                     </label>
                 </div>
@@ -132,7 +176,11 @@
                 >
                 <input
                     type="text"
-                    class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                    :class="
+                        `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                            'account'
+                        )}`
+                    "
                     :disabled="loading"
                     v-model="venue.account"
                 />
@@ -166,7 +214,11 @@
                             "
                             type="search"
                             placeholder="Enter a city, post code or location"
-                            class="w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200"
+                            :class="
+                                `w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
+                                    'place_id'
+                                )}`
+                            "
                         />
                     </div>
                 </google-places-autocomplete>
@@ -356,6 +408,11 @@ export default {
         })
     },
     methods: {
+        errorStyle(key) {
+            return this.manageVenueErrorFields.indexOf(key) > -1
+                ? " border-red-200"
+                : "";
+        },
         findVenue({ place_id, formatted_address }) {
             this.venue.place_id = place_id;
             this.venue.address = formatted_address;
