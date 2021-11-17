@@ -12,13 +12,11 @@
             title="Explore Northern Ireland"
             :categories="categories"
             :live="true"
-            display="5"
         ></category-list-component>
         <category-list-component
             title="How do you GoFish?"
             :categories="types"
             :live="true"
-            display="4"
         ></category-list-component>
     </div>
 </template>

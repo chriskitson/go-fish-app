@@ -1,5 +1,5 @@
 <template>
-    <div class="h-56 my-5 rounded-xl bg-grey-100">
+    <div class="my-5 bg-cover h-72 rounded-xl bg-grey-100 bg-banner-1">
         &nbsp;
     </div>
 </template>

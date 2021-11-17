@@ -92,6 +92,7 @@ let actions = {
             });
     },
     LOGIN({ commit }, { email, password }) {
+        commit("SET_LOADING", true);
         return axios
             .post(`/oauth/token`, {
                 username: email,
@@ -114,6 +115,7 @@ let actions = {
             });
     },
     LOGOUT({ commit }, user) {
+        commit("SET_LOADING", true);
         return axios
             .get(`/api/auth/logout`, getTokenHeader(user))
             .then(res => {
@@ -130,6 +132,7 @@ let actions = {
             });
     },
     REGISTER({ commit }, { name, email, password, confirm }) {
+        commit("SET_LOADING", true);
         return axios
             .post(`/api/register`, {
                 name,

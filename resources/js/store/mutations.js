@@ -64,6 +64,7 @@ let mutations = {
                 token_type: ""
             };
         }
+        state.loading = false;
     },
     LOGOUT(state, res) {
         state.user = {
@@ -75,6 +76,7 @@ let mutations = {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("token_type");
+        state.loading = false;
     },
     REGISTER(state, res) {
         const { success, email, errors } = res;
@@ -88,6 +90,7 @@ let mutations = {
         } else {
             state.registerForm.errors = Object.values(errors).flat();
         }
+        state.loading = false;
     },
     // Location
     LOCATION_SEARCH_SHOW(state, show) {

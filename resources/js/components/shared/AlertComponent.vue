@@ -1,8 +1,8 @@
 <template>
     <div
         :class="
-            `p-2 my-5 rounded-xl${type === 'error' ? ' bg-error' : ''}${
-                type === 'success' ? ' bg-success' : ''
+            `p-2 my-5 border rounded-xl${type === 'error' ? ' border-error' : ''}${
+                type === 'success' ? ' border-success' : ''
             }`
         "
     >

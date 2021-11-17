@@ -58,7 +58,7 @@
                 <a href="#" class="mr-3 font-semibold text-md text-grey-300"
                     >Best Fisheries</a
                 >
-                <a href="#" class="mr-3 font-semibold text-md text-grey-300"
+                <a href="/login" class="mr-3 font-semibold text-md text-grey-300"
                     >Join GoFish</a
                 >
                 <span class="flex-grow"></span>

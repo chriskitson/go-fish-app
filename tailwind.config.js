@@ -21,6 +21,10 @@ module.exports = {
                 orange: {
                     200: '#F8AA02'
                 }
+            },
+            backgroundImage: {
+                'login': "url('/images/bg1.jpg')",
+                'banner-1': "url('/images/bg2.jpg')",
             }
         }
     },

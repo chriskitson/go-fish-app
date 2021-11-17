@@ -18082,6 +18082,14 @@ video {
   background-image: linear-gradient(to top left, var(--tw-gradient-stops));
 }
 
+.bg-login {
+  background-image: url('/images/bg1.jpg');
+}
+
+.bg-banner-1 {
+  background-image: url('/images/bg2.jpg');
+}
+
 .from-transparent {
   --tw-gradient-from: transparent;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -50556,6 +50564,14 @@ body {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .sm\:bg-login {
+    background-image: url('/images/bg1.jpg');
+  }
+
+  .sm\:bg-banner-1 {
+    background-image: url('/images/bg2.jpg');
+  }
+
   .sm\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -82897,6 +82913,14 @@ body {
 
   .md\:bg-gradient-to-tl {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  }
+
+  .md\:bg-login {
+    background-image: url('/images/bg1.jpg');
+  }
+
+  .md\:bg-banner-1 {
+    background-image: url('/images/bg2.jpg');
   }
 
   .md\:from-transparent {
@@ -115242,6 +115266,14 @@ body {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .lg\:bg-login {
+    background-image: url('/images/bg1.jpg');
+  }
+
+  .lg\:bg-banner-1 {
+    background-image: url('/images/bg2.jpg');
+  }
+
   .lg\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -147585,6 +147617,14 @@ body {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .xl\:bg-login {
+    background-image: url('/images/bg1.jpg');
+  }
+
+  .xl\:bg-banner-1 {
+    background-image: url('/images/bg2.jpg');
+  }
+
   .xl\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -179926,6 +179966,14 @@ body {
 
   .\32xl\:bg-gradient-to-tl {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  }
+
+  .\32xl\:bg-login {
+    background-image: url('/images/bg1.jpg');
+  }
+
+  .\32xl\:bg-banner-1 {
+    background-image: url('/images/bg2.jpg');
   }
 
   .\32xl\:from-transparent {

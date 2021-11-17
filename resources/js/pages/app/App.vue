@@ -43,8 +43,12 @@ export default {
             locationSearch: state => state.locationSearch,
             venueSearch: state => state.venueSearch,
             dateSearch: state => state.dateSearch,
-            bgColor: state =>
-                state.path === "login" ? "bg-grey-100" : "",
+            bgColor: state => {
+                if (state.path === "login") {
+                    return `bg-cover bg-login bg-grey-100`;
+                }
+                return '';
+            },
             showSearch: state => state.path !== "login",
             user: state => state.user,
             live: state => state.live,

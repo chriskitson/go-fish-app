@@ -1,14 +1,16 @@
 <template>
-    <div class="w-full max-w-5xl mx-auto">
+    <div class="w-full h-full max-w-5xl mx-auto">
         <div class="grid grid-cols-2 gap-6 px-4 my-24">
             <login-component
                 :login="loginForm"
                 :loggedIn="loggedIn"
+                :loading="loading"
                 @login="login"
             ></login-component>
             <register-component
                 :register="registerForm"
                 :loggedIn="loggedIn"
+                :loading="loading"
                 @register="register"
             ></register-component>
         </div>
@@ -22,7 +24,8 @@ export default {
         ...mapState({
             loginForm: state => state.loginForm,
             registerForm: state => state.registerForm,
-            loggedIn: state => state.user.loggedIn
+            loggedIn: state => state.user.loggedIn,
+            loading: state => state.loading
         })
     },
     methods: {

@@ -120,8 +120,8 @@ class BootstrapController extends Controller
       );
     }
 
-    // add categories
-    $response->categories = Category::inRandomOrder()->limit(5)->get(["id", "name", "image"])->toArray();
+    // add location based categories
+    $response->categories = Category::inRandomOrder()->limit(4)->get(["id", "name", "image"])->toArray();
 
     return response()->json($response);
   }
