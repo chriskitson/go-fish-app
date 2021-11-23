@@ -143,6 +143,36 @@ Vue.component(
     require("./components/search/SearchResultItemComponent.vue").default
 );
 
+Vue.component(
+    "manage-tabs-component",
+    require("./components/manage/ManageTabsComponent.vue").default
+);
+
+Vue.component(
+    "manage-details-component",
+    require("./components/manage/ManageDetailsComponent.vue").default
+);
+
+Vue.component(
+    "manage-opening-hours-component",
+    require("./components/manage/ManageOpeningHoursComponent.vue").default
+);
+
+Vue.component(
+    "manage-payment-component",
+    require("./components/manage/ManagePaymentComponent.vue").default
+);
+
+Vue.component(
+    "manage-location-component",
+    require("./components/manage/ManageLocationComponent.vue").default
+);
+
+Vue.component(
+    "manage-tickets-component",
+    require("./components/manage/ManageTicketsComponent.vue").default
+);
+
 export default new Vue({
     render: h => h(App),
     store,

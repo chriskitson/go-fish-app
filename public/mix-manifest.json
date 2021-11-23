@@ -2,8 +2,8 @@
     "/js/app-client.js": "/js/app-client.js",
     "/js/app-server.js": "/js/app-server.js",
     "/css/app.css": "/css/app.css",
-    "/images/logo.png": "/images/logo.png",
-    "/images/river.jpg": "/images/river.jpg",
     "/images/bg1.jpg": "/images/bg1.jpg",
-    "/images/bg2.jpg": "/images/bg2.jpg"
+    "/images/bg2.jpg": "/images/bg2.jpg",
+    "/images/logo.png": "/images/logo.png",
+    "/images/river.jpg": "/images/river.jpg"
 }

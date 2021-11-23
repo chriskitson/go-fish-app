@@ -1,7 +1,13 @@
-import vueFilterDateFormatEsm from "@vuejs-community/vue-filter-date-format";
-
 const today = new Date();
 const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+
+export const manageTabs = {
+    DETAILS: 1,
+    HOURS: 2,
+    PAYMENT: 3,
+    LOCATION: 4,
+    TICKETS: 5
+};
 
 let state = {
     live: false,
