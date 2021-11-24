@@ -7,7 +7,11 @@
             You need to add venue details above and click create venue before
             adding any tickets.
         </div>
-        <div v-for="ticket in venue.tickets" :key="`ticket-${ticket.id}`">
+        <div
+            v-for="(ticket, index) in venue.tickets"
+            :key="`ticket-${ticket.id}`"
+            :class="`p-2${index % 2 ? ' bg-white' : ' bg-grey-100'}`"
+        >
             <div class="mt-10 md:grid md:grid-cols-2 md:gap-6">
                 <div class="mb-8 md:mb-0">
                     <label class="block mb-2 font-semibold text-grey-300"

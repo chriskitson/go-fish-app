@@ -9,6 +9,7 @@ if (isset($venueid)) {   // venue detail
 if (isset($venuemanageid)) {
     $initial_state['venueDetail'] = $venue->get_detail($venuemanageid)->original;
     $initial_state['venueDetail']['tickets'] = $venue->get_tickets_detail($venuemanageid)->original;
+    $initial_state['venueDetail']['closed'] = $venue->get_closures($venuemanageid)->original;
 }
 if (isset($date) && isset($location)) {   // venue search
     $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;

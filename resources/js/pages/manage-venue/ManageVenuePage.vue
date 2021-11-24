@@ -24,6 +24,12 @@
             <manage-opening-hours-component
                 v-if="activeTab === manageTabs.HOURS"
                 :venue="venue"
+                :closed="venueManageClosed"
+                :loading="loading"
+                @start="venueClosedStart"
+                @end="venueClosedEnd"
+                @add="venueClosedAdd"
+                @delete="venueClosedDelete"
             ></manage-opening-hours-component>
             <manage-payment-component
                 v-if="activeTab === manageTabs.PAYMENT"
@@ -70,6 +76,7 @@
 <script>
 import { mapState } from "vuex";
 import { manageTabs } from "../../store/state";
+import { formatDateAPI } from "../../utils";
 export default {
     computed: {
         ...mapState({
@@ -83,7 +90,8 @@ export default {
             loading: state => state.loading,
             manageVenueErrorFields: state => state.manageVenueErrorFields,
             editMode: state => state.venueDetail?.id > 0,
-            venueSearch: state => state.venueSearch
+            venueSearch: state => state.venueSearch,
+            venueManageClosed: state => state.venueManageClosed
         })
     },
     data: () => ({
@@ -223,6 +231,30 @@ export default {
         deleteImage() {
             const { user } = this;
             this.$store.dispatch("VENUE_IMAGE_DELETE", {
+                venue_id: this.venue.id,
+                user
+            });
+        },
+        venueClosedStart(date) {
+            this.$store.dispatch("VENUE_CLOSED_START", date);
+        },
+        venueClosedEnd(date) {
+            this.$store.dispatch("VENUE_CLOSED_END", date);
+        },
+        venueClosedAdd() {
+            const { start, end } = this.venueManageClosed;
+            const { user } = this;
+            this.$store.dispatch("VENUE_CLOSED_ADD", {
+                start: formatDateAPI(start),
+                end: formatDateAPI(end),
+                venue_id: this.venue.id,
+                user
+            });
+        },
+        venueClosedDelete(id) {
+            const { user } = this;
+            this.$store.dispatch("VENUE_CLOSED_DELETE", {
+                id,
                 venue_id: this.venue.id,
                 user
             });

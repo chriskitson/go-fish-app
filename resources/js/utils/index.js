@@ -45,6 +45,11 @@ export const formatDateTimeDisplay = date => {
     )}`;
 };
 
+export const formatDateAPI = date => {
+    const fd = new Date(date);
+    return fd.toISOString().slice(0, 10);
+};
+
 export const clearErrors = state => {
     state.alerts = [];
     state.venueDetail.tickets = state.venueDetail.tickets.map(t => ({

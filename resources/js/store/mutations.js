@@ -317,7 +317,27 @@ let mutations = {
             image: image_url
         };
         state.loading = false;
+    },
+    VENUE_CLOSED_START(state, date) {
+        state.venueManageClosed.start = date;
+    },
+    VENUE_CLOSED_END(state, date) {
+        state.venueManageClosed.end = date;  
+    },
+    VENUE_CLOSED_ADD(state, { start_date, end_date, id }) {
+        state.venueDetail.closed.push({
+            start_date,
+            end_date,
+            id
+        });
+        state.loading = false;
+    },
+    VENUE_CLOSED_DELETE(state, id) {
+        const findDate = state.venueDetail.closed.findIndex(t => t.id == id);
+        if (findDate > -1) {
+            state.venueDetail.closed.splice(findDate, 1);
+        }
+        state.loading = false;
     }
-};
-
+}
 export default mutations;

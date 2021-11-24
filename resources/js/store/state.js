@@ -62,6 +62,7 @@ let state = {
         address: "",
         description: "",
         tickets: [],
+        closed: [],
         ticketsLoaded: false,
         date: tomorrow,
         account: "",
@@ -80,7 +81,11 @@ let state = {
     manageVenues: [],
     manageVenueNewTicket: false,
     manageVenueErrorFields: [],
-    venueCategory: []
+    venueCategory: [],
+    venueManageClosed: {
+        start: today,
+        end: tomorrow
+    }
 };
 
 export default state;

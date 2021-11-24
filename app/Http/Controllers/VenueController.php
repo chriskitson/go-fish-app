@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venue;
+use App\Models\VenueClosed;
 use App\Models\Category;
 use App\Models\Ticket;
 use App\Models\Booking;
@@ -87,6 +88,14 @@ class VenueController extends Controller
       )
     );
     return response()->json($fields);
+  }
+
+  public function get_closures($id)
+  { // for admin display
+    $closed = VenueClosed::where([
+      ["venue_id", "=", $id]
+    ])->orderBy("start_date", "ASC")->get(["id", "start_date", "end_date"]);
+    return response()->json($closed);
   }
 
   public function get_tickets_detail($id)
@@ -565,7 +574,7 @@ class VenueController extends Controller
 
       // are results older than 24 hours?
       if (time() - strtotime($category->results_updated) > 60 * 60 * 24) {
-        
+
         // get all venues
         $venues = Venue::where([
           ["place_id", "!=", ""],
@@ -613,12 +622,10 @@ class VenueController extends Controller
           "results" => json_encode($venues),
           "results_updated" => Carbon::now()
         ));
-
       } else {
 
         // use cached results
         $venues = json_decode($category->results);
-
       }
     } else {
       $venues = [];
@@ -626,4 +633,56 @@ class VenueController extends Controller
 
     return response()->json($venues);
   }
+
+  public function closed_add(Request $request, $id) {
+    
+    $user = $request->user();
+    $is_admin = false; // TODO
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_admin || $is_global_admin) {
+
+      $validators = [
+        "start" => ["required", "date"],
+        "end" => ["required", "date"]
+      ];
+
+      $validator = Validator::make($request->all(), $validators);
+
+      if ($validator->fails()) {
+        $error_response = $validator->messages();
+        return response()->json($error_response, 400);
+      }
+
+      $date_range = new VenueClosed([
+        "venue_id" =>  $id,
+        "start_date" => $request->start,
+        "end_date" => $request->end
+      ]);
+
+      $date_range->save();
+
+      return response()->json(VenueClosed::find($date_range->id, ["id", "start_date", "end_date"]));
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
+  public function closed_delete(Request $request, $venue_id, $id) {
+    $user = $request->user();
+    $is_admin = false; // TODO
+    $is_global_admin = $user->global_admin == 1;
+
+    if ($is_admin || $is_global_admin) {
+
+      VenueClosed::where([
+        ["id", "=", $id],
+        ["venue_id", "=", $venue_id],
+      ])->delete();
+
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
 }

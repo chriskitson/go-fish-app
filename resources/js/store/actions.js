@@ -218,11 +218,7 @@ let actions = {
     VENUE_DETAILS_CREATE({ commit }, { venue, user }) {
         commit("SET_LOADING", true);
         return axios
-            .post(
-                `/api/auth/venues`,
-                venue,
-                getTokenHeader(user)
-            )
+            .post(`/api/auth/venues`, venue, getTokenHeader(user))
             .then(res => {
                 commit("VENUE_DETAILS_CREATE", {
                     success: true,
@@ -260,10 +256,7 @@ let actions = {
     VENUE_DELETE({ commit }, { id, user }) {
         commit("SET_LOADING", true);
         return axios
-            .delete(
-                `/api/auth/venues/${id}`,
-                getTokenHeader(user)
-            )
+            .delete(`/api/auth/venues/${id}`, getTokenHeader(user))
             .then(res => {
                 commit("VENUE_DELETE", res.data);
             })
@@ -275,19 +268,19 @@ let actions = {
     VENUE_TICKET_SAVE({ commit }, { venue_id, ticket, user }) {
         commit("SET_LOADING", true);
         if (venue_id > 0) {
-        return axios
-            .put(
-                `/api/auth/venues/${venue_id}/ticket`,
-                ticket,
-                getTokenHeader(user)
-            )
-            .then(res => {
-                commit("VENUE_TICKET_SAVE", res.data);
-            })
-            .catch(err => {
-                commit("SET_LOADING", false);
-                handleError(err.response.data.message);
-            });
+            return axios
+                .put(
+                    `/api/auth/venues/${venue_id}/ticket`,
+                    ticket,
+                    getTokenHeader(user)
+                )
+                .then(res => {
+                    commit("VENUE_TICKET_SAVE", res.data);
+                })
+                .catch(err => {
+                    commit("SET_LOADING", false);
+                    handleError(err.response.data.message);
+                });
         }
     },
     VENUE_TICKET_DELETE({ commit }, { venue_id, id, user }) {
@@ -338,6 +331,39 @@ let actions = {
                     image_url: "",
                     venue_id
                 });
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_CLOSED_START({ commit }, date) {
+        commit("VENUE_CLOSED_START", date);
+    },
+    VENUE_CLOSED_END({ commit }, date) {
+        commit("VENUE_CLOSED_END", date);
+    },
+    VENUE_CLOSED_ADD({ commit }, { start, end, user, venue_id }) {
+        commit("SET_LOADING", true);
+        return axios
+            .post(`/api/auth/venues/${venue_id}/closed`, {
+                start,
+                end
+            }, getTokenHeader(user))
+            .then(res => {
+                commit("VENUE_CLOSED_ADD", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_CLOSED_DELETE({ commit }, { id, user, venue_id }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(`/api/auth/venues/${venue_id}/closed/${id}`, getTokenHeader(user))
+            .then(res => {
+                commit("VENUE_CLOSED_DELETE", id);
             })
             .catch(err => {
                 commit("SET_LOADING", false);

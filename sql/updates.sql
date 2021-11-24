@@ -57,3 +57,17 @@ ADD COLUMN `updated_at` DATETIME NULL AFTER `created_at`;
 ALTER TABLE `categories` 
 ADD COLUMN `image` VARCHAR(255) NULL AFTER `name`;
 
+/* 23-11-21 */
+CREATE TABLE `venues_closed` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `venue_id` INT NULL,
+  `start_date` DATETIME NULL,
+  `end_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+  ALTER TABLE `venues_closed` 
+ADD COLUMN `created_at` TIMESTAMP NULL AFTER `end_date`,
+ADD COLUMN `updated_at` TIMESTAMP NULL AFTER `created_at`;
+
+
+
