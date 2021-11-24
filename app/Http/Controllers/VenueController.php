@@ -31,6 +31,16 @@ class VenueController extends Controller
   {
   }
 
+  public function check_in_range($start_date, $end_date, $date) {
+    // Convert to timestamp
+    $start = strtotime($start_date);
+    $end = strtotime($end_date);
+    $check = strtotime($date);
+  
+    // Check that user date is between start & end
+    return (($start <= $check ) && ($check <= $end));
+  }
+
   public function clear_cache()
   {
     SearchCache::truncate();
@@ -143,6 +153,23 @@ class VenueController extends Controller
     $date = gmdate("Y-m-d", $request->input("d") / 1000);
     $date_day_of_week = intval(gmdate("w", $request->input("d") / 1000));
     $date_day_of_week = $this->get_day($date_day_of_week);
+
+    // is the venue closed on this date?
+    $closed_ranges = VenueClosed::where([
+      ["venue_id", "=", $id]
+    ])->get();
+
+    $closed = false;
+
+    foreach ($closed_ranges as $range) {
+      if (!$closed && $this->check_in_range($range->start_date, $range->end_date, $date)) {
+        $closed = true;
+      }
+    }
+
+    if ($closed) {
+      return response()->json([]);
+    }
 
     // get all available ticket types
     $tickets = Ticket::join("venues", "tickets.venue_id", "venues.id")->where([
@@ -634,8 +661,9 @@ class VenueController extends Controller
     return response()->json($venues);
   }
 
-  public function closed_add(Request $request, $id) {
-    
+  public function closed_add(Request $request, $id)
+  {
+
     $user = $request->user();
     $is_admin = false; // TODO
     $is_global_admin = $user->global_admin == 1;
@@ -668,7 +696,8 @@ class VenueController extends Controller
     }
   }
 
-  public function closed_delete(Request $request, $venue_id, $id) {
+  public function closed_delete(Request $request, $venue_id, $id)
+  {
     $user = $request->user();
     $is_admin = false; // TODO
     $is_global_admin = $user->global_admin == 1;
@@ -679,10 +708,8 @@ class VenueController extends Controller
         ["id", "=", $id],
         ["venue_id", "=", $venue_id],
       ])->delete();
-
     } else {
       return response("Unauthorized", 401);
     }
   }
-
 }

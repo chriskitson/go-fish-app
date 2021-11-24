@@ -3,7 +3,7 @@
         <div class="mb-8 md:grid md:grid-cols-2 md:gap-6">
             <div>
                 <h3 class="my-8 text-xl font-semibold text-red-200">
-                    Opening Hours
+                    Opening Days
                 </h3>
                 <div>
                     <label class="inline-flex items-center">

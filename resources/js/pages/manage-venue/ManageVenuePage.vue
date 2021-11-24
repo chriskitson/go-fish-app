@@ -104,7 +104,7 @@ export default {
             },
             {
                 index: manageTabs.HOURS,
-                label: "Opening Hours"
+                label: "Opening Days"
             },
             {
                 index: manageTabs.PAYMENT,
