@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Venue;
 use App\Models\Category;
+use App\Models\User;
 use App\Models\RequestCache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,9 @@ class BootstrapController extends Controller
     $c = $request->input('c');
     $lat = $request->input('latitude');
     $lng = $request->input('longitude');
+
+    $town = "";
+    $origin = "";
 
     $response = (object)[];
 
@@ -92,7 +96,8 @@ class BootstrapController extends Controller
           "userPosition" => array(
             "latitude" => $lat,
             "longitude" => $lng,
-            "town" => $town
+            "town" => $town,
+            "origin" => $lat . "," . $lng
           ),
           "token" => $cache_id,
         );
@@ -109,6 +114,13 @@ class BootstrapController extends Controller
 
     if (Auth::check()) {
       $user = $request->user();
+      // store location details against user account if logged in
+      if ($town !== "" && $origin !== "") {
+        User::find($user->id)->update([
+          "town" => $town,
+          "origin" => $origin
+        ]);
+      }
       $response->user = array(
         "userType" => $user->user_type,
         "globalAdmin" => $user->global_admin === 1

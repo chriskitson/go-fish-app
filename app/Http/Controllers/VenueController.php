@@ -757,18 +757,19 @@ class VenueController extends Controller
 
     $lat = $request->input('latitude');
     $lng = $request->input('longitude');
+    $o = $request->input('o');
 
     $venues_array = [];
     $town = "";
 
     // determine location based on lat lng
-    if (isset($lat) && isset($lng)) {
+    if (isset($o) || (isset($lat) && isset($lng))) {
 
       // get all venues
       $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image"]);
 
       // set origin
-      $origin = $lat . "," . $lng;
+      $origin = isset($o) ? $o : $lat . "," . $lng;
 
       // set destinations
       $destinations = $venues->map(function ($venue) {

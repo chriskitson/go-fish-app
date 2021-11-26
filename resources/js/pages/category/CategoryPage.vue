@@ -38,33 +38,6 @@ export default {
     methods: {
         showLocationSearch(show) {
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
-        },
-        getUserPosition() {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    const {
-                        coords: { latitude, longitude }
-                    } = position;
-                    this.getLocationData(
-                        `latitude=${latitude}&longitude=${longitude}`
-                    );
-                },
-                error => {
-                    this.getLocationData("");
-                }
-            );
-        },
-        getLocationData(queryString) {
-            const { user } = this;
-            this.$store.dispatch("VENUES_NEAR", {
-                user,
-                queryString
-            });
-        }
-    },
-    mounted() {
-        if (this.venueCategoryDetail.id === "near") {
-            this.getUserPosition();
         }
     }
 };

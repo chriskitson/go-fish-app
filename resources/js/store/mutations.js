@@ -26,6 +26,7 @@ let mutations = {
         };
         state.categories = data.categories;
         localStorage.setItem("homeToken", data.token);
+        localStorage.setItem("origin", data.userPosition.origin);
     },
     // User register and login
     LOGIN(state, res) {

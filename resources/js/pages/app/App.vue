@@ -95,6 +95,12 @@ export default {
                 user,
                 queryString
             });
+            if (this.$route.fullPath === '/category/near') {
+                this.$store.dispatch("VENUES_NEAR", {
+                    user,
+                    queryString
+                });
+            }
         },
         showLocationSearch(show) {
             this.$store.dispatch("LOCATION_SEARCH_SHOW", show);
@@ -105,6 +111,7 @@ export default {
                     geometry: { location }
                 } = this.locationSearch.detail;
                 localStorage.removeItem("homeToken");
+                localStorage.setItem("origin", `${location.lat()},${location.lng()}`);
                 this.getLocationData(
                     `latitude=${location.lat()}&longitude=${location.lng()}`
                 );

@@ -24,7 +24,8 @@ let actions = {
             .get(
                 `/api/${
                     user.loggedIn ? "auth/" : ""
-                }venues/near?${queryString}`,
+                }venues/near?${queryString}&o=${localStorage.getItem("origin") ||
+                ""}`,
                 getTokenHeader(user)
             )
             .then(res => {
