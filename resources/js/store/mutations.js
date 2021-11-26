@@ -1,5 +1,6 @@
 import { clearErrors } from "../utils";
 import { MESSAGES } from "../config/messages";
+import state, { manageTabs } from "./state";
 
 let mutations = {
     // Generic
@@ -63,6 +64,9 @@ let mutations = {
                 refresh_token: "",
                 token_type: ""
             };
+            localStorage.setItem("access_token", null);
+            localStorage.setItem("refresh_token", null);
+            localStorage.setItem("token_type", null);
         }
         state.loading = false;
     },
@@ -241,8 +245,29 @@ let mutations = {
             };
         } else {
             state.manageVenueErrorFields = Object.keys(errors);
+            if (state.manageVenueErrorFields.length > 0) {
+                const firstError = state.manageVenueErrorFields[0];
+                if (
+                    firstError === "name" ||
+                    firstError === "image" ||
+                    firstError === "description" ||
+                    firstError === "rules"
+                ) {
+                    state.venueManageTab = manageTabs.DETAILS;
+                } else if (firstError === "account") {
+                    state.venueManageTab = manageTabs.PAYMENT;
+                } else if (
+                    firstError === "address" ||
+                    firstError === "place_id"
+                ) {
+                    state.venueManageTab = manageTabs.LOCATION;
+                }
+            }
         }
         state.loading = false;
+    },
+    VENUE_MANAGE_TAB(state, tab) {
+        state.venueManageTab = tab;
     },
     VENUE_DETAILS_CREATE(state, { success, venue, errors }) {
         state.manageVenueErrorFields = [];
@@ -322,7 +347,7 @@ let mutations = {
         state.venueManageClosed.start = date;
     },
     VENUE_CLOSED_END(state, date) {
-        state.venueManageClosed.end = date;  
+        state.venueManageClosed.end = date;
     },
     VENUE_CLOSED_ADD(state, { start_date, end_date, id }) {
         state.venueDetail.closed.push({
@@ -339,5 +364,5 @@ let mutations = {
         }
         state.loading = false;
     }
-}
+};
 export default mutations;

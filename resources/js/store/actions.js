@@ -337,6 +337,9 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
+    VENUE_MANAGE_TAB({ commit }, tab) {
+        commit("VENUE_MANAGE_TAB", tab);
+    },
     VENUE_CLOSED_START({ commit }, date) {
         commit("VENUE_CLOSED_START", date);
     },

@@ -9,20 +9,21 @@
             <div class="mb-4 md:col-span-2 md:mb-0">
                 <manage-tabs-component
                     :tabs="TABS"
-                    :active="activeTab"
+                    :active="venueManageTab"
                     :manageVenueErrorFields="manageVenueErrorFields"
                     @setTab="setTab"
                 ></manage-tabs-component>
             </div>
             <manage-details-component
-                v-if="activeTab === manageTabs.DETAILS"
+                v-if="venueManageTab === manageTabs.DETAILS"
                 :loading="loading"
                 :venue="venue"
+                :manageVenueErrorFields="manageVenueErrorFields"
                 @deleteImage="deleteImage"
                 @uploadImage="uploadImage"
             ></manage-details-component>
             <manage-opening-hours-component
-                v-if="activeTab === manageTabs.HOURS"
+                v-if="venueManageTab === manageTabs.HOURS"
                 :venue="venue"
                 :closed="venueManageClosed"
                 :loading="loading"
@@ -32,20 +33,20 @@
                 @delete="venueClosedDelete"
             ></manage-opening-hours-component>
             <manage-payment-component
-                v-if="activeTab === manageTabs.PAYMENT"
+                v-if="venueManageTab === manageTabs.PAYMENT"
                 :loading="loading"
                 :venue="venue"
                 :manageVenueErrorFields="manageVenueErrorFields"
             ></manage-payment-component>
             <manage-location-component
-                v-if="activeTab === manageTabs.LOCATION"
+                v-if="venueManageTab === manageTabs.LOCATION"
                 :loading="loading"
                 :venue="venue"
                 :venueSearch="venueSearch"
                 :manageVenueErrorFields="manageVenueErrorFields"
             ></manage-location-component>
             <manage-tickets-component
-                v-if="activeTab === manageTabs.TICKETS"
+                v-if="venueManageTab === manageTabs.TICKETS"
                 :loading="loading"
                 :venue="venue"
                 :editMode="editMode"
@@ -57,7 +58,7 @@
             ></manage-tickets-component>
             <div
                 class="flex items-center justify-end col-span-2 p-4 mb-8 md:mb-0 bg-grey-100"
-                v-if="activeTab !== manageTabs.TICKETS"
+                v-if="venueManageTab !== manageTabs.TICKETS"
             >
                 <button
                     @click="updateDetails"
@@ -91,12 +92,12 @@ export default {
             manageVenueErrorFields: state => state.manageVenueErrorFields,
             editMode: state => state.venueDetail?.id > 0,
             venueSearch: state => state.venueSearch,
-            venueManageClosed: state => state.venueManageClosed
+            venueManageClosed: state => state.venueManageClosed,
+            venueManageTab: state => state.venueManageTab
         })
     },
     data: () => ({
         manageTabs,
-        activeTab: 1,
         TABS: [
             {
                 index: manageTabs.DETAILS,
@@ -121,8 +122,8 @@ export default {
         ]
     }),
     methods: {
-        setTab(index) {
-            this.activeTab = index;
+        setTab(tab) {
+            this.$store.dispatch("VENUE_MANAGE_TAB", tab);
         },
         errorStyle(key) {
             return this.manageVenueErrorFields.indexOf(key) > -1

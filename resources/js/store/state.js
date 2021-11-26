@@ -85,7 +85,8 @@ let state = {
     venueManageClosed: {
         start: today,
         end: tomorrow
-    }
+    },
+    venueManageTab: manageTabs.DETAILS
 };
 
 export default state;
