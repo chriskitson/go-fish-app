@@ -31,14 +31,15 @@ class VenueController extends Controller
   {
   }
 
-  public function check_in_range($start_date, $end_date, $date) {
+  public function check_in_range($start_date, $end_date, $date)
+  {
     // Convert to timestamp
     $start = strtotime($start_date);
     $end = strtotime($end_date);
     $check = strtotime($date);
-  
+
     // Check that user date is between start & end
-    return (($start <= $check ) && ($check <= $end));
+    return (($start <= $check) && ($check <= $end));
   }
 
   public function clear_cache()
@@ -589,73 +590,111 @@ class VenueController extends Controller
     }
   }
 
+  public function get_category_detail($id)
+  {
+    // is it numerical?
+    if (is_numeric($id)) {
+      $category = Category::find($id, ["id", "name", "image"]);
+    } else {
+      if ($id === "hot") {
+        $category = array(
+          "id" => "hot",
+          "name" => "Hot Deals",
+          "image" => "/images/bg1.jpg"
+        );
+      } elseif ($id === "best") {
+        $category = array(
+          "id" => "best",
+          "name" => "Best Fisheries",
+          "image" => "/images/bg1.jpg"
+        );
+      } elseif ($id === "near") {
+        $category = array(
+          "id" => "near",
+          "name" => "Fisheries Near Me",
+          "image" => "/images/bg1.jpg"
+        );
+      }
+    }
+    return response()->json($category);
+  }
+
   public function get_category($id)
   {
 
-    $category = Category::find($id, ["key", "value", "results", "results_updated"]);
+    if (is_numeric($id)) { // location based
 
-    if (isset($category)) {
+      $category = Category::find($id, ["key", "value", "results", "results_updated"]);
 
-      $category_key = $category->key;
-      $category_value = $category->value;
+      if (isset($category)) {
 
-      // are results older than 24 hours?
-      if (time() - strtotime($category->results_updated) > 60 * 60 * 24) {
+        $category_key = $category->key;
+        $category_value = $category->value;
 
-        // get all venues
-        $venues = Venue::where([
-          ["place_id", "!=", ""],
-          ["deleted", "=", 0]
-        ])->get(["id", "name", "address", "place_id", "image", "place_meta"])->toArray();
+        // are results older than 24 hours?
+        if (time() - strtotime($category->results_updated) > 60 * 60 * 24) {
 
-        // check if meta exist (if not, then fetch and save for future use)
-        foreach ($venues as $venue) {
-          if (!isset($venue->place_meta) || $venue->place_meta === "") {
-            $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
-            $venue["place_meta"] = $place_meta;
-            Venue::where([
-              ["id", "=", $venue["id"]]
-            ])->update(array(
-              "place_meta" => $place_meta
-            ));
+          // get all venues
+          $venues = Venue::where([
+            ["place_id", "!=", ""],
+            ["deleted", "=", 0]
+          ])->get(["id", "name", "address", "place_id", "image", "place_meta"])->toArray();
+
+          // check if meta exist (if not, then fetch and save for future use)
+          foreach ($venues as $venue) {
+            if (!isset($venue->place_meta) || $venue->place_meta === "") {
+              $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
+              $venue["place_meta"] = $place_meta;
+              Venue::where([
+                ["id", "=", $venue["id"]]
+              ])->update(array(
+                "place_meta" => $place_meta
+              ));
+            }
           }
+
+          // filter venues based on location category
+          $venues = array_filter($venues, function ($venue) use ($category_key, $category_value) {
+            $place_meta = json_decode($venue["place_meta"]);
+            $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
+              return in_array($category_key, $component->types);
+            }));
+            if ($place_component_match) {
+              return $place_component_match->long_name === $category_value;
+            } else {
+              return false;
+            }
+          });
+
+          // map venues to display fields
+          $venues = array_map(function ($v) {
+            return array(
+              "id" => $v["id"],
+              "name" => $v["name"],
+              "address" => $v["address"],
+              "image" => $v["image"]
+            );
+          }, $venues);
+
+          // cache results
+          Category::find($id)->update(array(
+            "results" => json_encode($venues),
+            "results_updated" => Carbon::now()
+          ));
+        } else {
+
+          // use cached results
+          $venues = json_decode($category->results);
         }
-
-        // filter venues based on location category
-        $venues = array_filter($venues, function ($venue) use ($category_key, $category_value) {
-          $place_meta = json_decode($venue["place_meta"]);
-          $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
-            return in_array($category_key, $component->types);
-          }));
-          if ($place_component_match) {
-            return $place_component_match->long_name === $category_value;
-          } else {
-            return false;
-          }
-        });
-
-        // map venues to display fields
-        $venues = array_map(function ($v) {
-          return array(
-            "id" => $v["id"],
-            "name" => $v["name"],
-            "address" => $v["address"],
-            "image" => $v["image"]
-          );
-        }, $venues);
-
-        // cache results
-        Category::find($id)->update(array(
-          "results" => json_encode($venues),
-          "results_updated" => Carbon::now()
-        ));
       } else {
-
-        // use cached results
-        $venues = json_decode($category->results);
+        $venues = [];
       }
     } else {
-      $venues = [];
+      if ($id === "best" || $id === "hot") {
+        $venues = Venue::inRandomOrder()->limit(12)->get(["id", "name", "image"])->toArray();   // select 12 random venues
+      } else {
+        $venues = []; // return done, browser will fetch with client location
+      }
     }
 
     return response()->json($venues);
@@ -711,5 +750,55 @@ class VenueController extends Controller
     } else {
       return response("Unauthorized", 401);
     }
+  }
+
+  public function near(Request $request)
+  {
+
+    $lat = $request->input('latitude');
+    $lng = $request->input('longitude');
+
+    $venues_array = [];
+    $town = "";
+
+    // determine location based on lat lng
+    if (isset($lat) && isset($lng)) {
+
+      // get all venues
+      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image"]);
+
+      // set origin
+      $origin = $lat . "," . $lng;
+
+      // set destinations
+      $destinations = $venues->map(function ($venue) {
+        return 'place_id:' . $venue->place_id;
+      })->toArray();
+
+      // calculate distances
+      $distances = $this->calculate_distances($origin, $destinations);
+
+      // set distances on venue collection, then convert to array
+      $venues->map(function ($venue, $index) use ($distances) {
+        $venue->distance = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["value"] : 0;
+        $venue->distanceDisplay = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["text"] : "";
+      });
+
+      // convert to array and sort
+      $venues_array = $venues->toArray();
+      usort($venues_array, function ($a, $b) {
+        return $a["distance"] > $b["distance"];
+      });
+
+      // get user town
+      $town = $this->get_town($origin);
+
+    }
+
+    return response()->json(array(
+      "venues" => $venues_array,
+      "town" => $town
+    ));
+
   }
 }

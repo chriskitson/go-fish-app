@@ -33,6 +33,7 @@
                             <h3
                                 class="text-lg font-medium leading-6 text-gray-900"
                                 id="modal-title"
+                                v-if="allowUpdate"
                             >
                                 Update my location
                             </h3>

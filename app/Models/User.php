@@ -21,7 +21,9 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
-        'global_admin'
+        'global_admin',
+        'town',
+        'origin'
     ];
 
     /**

@@ -30,6 +30,7 @@ Route::get('load', [BootstrapController::class, 'load']);
 
 // venues (no user context)
 Route::get('venues', [VenueController::class, 'all']);
+Route::get('venues/near', [VenueController::class, 'near']);
 Route::get('venues/{id}', [VenueController::class, 'all']);
 Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
 Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
@@ -57,6 +58,7 @@ Route::group([
     Route::get('auth/venues/tickets/{id}', [VenueController::class, 'tickets']);
     Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
     Route::get('auth/venues/get', [VenueController::class, 'all']);
+    Route::get('auth/venues/near', [VenueController::class, 'near']);
     
     // basket
     Route::get('auth/basket', [BasketController::class, 'get']);

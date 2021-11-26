@@ -82,6 +82,7 @@ let state = {
     manageVenueNewTicket: false,
     manageVenueErrorFields: [],
     venueCategory: [],
+    venueCategoryDetail: {},
     venueManageClosed: {
         start: today,
         end: tomorrow

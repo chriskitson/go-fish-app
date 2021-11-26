@@ -70,4 +70,9 @@ ADD COLUMN `created_at` TIMESTAMP NULL AFTER `end_date`,
 ADD COLUMN `updated_at` TIMESTAMP NULL AFTER `created_at`;
 
 
+ALTER TABLE `users` 
+ADD COLUMN `town` VARCHAR(255) NULL AFTER `global_admin`,
+ADD COLUMN `origin` VARCHAR(45) NULL AFTER `town`;
+
+
 

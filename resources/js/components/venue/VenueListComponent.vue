@@ -24,7 +24,7 @@
                 :venue="venue"
             ></venue-item-component>
             <venue-item-component
-                v-for="index in venues.length < 4 ? 4 - venues.length : 0"
+                v-for="index in venues.length < display ? display - venues.length : 0"
                 :key="index"
                 :live="false"
             ></venue-item-component>
@@ -33,16 +33,13 @@
             :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4`"
             v-if="!live"
         >
-            <venue-item-component :live="live"></venue-item-component>
-            <venue-item-component :live="live"></venue-item-component>
-            <venue-item-component :live="live"></venue-item-component>
-            <venue-item-component :live="live"></venue-item-component>
+            <venue-item-component :live="live" v-for="index in display" :key="`temp-${index}`"></venue-item-component>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["title", "venues", "live", "userPosition"]
+    props: ["title", "venues", "live", "userPosition", "display"]
 };
 </script>

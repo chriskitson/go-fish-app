@@ -1,11 +1,12 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
-        <banner-component></banner-component>
+        <banner-component imageURL="/images/bg2.jpg"></banner-component>
         <venue-list-component
             title="Fisheries near me"
             :venues="venues"
             :live="live"
             :userPosition="userPosition"
+            :display="4"
             @showLocation="showLocationSearch"
         ></venue-list-component>
         <category-list-component
@@ -13,11 +14,11 @@
             :categories="categories"
             :live="true"
         ></category-list-component>
-        <category-list-component
+        <!-- <category-list-component
             title="How do you GoFish?"
             :categories="types"
             :live="true"
-        ></category-list-component>
+        ></category-list-component> -->
     </div>
 </template>
 

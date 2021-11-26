@@ -19,6 +19,21 @@ let actions = {
                 commit("LOGOUT", null);
             });
     },
+    VENUES_NEAR({ commit }, { queryString, user }) {
+        axios
+            .get(
+                `/api/${
+                    user.loggedIn ? "auth/" : ""
+                }venues/near?${queryString}`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUES_NEAR", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
+    },
     LOCATION_SEARCH_SHOW({ commit }, show) {
         commit("LOCATION_SEARCH_SHOW", show);
     },
@@ -349,10 +364,14 @@ let actions = {
     VENUE_CLOSED_ADD({ commit }, { start, end, user, venue_id }) {
         commit("SET_LOADING", true);
         return axios
-            .post(`/api/auth/venues/${venue_id}/closed`, {
-                start,
-                end
-            }, getTokenHeader(user))
+            .post(
+                `/api/auth/venues/${venue_id}/closed`,
+                {
+                    start,
+                    end
+                },
+                getTokenHeader(user)
+            )
             .then(res => {
                 commit("VENUE_CLOSED_ADD", res.data);
             })
@@ -364,7 +383,10 @@ let actions = {
     VENUE_CLOSED_DELETE({ commit }, { id, user, venue_id }) {
         commit("SET_LOADING", true);
         return axios
-            .delete(`/api/auth/venues/${venue_id}/closed/${id}`, getTokenHeader(user))
+            .delete(
+                `/api/auth/venues/${venue_id}/closed/${id}`,
+                getTokenHeader(user)
+            )
             .then(res => {
                 commit("VENUE_CLOSED_DELETE", id);
             })

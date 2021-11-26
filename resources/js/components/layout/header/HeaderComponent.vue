@@ -49,13 +49,13 @@
                 </h1>
             </div>
             <div class="flex items-center flex-grow hidden ml-5 lg:block">
-                <a href="#" class="mr-3 font-semibold text-md text-grey-300"
+                <a href="/category/hot" class="mr-3 font-semibold text-md text-grey-300"
                     >Hot Deals</a
                 >
-                <a href="#" class="mr-3 font-semibold text-md text-grey-300"
+                <a href="/category/near" class="mr-3 font-semibold text-md text-grey-300"
                     >Fisheries Near Me</a
                 >
-                <a href="#" class="mr-3 font-semibold text-md text-grey-300"
+                <a href="/category/best" class="mr-3 font-semibold text-md text-grey-300"
                     >Best Fisheries</a
                 >
                 <a href="/login" class="mr-3 font-semibold text-md text-grey-300"

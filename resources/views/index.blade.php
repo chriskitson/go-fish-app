@@ -23,6 +23,7 @@ if (isset($date) && isset($location)) {   // venue search
 }
 if (isset($categoryid)) {
     $initial_state['venueCategory'] = $venue->get_category($categoryid)->original;
+    $initial_state['venueCategoryDetail'] = $venue->get_category_detail($categoryid)->original;
 }
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];

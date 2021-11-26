@@ -363,6 +363,14 @@ let mutations = {
             state.venueDetail.closed.splice(findDate, 1);
         }
         state.loading = false;
+    },
+    VENUES_NEAR(state, { venues, town }) {
+        state.venueCategory = venues;
+        state.userPosition = {
+            ...state.userPosition,
+            town
+        }
+        state.loading = false;
     }
 };
 export default mutations;
