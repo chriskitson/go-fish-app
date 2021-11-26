@@ -5,7 +5,7 @@
                 <user-ticket-list-component
                     title="My Tickets"
                     :tickets="userTickets"
-                    :live="true"
+                    :live="live"
                 ></user-ticket-list-component>
             </div>
         </div>

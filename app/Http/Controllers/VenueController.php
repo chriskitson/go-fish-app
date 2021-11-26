@@ -68,7 +68,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"]);
+    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"])->where([["deleted", "=", 0]]);
     $venue->description = str_replace("\n", "<br/>", $venue->description);
     $venue->rules = str_replace("\n", "<br/>", $venue->rules);
     return response()->json($venue);
@@ -76,7 +76,7 @@ class VenueController extends Controller
 
   public function get_detail($id)
   { // for admin display
-    $venue = Venue::find($id);
+    $venue = Venue::find($id)->where([["deleted", "=", 0]]);
     $venue->description = str_replace("\n", "\\n", $venue->description);
     $venue->rules = str_replace("\n", "\\n", $venue->rules);
     $fields = array(
@@ -387,7 +387,8 @@ class VenueController extends Controller
       $venue_id = $venue->id;
 
       Venue::where([
-        ["id", "=", $venue_id]
+        ["id", "=", $venue_id],
+        ["deleted", "=", 0]
       ])->update($fields);
 
       // clear cached requests
@@ -691,7 +692,7 @@ class VenueController extends Controller
       }
     } else {
       if ($id === "best" || $id === "hot") {
-        $venues = Venue::inRandomOrder()->limit(12)->get(["id", "name", "image"])->toArray();   // select 12 random venues
+        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image"])->toArray();   // select 12 random venues
       } else {
         $venues = []; // return done, browser will fetch with client location
       }
