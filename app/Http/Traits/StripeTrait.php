@@ -31,10 +31,11 @@ trait StripeTrait
         "application_fee_amount" => $application_fee,
         "transfer_data" => [
           "destination" => $account_id,
-        ]
+        ],
+        "receipt_email" => $email
       ),
       "mode" => "payment",
-      "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm",
+      "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm?session_id={CHECKOUT_SESSION_ID}",
       "cancel_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . $url,
     ]);
     return $checkout_session->id;

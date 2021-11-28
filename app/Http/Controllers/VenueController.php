@@ -68,7 +68,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"])->where([["deleted", "=", 0]]);
+    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"]);
     $venue->description = str_replace("\n", "<br/>", $venue->description);
     $venue->rules = str_replace("\n", "<br/>", $venue->rules);
     return response()->json($venue);
@@ -76,7 +76,7 @@ class VenueController extends Controller
 
   public function get_detail($id)
   { // for admin display
-    $venue = Venue::find($id)->where([["deleted", "=", 0]]);
+    $venue = Venue::find($id);
     $venue->description = str_replace("\n", "\\n", $venue->description);
     $venue->rules = str_replace("\n", "\\n", $venue->rules);
     $fields = array(
