@@ -72,6 +72,7 @@ Route::group([
 
     // user tickets
     Route::get('auth/bookings/user', [BookingController::class, 'user']);
+    Route::get('auth/booking/{id}', [BookingController::class, 'get']);
 
     // load (with user context)
     Route::get('auth/load', [BootstrapController::class, 'load']);

@@ -78,6 +78,7 @@ let state = {
     },
     venueSearchResults: [],
     userTickets: [],
+    userTicketDetail: {},
     manageVenues: [],
     manageVenueNewTicket: false,
     manageVenueErrorFields: [],

@@ -4,24 +4,22 @@
             class="flex flex-col items-center w-full px-2 py-2 border md:py-0 md:h-12 justify-items bg-grey-300 border-grey-300 md:flex-row"
             v-if="live"
         >
-            <icon
-                name="ticket"
-                class="mr-2 text-lg text-white w-7 h-7"
-                v-if="live"
-            />
-            <span class="flex-grow font-semibold text-center text-white md:text-left">
+            <icon name="ticket" class="mr-2 text-lg text-white w-7 h-7" />
+            <span
+                class="flex-grow font-semibold text-center text-white md:text-left"
+            >
                 {{
                     live
-                        ? `${formatDateDisplay(ticket.ticket_date)} - ${
-                              ticket.venue_name
-                          } - ${ticket.ticket_name}`
+                        ? `${padNumber(ticket.id, 5)} - ${formatDateDisplay(
+                              ticket.date
+                          )}`
                         : "&nbsp;"
                 }}
             </span>
             <span
                 class="px-3 py-1 mt-4 text-lg font-semibold text-white bg-orange-200 rounded-full md:mt-0"
             >
-                {{ formatCurrency(ticket.cost) }}
+                {{ ticket.qty }}
             </span>
         </div>
         <div
@@ -32,28 +30,78 @@
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
                     <div class="font-semibold">Transaction Date</div>
                     <div class="md:col-span-4">
-                        {{ formatDateTimeDisplay(ticket.transaction_date) }}
+                        {{ formatDateTimeDisplay(ticket.date) }}
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Ticket Cost</div>
+                    <div class="font-semibold">Total Cost</div>
+                    <div class="flex items-center md:col-span-4">
+                        {{ formatCurrency(ticket.total) }}
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
+                    <div class="font-semibold">Booking Fee</div>
                     <div class="md:col-span-4">
-                        {{ formatCurrency(ticket.cost) }}
+                        {{ formatCurrency(ticket.booking_fee) }}
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
                     <div class="font-semibold">Venue</div>
-                    <div class="md:col-span-4"><a :href="`/venue/${ticket.venue_id}`" class="text-red-200">{{ ticket.venue_name }}</a></div>
-                </div>
-                <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Ticket Date</div>
                     <div class="md:col-span-4">
-                        {{ formatDateDisplay(ticket.ticket_date) }}
+                        {{ ticket.tickets.length > 0 ? ticket.tickets[0].venue_name : "Unknown" }}
+                    </div>
+                </div>
+                <!-- <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
+                    <div class="font-semibold"></div>
+                    <div class="md:col-span-4">
+                        <a
+                            :href="`/success/${ticket.session}`"
+                            v-if="ticket.session && ticket.session !== ''"
+                            class="flex items-center text-sm text-orange-200"
+                        >
+                            <icon
+                                name="ticket"
+                                class="w-5 h-5 mr-1 text-lg"
+                            />
+                            View Tickets
+                        </a>
+                    </div>
+                </div> -->
+                <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
+                    <div class="font-semibold"></div>
+                    <div class="md:col-span-4">
+                        <a
+                            :href="`/success/${ticket.session}`"
+                            v-if="ticket.session && ticket.session !== ''"
+                            class="flex items-center text-sm text-orange-200"
+                        >
+                            <icon
+                                name="check-circle"
+                                class="w-5 h-5 mr-1 text-lg"
+                            />
+                            View Confirmation
+                        </a>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Ticket Type</div>
-                    <div class="md:col-span-4">{{ ticket.ticket_name }}</div>
+                    <div class="font-semibold"></div>
+                    <div class="md:col-span-4">
+                        <a
+                            :href="ticket.receipt_link"
+                            target="_blank"
+                            v-if="
+                                ticket.receipt_link &&
+                                    ticket.receipt_link !== ''
+                            "
+                            class="flex items-center text-sm text-orange-200"
+                        >
+                            <icon
+                                name="receipt-tax"
+                                class="w-5 h-5 mr-1 text-lg"
+                            />
+                            View Receipt
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,14 +118,17 @@
 import {
     formatCurrency,
     formatDateDisplay,
-    formatDateTimeDisplay
+    formatDateTimeDisplay,
+    padNumber
 } from "../../utils";
 export default {
     props: ["ticket", "live"],
     data: () => ({
         formatCurrency,
         formatDateDisplay,
-        formatDateTimeDisplay
+        formatDateTimeDisplay,
+        padNumber
     })
 };
 </script>
+x

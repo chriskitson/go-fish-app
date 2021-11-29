@@ -26,10 +26,10 @@ export const formatCurrency = num => {
 export const formatLongDateDisplay = date => {
     const fd = new Date(date);
     return fd.toLocaleDateString("en-GB", {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
     });
 };
 
@@ -62,4 +62,19 @@ export const clearErrors = state => {
         error: ""
     }));
     return state;
+};
+
+export const groupBy = (arr, criteria) => {
+    const newObj = arr.reduce(function(acc, currentValue) {
+        if (!acc[currentValue[criteria]]) {
+            acc[currentValue[criteria]] = [];
+        }
+        acc[currentValue[criteria]].push(currentValue);
+        return acc;
+    }, {});
+    return newObj;
+};
+
+export const padNumber = (number, len) => {
+    return String(number).padStart(len, "0");
 };

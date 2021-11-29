@@ -35,7 +35,7 @@ trait StripeTrait
         "receipt_email" => $email
       ),
       "mode" => "payment",
-      "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm?session_id={CHECKOUT_SESSION_ID}",
+      "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm/{CHECKOUT_SESSION_ID}",
       "cancel_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . $url,
     ]);
     return $checkout_session->id;

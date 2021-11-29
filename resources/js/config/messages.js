@@ -15,5 +15,8 @@ export const MESSAGES = {
   },
   VENUE: {
     SoldOut: "There are no tickets availble for this venue on this date. The venue could be closed or tickets have sold out."
+  },
+  TICKETS: {
+    None: "You have no bookings."
   }
 };

@@ -17,7 +17,7 @@ Vue.use(VueRouter);
 export const routes = [
     { path: '/', component: Home, name: 'Home' },
     { path: '/login', component: Login, name: 'Login' },
-    { path: '/confirm', component: Confirm, name: 'Confirm' },
+    { path: '/success/:id', component: Confirm, name: 'Confirm' },
     { path: '/basket', component: Basket, name: 'Basket' },
     { path: '/venue/:id', component: Detail, name: 'Detail' },
     { path: '/search/:date/:location', component: Search, name: 'Search' },

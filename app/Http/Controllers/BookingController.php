@@ -35,7 +35,7 @@ class BookingController extends Controller
 
     // get tickets from user basket
     $items = Basket::where([
-      ['user_id', '=', $user_id]
+      ["user_id", "=", $user_id]
     ])->get();
 
     // array to hold booking responses
@@ -65,8 +65,8 @@ class BookingController extends Controller
 
       // get ticket info
       $ticket = Ticket::where([
-        ['venue_id', '=', $venue_id],
-        ['id', '=', $ticket_id]
+        ["venue_id", "=", $venue_id],
+        ["id", "=", $ticket_id]
       ])->get(["daily_limit", "cost", "name"])->first();
 
       if (isset($ticket)) {
@@ -76,16 +76,16 @@ class BookingController extends Controller
         $cost = $ticket->cost;
 
         // count number of bookings
-        $bookings = count(Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->where([
-          ['ticket_id', '=', $ticket_id],
-          ['confirmed', true]
-        ])->whereDate('bookings.created_at', $date)->get('bookings.id'));
+        $bookings = count(Booking::join("transactions", "transactions.id", "bookings.transaction_id")->where([
+          ["ticket_id", "=", $ticket_id],
+          ["confirmed", true]
+        ])->whereDate("bookings.created_at", $date)->get("bookings.id"));
 
         if ($daily_limit > 0 && $daily_limit >= ($bookings + $qty)) {
 
           // get venue info
           $venue = Venue::where([
-            ['id', '=', $venue_id],
+            ["id", "=", $venue_id],
           ])->get(["name", "account", "payment_fee"])->first();
 
           array_push($booking_responses, array(
@@ -203,7 +203,7 @@ class BookingController extends Controller
 
     $event = null;
 
-    if (!$this->verify_event($request->getContent(), $_SERVER['HTTP_STRIPE_SIGNATURE'])) {
+    if (!$this->verify_event($request->getContent(), $_SERVER["HTTP_STRIPE_SIGNATURE"])) {
       // handle unverified
       return response()->json(array(
         "success" => false,
@@ -224,7 +224,7 @@ class BookingController extends Controller
 
     // handle event
     switch ($event->type) {
-      case 'checkout.session.completed':
+      case "checkout.session.completed":
 
         // clear basket and record payment intent
         $session_id = $event->data->object->id;
@@ -236,7 +236,7 @@ class BookingController extends Controller
         if ($session_payment_status === "paid") {
 
           $transaction = Transaction::where([
-            ['session', '=', $session_id]
+            ["session", "=", $session_id]
           ])->first();
 
           $transaction->confirmed = 1;
@@ -245,13 +245,13 @@ class BookingController extends Controller
 
           // clear basket
           Basket::where([
-            ['user_id', '=', $user_id]
+            ["user_id", "=", $user_id]
           ])->delete();
         }
 
         break;
 
-      case 'payment_intent.succeeded':
+      case "payment_intent.succeeded":
 
         // record receipt for payment
         $payment_intent_id = $event->data->object->id;
@@ -260,7 +260,7 @@ class BookingController extends Controller
         }, $event->data->object->charges->data));
 
         $transaction = Transaction::where([
-          ['payment', '=', $payment_intent_id]
+          ["payment", "=", $payment_intent_id]
         ])->first();
 
         $transaction->receipt_link = $payment_receipt_link;
@@ -268,7 +268,7 @@ class BookingController extends Controller
 
         break;
       default:
-        echo 'Received unknown event type ' . $event->type;
+        echo "Received unknown event type " . $event->type;
     }
 
     http_response_code(200);
@@ -280,11 +280,44 @@ class BookingController extends Controller
     $user = $request->user();
     $user_id = isset($user) ? $user->id : 0;
 
-    $bookings = Booking::join('transactions', 'transactions.id', 'bookings.transaction_id')->join('tickets', 'tickets.id', 'bookings.ticket_id')->join('venues', 'venues.id', 'tickets.venue_id')->where([
-      ['user_id', '=', $user_id],
-      ['confirmed', true]
-    ])->orderBy('transactions.created_at','DESC')->get(['bookings.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.description AS ticket_description', 'venues.name AS venue_name', 'venues.id AS venue_id', 'bookings.cost AS cost', 'bookings.date AS ticket_date','transactions.created_at AS transaction_date'])->toArray();
+    // get confirmed transactions
+    $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
+      ["confirmed", "=", 1],
+      ["user_id", "=", $user_id]
+    ])->distinct()->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
 
-    return response()->json($bookings);
+    // get bookings (tickets) for each transaction
+    foreach ($transactions as $transaction) {
+      $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+        ["user_id", "=", $user_id],
+        ["transaction_id", "=", $transaction->id]
+      ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+      $transaction->tickets = $tickets;
+    }
+
+    return response()->json($transactions);
+  }
+
+  public function get(Request $request, $session)
+  {
+
+    $user = $request->user();
+    $user_id = isset($user) ? $user->id : 0;
+
+    // get confirmed transaction
+    $transaction = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
+      ["confirmed", "=", 1],
+      ["user_id", "=", $user_id],
+      ["session", "=", $session]
+    ])->distinct()->first(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+
+    // get bookings (tickets) for transaction
+    $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+      ["user_id", "=", $user_id],
+      ["transaction_id", "=", $transaction->id]
+    ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+    $transaction->tickets = $tickets;
+
+    return response()->json($transaction);
   }
 }

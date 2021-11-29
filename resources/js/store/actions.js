@@ -228,6 +228,16 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
+    MY_TICKET_GET({ commit }, { user, session }) {
+        return axios
+            .get(`/api/auth/booking/${session}`, getTokenHeader(user))
+            .then(res => {
+                commit("MY_TICKET_GET", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
+    },
     VENUE_TICKET_ADD({ commit }) {
         commit("VENUE_TICKET_ADD");
     },

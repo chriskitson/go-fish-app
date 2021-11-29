@@ -1,6 +1,6 @@
 import { clearErrors } from "../utils";
 import { MESSAGES } from "../config/messages";
-import state, { manageTabs } from "./state";
+import { manageTabs } from "./state";
 
 let mutations = {
     // Generic
@@ -235,6 +235,9 @@ let mutations = {
     // My Tickets
     MY_TICKETS_GET(state, res) {
         state.userTickets = res;
+    },
+    MY_TICKET_GET(state, res) {
+        state.userTicketDetail = res;
     },
     // Manage Venues
     VENUE_DETAILS_UPDATE(state, { success, venue, errors }) {

@@ -32,8 +32,8 @@ Route::get('/search/{date}/{location}', function ($date, $location) {
     return view('index', ['date' => $date, 'location' => $location]);
 });
 
-Route::get('/confirm', function () {
-    return view('index');
+Route::get('/success/{session}', function ($session) {
+    return view('index', ['confirmid' => $session]);
 });
 
 Route::get('/tickets', function () {

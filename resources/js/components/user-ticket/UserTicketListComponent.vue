@@ -9,13 +9,13 @@
         >
             <user-ticket-item-component
                 v-for="ticket in tickets"
-                :key="`user-ticket-${ticket.ticket_id}`"
+                :key="`user-ticket-${ticket.id}`"
                 :live="live"
                 :ticket="ticket"
             ></user-ticket-item-component>
         </div>
         <div v-if="live && tickets.length === 0">
-            {{ MESSAGES.VENUE.SoldOut }}
+            {{ MESSAGES.TICKETS.None }}
         </div>
         <div
             class="flex flex-wrap items-center w-full space-y-4 py-50"
