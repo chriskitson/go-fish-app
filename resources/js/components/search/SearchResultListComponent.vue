@@ -13,6 +13,7 @@
                     :key="`result-${result.id}`"
                     :result="result"
                     :date="date"
+                    :dateStamp="dateStamp"
                 ></search-result-item-component>
             </div>
         </div>
@@ -21,6 +22,6 @@
 
 <script>
 export default {
-    props: ["title", "results", "date"]
+    props: ["title", "results", "date", "dateStamp"]
 };
 </script>

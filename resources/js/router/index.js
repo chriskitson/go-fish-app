@@ -20,6 +20,7 @@ export const routes = [
     { path: '/confirm/:id', component: Confirm, name: 'Confirm' },
     { path: '/basket', component: Basket, name: 'Basket' },
     { path: '/venue/:id', component: Detail, name: 'Detail' },
+    { path: '/venue/:id/:date', component: Detail, name: 'Detail' },
     { path: '/search/:date/:location', component: Search, name: 'Search' },
     { path: '/tickets', component: MyTickets, name: 'My Tickets' },
     { path: '/manage-venues', component: ManageVenues, name: 'Manage Venues' },

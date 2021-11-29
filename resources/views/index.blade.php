@@ -1,10 +1,14 @@
 @inject('venue', 'App\Http\Controllers\VenueController')
+@inject('page', 'App\Http\Controllers\PageController')
 @php
 $initial_state = array();
 // pre-fetch venue data server side
 if (isset($venueid)) {   // venue detail
     $initial_state['venueDetail'] = $venue->get($venueid)->original;
     $initial_state['ticketDetail'] = $venue->get($venueid)->original;
+    if (isset($date)) {
+        $initial_state['venueDetail']['date'] = intval($date);
+    }
 }
 if (isset($venuemanageid)) {
     $initial_state['venueDetail'] = $venue->get_detail($venuemanageid)->original;
@@ -30,11 +34,12 @@ $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
 if ($initial_state['path'] === 'manage-venues') {
     $initial_state['manageVenues'] = $venue->names()->original;
 }
+$page_title = $page->get_title($initial_state['path']);
 @endphp
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
-        <title>GoFish! - Find the best fisheries near you</title>
+        <title>{{ $page_title }}</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">

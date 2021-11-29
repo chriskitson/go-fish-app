@@ -1,6 +1,6 @@
 <template>
     <div class="relative flex w-full p-4 rounded-md text-grey-300 bg-grey-100">
-        <a :href="`/venue/${result.id}`">
+        <a :href="`/venue/${result.id}/${dateStamp}`">
             <span
                 :style="
                     `background-image:url('${
@@ -12,7 +12,7 @@
             >
         </a>
         <div class="flex flex-col">
-            <a :href="`/venue/${result.id}`" class="text-lg font-bold"
+            <a :href="`/venue/${result.id}/${dateStamp}`" class="text-lg font-bold"
                 >{{ result.name }} - {{ result.distanceDisplay }}</a
             >
             <span class="text-sm">{{ result.address }}</span>
@@ -39,6 +39,6 @@
 
 <script>
 export default {
-    props: ["result", "date"]
+    props: ["result", "date", "dateStamp"]
 };
 </script>

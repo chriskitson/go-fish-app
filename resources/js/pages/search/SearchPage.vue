@@ -9,6 +9,7 @@
                     :results="venueSearchResults"
                     :title="title"
                     :date="dateSearch"
+                    :dateStamp="dateStamp"
                 ></search-result-list-component>
             </div>
         </div>
@@ -26,7 +27,8 @@ export default {
             venueDetail: state => state.venueDetail,
             venueSearchResults: state => state.venueSearchResults,
             title: state => `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:`,
-            dateSearch: state => formatDateDisplay(state.dateSearch)
+            dateSearch: state => formatDateDisplay(state.dateSearch),
+            dateStamp: state => state.dateSearch.getTime()
         })
     }
 };

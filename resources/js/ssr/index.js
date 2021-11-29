@@ -2,8 +2,15 @@ export const bindState = (context, state, client) => {
     if (context.venueDetail) {
         state.venueDetail = {
             ...state.venueDetail,
-            ...context.venueDetail
+            ...context.venueDetail,
         };
+        if (context.venueDetail.date) {
+            state.venueDetail = {
+                ...state.venueDetail,
+                date: new Date(context.venueDetail.date)
+            };
+        }
+
     }
     if (context.venueSearchResults) {
         state.venueSearchResults = context.venueSearchResults.results;
