@@ -32,7 +32,7 @@ Route::get('/search/{date}/{location}', function ($date, $location) {
     return view('index', ['date' => $date, 'location' => $location]);
 });
 
-Route::get('/success/{session}', function ($session) {
+Route::get('/confirm/{session}', function ($session) {
     return view('index', ['confirmid' => $session]);
 });
 

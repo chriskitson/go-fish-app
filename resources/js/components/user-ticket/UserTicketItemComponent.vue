@@ -55,7 +55,7 @@
                     <div class="font-semibold"></div>
                     <div class="md:col-span-4">
                         <a
-                            :href="`/success/${ticket.session}`"
+                            :href="`/confirm/${ticket.session}`"
                             v-if="ticket.session && ticket.session !== ''"
                             class="flex items-center text-sm text-orange-200"
                         >
@@ -71,7 +71,7 @@
                     <div class="font-semibold"></div>
                     <div class="md:col-span-4">
                         <a
-                            :href="`/success/${ticket.session}`"
+                            :href="`/confirm/${ticket.session}`"
                             v-if="ticket.session && ticket.session !== ''"
                             class="flex items-center text-sm text-orange-200"
                         >
