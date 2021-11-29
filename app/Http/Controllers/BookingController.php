@@ -311,12 +311,14 @@ class BookingController extends Controller
       ["session", "=", $session]
     ])->distinct()->first(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
 
-    // get bookings (tickets) for transaction
-    $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
-      ["user_id", "=", $user_id],
-      ["transaction_id", "=", $transaction->id]
-    ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
-    $transaction->tickets = $tickets;
+    if (isset($transaction)) {
+      // get bookings (tickets) for transaction
+      $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+        ["user_id", "=", $user_id],
+        ["transaction_id", "=", $transaction->id]
+      ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+      $transaction->tickets = $tickets;
+    }
 
     return response()->json($transaction);
   }

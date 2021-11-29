@@ -90,7 +90,7 @@ export default {
             user: state => state.user,
             ticket: state => state.userTicketDetail,
             venue: state =>
-                state.userTicketDetail.tickets.length > 0
+                state.userTicketDetail.tickets?.length > 0
                     ? state.userTicketDetail.tickets[0].venue_name
                     : ""
         })
