@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <a
-                        :href="`/venues/${t.venue_id}`"
+                        :href="`/venue/${t.venue_id}`"
                         class="text-orange-200 hover:underline"
                         >{{ t.venue_name }}</a
                     >

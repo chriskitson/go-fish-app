@@ -259,6 +259,8 @@ class BookingController extends Controller
           return $c->receipt_url;
         }, $event->data->object->charges->data));
 
+        sleep(1); // pause for a second to allow write transaction to db (race condition)
+
         $transaction = Transaction::where([
           ["payment", "=", $payment_intent_id]
         ])->first();
