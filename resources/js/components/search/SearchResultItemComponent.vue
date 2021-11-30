@@ -25,7 +25,7 @@
                         ? `is ${result.tickets.length} type`
                         : `are ${result.tickets.length} types`
                 }}
-                of tickets available on {{ date }}.</span
+                of tickets available on {{ date }} from {{result.tickets.length > 0 ? formatCurrency(result.tickets.map(t => t.cost).sort((a,b) => a - b)[0]) : formatCurrency('0')}}.</span
             >
             <span
                 class="flex items-center mt-2 text-sm justify-content text-grey-300"
@@ -38,7 +38,11 @@
 </template>
 
 <script>
+import { formatCurrency } from "../../utils";
 export default {
-    props: ["result", "date", "dateStamp"]
+    props: ["result", "date", "dateStamp"],
+    data: () => ({
+        formatCurrency
+    })
 };
 </script>

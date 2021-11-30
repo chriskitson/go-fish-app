@@ -68,7 +68,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image"]);
+    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id"]);
     $venue->description = str_replace("\n", "<br/>", $venue->description);
     $venue->rules = str_replace("\n", "<br/>", $venue->rules);
     return response()->json($venue);
@@ -263,10 +263,10 @@ class VenueController extends Controller
       $results = array_filter($results, function ($v) {
         return $v["distance"] < env("SEARCH_DISTANCE_LIMIT", 0);
       });
+      // sort by distance
       usort($results, function ($a, $b) {
         return $a["distance"] > $b["distance"];
       });
-
       // write to cache expiring in 1 week
       $cache = new SearchCache([
         "id" => $location,
@@ -305,8 +305,15 @@ class VenueController extends Controller
           })->values()->toArray();
 
           $result->tickets = $tickets;
+
         }
       }
+
+      // sort by tickets available
+      usort($results, function ($a, $b) {
+        return (count($a->tickets) > 0) < (count($b->tickets) > 0);
+      });
+
     }
 
     return response()->json(array(

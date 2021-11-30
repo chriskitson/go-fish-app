@@ -14,12 +14,15 @@
                 </p>
                 <p class="text-sm" v-html="venueDetail.description"></p>
                 <div class="flex mt-5">
-                    <button
+                    <a
+                        :href="directionsURL"
+                        target="_blank"
                         class="flex items-center justify-center px-3 py-1 mr-2 text-sm text-white bg-red-200 rounded-lg"
+                        v-if="venueDetail.place_id !== ''"
                     >
                         <icon name="location-marker" class="w-4 h-4 mr-2" />
                         Directions
-                    </button>
+                    </a>
                     <button
                         class="flex items-center justify-center px-3 py-2 text-sm text-white bg-red-200 rounded-lg"
                     >
@@ -27,7 +30,7 @@
                         Review
                     </button>
                 </div>
-                <div class="p-5 mt-10 border border-grey-200 text-grey-300">
+                <div class="p-5 mt-10 border border-grey-200 text-grey-300" v-if="venueDetail.rules !== ''">
                     <h2 class="mb-2 font-semibold">Rules</h2>
                     <div v-html="venueDetail.rules"></div>
                 </div>
@@ -93,7 +96,10 @@ export default {
                           )[0].cost
                       } for ${formatDateDisplay(state.venueDetail.date)}:`
                     : "No tickets available",
-            currentDate: state => formatLongDateDisplay(state.venueDetail.date)
+            currentDate: state => formatLongDateDisplay(state.venueDetail.date),
+            directionsURL: state => {
+                return `https://www.google.com/maps/dir/?api=1&origin=${state.userPosition.town}&destination_place_id=${state.venueDetail.place_id}&destination=${state.venueDetail.address}` ;
+            }
         })
     },
     mounted() {
