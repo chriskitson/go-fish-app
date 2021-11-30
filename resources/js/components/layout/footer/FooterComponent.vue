@@ -1,6 +1,6 @@
 <template>
     <footer
-        class="flex items-center justify-center w-full px-8 py-16 mt-10 bg-grey-300"
+        class="flex items-center justify-center w-full px-8 pt-16 pb-8 mt-10 bg-grey-300"
     >
         <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
             <div>
@@ -51,7 +51,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="text-xs text-center text-white col-span-full">
+            <div class="mt-8 text-xs text-center text-white col-span-full">
                 &copy; Copyright 2021 GoFish. All rights reserved.
             </div>
         </div>

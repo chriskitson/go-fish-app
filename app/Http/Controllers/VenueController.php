@@ -630,7 +630,7 @@ class VenueController extends Controller
   public function get_categories()
   {
     // used for footer links
-    $categories = Category::orderBy("name", "ASC")->get(["id", "name"]);
+    $categories = Category::inRandomOrder()->limit(10)->get(["id", "name"]);
     return response()->json($categories);
   }
 
