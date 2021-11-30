@@ -34,6 +34,7 @@ $initial_state['bookingFee'] = $_ENV["BOOKING_FEE"];
 if ($initial_state['path'] === 'manage-venues') {
     $initial_state['manageVenues'] = $venue->names()->original;
 }
+$initial_state['allCategories']  = $venue->get_categories()->original;
 $page_title = $page->get_title($initial_state['path']);
 @endphp
 <!doctype html>

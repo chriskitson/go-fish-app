@@ -627,6 +627,13 @@ class VenueController extends Controller
     return response()->json($category);
   }
 
+  public function get_categories()
+  {
+    // used for footer links
+    $categories = Category::orderBy("name", "ASC")->get(["id", "name"]);
+    return response()->json($categories);
+  }
+
   public function get_category($id)
   {
 

@@ -1,5 +1,8 @@
 <template>
-    <main :class="`md:mt-4 m-auto bg-white text-left max-w-screen-lg ${bgColor}`" id="app">
+    <main
+        :class="`md:mt-4 m-auto bg-white text-left max-w-screen-lg ${bgColor}`"
+        id="app"
+    >
         <header-component
             :user="user"
             :live="live"
@@ -7,7 +10,10 @@
             :basketTotal="basketTotal"
             @logout="logout"
         ></header-component>
-        <div class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100" v-if="showSearch">
+        <div
+            class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100"
+            v-if="showSearch"
+        >
             <top-search-component
                 :venueSearch="venueSearch"
                 :date="dateSearch"
@@ -17,7 +23,11 @@
             ></top-search-component>
         </div>
         <router-view></router-view>
-        <footer-component></footer-component>
+        <footer-component
+            :categories="allCategories"
+            :usefulLinks="usefulLinks"
+            :informationLinks="informationLinks"
+        ></footer-component>
         <location-component
             v-if="locationSearch.show"
             :locationSearch="locationSearch"
@@ -47,7 +57,7 @@ export default {
                 if (state.path === "login") {
                     return `bg-cover bg-login bg-grey-100`;
                 }
-                return '';
+                return "";
             },
             showSearch: state => state.path !== "login",
             user: state => state.user,
@@ -61,7 +71,8 @@ export default {
                     state.basket
                         .map(b => b.basket_qty * b.ticket_cost)
                         .reduce((a, b) => a + b, 0)
-                )
+                ),
+            allCategories: state => state.allCategories
         })
     },
     mounted() {
@@ -95,7 +106,7 @@ export default {
                 user,
                 queryString
             });
-            if (this.$route.fullPath === '/category/near') {
+            if (this.$route.fullPath === "/category/near") {
                 this.$store.dispatch("VENUES_NEAR", {
                     user,
                     queryString
@@ -111,7 +122,10 @@ export default {
                     geometry: { location }
                 } = this.locationSearch.detail;
                 localStorage.removeItem("homeToken");
-                localStorage.setItem("origin", `${location.lat()},${location.lng()}`);
+                localStorage.setItem(
+                    "origin",
+                    `${location.lat()},${location.lng()}`
+                );
                 this.getLocationData(
                     `latitude=${location.lat()}&longitude=${location.lng()}`
                 );
@@ -126,7 +140,9 @@ export default {
         searchVenues() {
             const { dateSearch, venueSearch } = this.$store.state;
             if (dateSearch && venueSearch.detail) {
-                window.location.href = `/search/${dateSearch.getTime()}/${venueSearch.detail.place_id}`;
+                window.location.href = `/search/${dateSearch.getTime()}/${
+                    venueSearch.detail.place_id
+                }`;
             }
         },
         logout() {
@@ -139,6 +155,56 @@ export default {
         change(date) {
             this.$store.dispatch("DATE_SET", date);
         }
-    }
+    },
+    data: () => ({
+        usefulLinks: [
+            {
+                url: "/login",
+                name: "Join GoFish"
+            },
+            {
+                url: "/search",
+                name: "Search"
+            },
+            {
+                url: "/category/hot",
+                name: "Hot Deals"
+            },
+            {
+                url: "/category/near",
+                name: "Fisheries Near Me"
+            },
+            {
+                url: "/category/best",
+                name: "Best Fisheries"
+            }
+        ],
+        informationLinks: [
+            {
+                url: "/about",
+                name: "About GoFish"
+            },
+            {
+                url: "/contact",
+                name: "Contact us"
+            },
+            {
+                url: "/privacy",
+                name: "Privacy Policy"
+            },
+            {
+                url: "/terms",
+                name: "Terms & Conditions"
+            },
+            {
+                url: "/privacy",
+                name: "Privacy Policy"
+            },
+            {
+                url: "/faq",
+                name: "FAQs"
+            }
+        ]
+    })
 };
 </script>

@@ -16,6 +16,7 @@ let state = {
     bookingFee: 0,
     venues: [],
     categories: [],
+    allCategories: [],
     alerts: [],
     user: {
         loggedIn: false,
