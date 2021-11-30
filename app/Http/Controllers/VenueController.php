@@ -265,7 +265,7 @@ class VenueController extends Controller
       });
       // sort by distance
       usort($results, function ($a, $b) {
-        return $a["distance"] > $b["distance"];
+        return $a["distance"] < $b["distance"];
       });
       // write to cache expiring in 1 week
       $cache = new SearchCache([
