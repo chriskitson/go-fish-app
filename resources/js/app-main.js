@@ -44,6 +44,11 @@ Vue.component(
 );
 
 Vue.component(
+    "rating-component",
+    require("./components/shared/RatingComponent.vue").default
+);
+
+Vue.component(
     "page-spinner-component",
     require("./components/shared/PageSpinnerComponent.vue").default
 );
@@ -101,6 +106,16 @@ Vue.component(
 Vue.component(
     "category-item-component",
     require("./components/category/CategoryItemComponent.vue").default
+);
+
+Vue.component(
+    "review-list-component",
+    require("./components/reviews/ReviewsListComponent.vue").default
+);
+
+Vue.component(
+    "review-item-component",
+    require("./components/reviews/ReviewsItemComponent.vue").default
 );
 
 Vue.component(

@@ -8,6 +8,13 @@
                     class="w-full mb-5 rounded-md"
                     :alt="`${venueDetail.name} image`"
                 />
+                <div class="flex items-center text-xs text-gold">
+                    <rating-component
+                        :current="venueDetail.rating || 0"
+                        :max="5"
+                    ></rating-component>
+                    {{ venueDetail.rating || 0 }} / 5
+                </div>
                 <h1 class="text-xl font-semibold">{{ venueDetail.name }}</h1>
                 <p class="mb-10 text-sm font-semibold">
                     {{ venueDetail.address }}
@@ -30,7 +37,10 @@
                         Review
                     </button>
                 </div>
-                <div class="p-5 mt-10 border border-grey-200 text-grey-300" v-if="venueDetail.rules !== ''">
+                <div
+                    class="p-5 mt-10 border border-grey-200 text-grey-300"
+                    v-if="venueDetail.rules !== ''"
+                >
                     <h2 class="mb-2 font-semibold">Rules</h2>
                     <div v-html="venueDetail.rules"></div>
                 </div>
@@ -77,9 +87,13 @@
 </template>
 
 <script>
+import ClientOnly from "vue-client-only";
 import { mapState } from "vuex";
 import { formatDateDisplay, formatLongDateDisplay } from "../../utils";
 export default {
+    components: {
+        ClientOnly
+    },
     computed: {
         ...mapState({
             venues: state => state.venues,
@@ -98,7 +112,7 @@ export default {
                     : "No tickets available",
             currentDate: state => formatLongDateDisplay(state.venueDetail.date),
             directionsURL: state => {
-                return `https://www.google.com/maps/dir/?api=1&origin=${state.userPosition.town}&destination_place_id=${state.venueDetail.place_id}&destination=${state.venueDetail.address}` ;
+                return `https://www.google.com/maps/dir/?api=1&origin=${state.userPosition.town}&destination_place_id=${state.venueDetail.place_id}&destination=${state.venueDetail.address}`;
             }
         })
     },

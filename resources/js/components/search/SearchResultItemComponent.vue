@@ -12,6 +12,10 @@
             >
         </a>
         <div class="flex flex-col">
+            <rating-component
+                :max="5"
+                :current="parseFloat(result.rating) || 0"
+            ></rating-component>
             <a :href="`/venue/${result.id}/${dateStamp}`" class="text-lg font-bold"
                 >{{ result.name }} - {{ result.distanceDisplay }}</a
             >

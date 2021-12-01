@@ -33110,6 +33110,27 @@ body {
   /*.text-grey-lightest*/
 }
 
+/* star rating */
+
+.star-rating {
+  color: gold;
+  display: inline-block;
+  font-size: 20px;
+  position: relative;
+  transform: translate(-3px);
+}
+
+.star-rating__max,
+.star-rating__current {
+  position: absolute;
+  top: 0;
+}
+
+.star-rating__current {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

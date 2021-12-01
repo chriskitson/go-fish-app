@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
     @apply m-auto text-center bg-grey-200;
 }
@@ -113,4 +114,24 @@ body {
     /*.bg-indigo*/
     color: #f8fafc;
     /*.text-grey-lightest*/
+}
+
+/* star rating */
+.star-rating {
+    color: gold;
+    display: inline-block;
+    font-size: 20px;
+    position: relative;
+    transform: translate(-3px);
+}
+
+.star-rating__max,
+.star-rating__current {
+    position: absolute;
+    top: 0;
+}
+
+.star-rating__current {
+    overflow: hidden;
+    white-space: nowrap;
 }

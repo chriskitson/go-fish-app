@@ -68,9 +68,23 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id"]);
+    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
     $venue->description = str_replace("\n", "<br/>", $venue->description);
     $venue->rules = str_replace("\n", "<br/>", $venue->rules);
+    if (isset($venue->place_id)) {  // get more info about place from Google
+      if (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"]) {
+        $place_detail = $this->get_place_data($venue->place_id);
+        if (isset($place_detail["result"])) {
+          if (isset($place_detail["result"]["rating"])) {
+            $venue->rating = $place_detail["result"]["rating"];
+          }
+          if (isset($place_detail["result"]["reviews"])) {
+            $venue->reviews = $place_detail["result"]["reviews"];
+          }
+          $venue->save();
+        }
+      }
+    }
     return response()->json($venue);
   }
 
@@ -239,7 +253,7 @@ class VenueController extends Controller
       $venues = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0]
-      ])->get(["id", "name", "address", "place_id", "image"]);
+      ])->get(["id", "name", "address", "place_id", "image", "rating"]);
 
       // set origin
       $origin = "place_id:" . $location;
@@ -646,14 +660,14 @@ class VenueController extends Controller
         $category_key = $category->key;
         $category_value = $category->value;
 
-        // are results older than 24 hours?
-        if (time() - strtotime($category->results_updated) > 60 * 60 * 24) {
+        // are results older than cache amount
+        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
 
           // get all venues
           $venues = Venue::where([
             ["place_id", "!=", ""],
             ["deleted", "=", 0]
-          ])->get(["id", "name", "address", "place_id", "image", "place_meta"])->toArray();
+          ])->get(["id", "name", "address", "place_id", "image", "place_meta", "rating"])->toArray();
 
           // check if meta exist (if not, then fetch and save for future use)
           foreach ($venues as $venue) {
@@ -671,9 +685,13 @@ class VenueController extends Controller
           // filter venues based on location category
           $venues = array_filter($venues, function ($venue) use ($category_key, $category_value) {
             $place_meta = json_decode($venue["place_meta"]);
-            $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
-              return in_array($category_key, $component->types);
-            }));
+            if (isset($place_meta) && $place_meta !== "") {
+              $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
+                return in_array($category_key, $component->types);
+              }));
+            } else {
+              $place_component_match = null;
+            }
             if ($place_component_match) {
               return $place_component_match->long_name === $category_value;
             } else {
@@ -687,7 +705,8 @@ class VenueController extends Controller
               "id" => $v["id"],
               "name" => $v["name"],
               "address" => $v["address"],
-              "image" => $v["image"]
+              "image" => $v["image"],
+              "rating" => $v["rating"]
             );
           }, $venues);
 
@@ -705,8 +724,10 @@ class VenueController extends Controller
         $venues = [];
       }
     } else {
-      if ($id === "best" || $id === "hot") {
-        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image"])->toArray();   // select 12 random venues
+      if ($id === "hot") {
+        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating"])->toArray();   // select 12 random venues
+      } elseif ($id === "best") {
+        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating"])->toArray();   // select 12 rating
       } else {
         $venues = []; // return done, browser will fetch with client location
       }

@@ -54,7 +54,7 @@ class BootstrapController extends Controller
       $venues_array = [];
 
       // get all venues
-      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image"]);
+      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image", "rating"]);
 
       // TODO - if lat/lng NOT set by browser, can it be detected by IP?
 

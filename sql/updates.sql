@@ -75,4 +75,11 @@ ADD COLUMN `town` VARCHAR(255) NULL AFTER `global_admin`,
 ADD COLUMN `origin` VARCHAR(45) NULL AFTER `town`;
 
 
+ALTER TABLE `venues` 
+ADD COLUMN `place_data_updated` TIMESTAMP NULL AFTER `place_meta`,
+ADD COLUMN `rating` FLOAT NULL AFTER `place_data_updated`,
+ADD COLUMN `reviews` LONGTEXT NULL AFTER `rating`;
+
+
+
 
