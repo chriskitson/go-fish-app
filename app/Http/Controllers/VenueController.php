@@ -78,9 +78,9 @@ class VenueController extends Controller
           if (isset($place_detail["result"]["rating"])) {
             $venue->rating = $place_detail["result"]["rating"];
           }
-          if (isset($place_detail["result"]["reviews"])) {
-            $venue->reviews = $place_detail["result"]["reviews"];
-          }
+          // if (isset($place_detail["result"]["reviews"])) {
+          //   $venue->reviews = $place_detail["result"]["reviews"];
+          // }
           $venue->save();
         }
       }
