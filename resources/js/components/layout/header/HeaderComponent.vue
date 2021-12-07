@@ -19,6 +19,13 @@
                     v-if="user.loggedIn && live"
                     >Welcome back</span
                 > -->
+                <button
+                    @click="$emit('cache')"
+                    v-if="user.loggedIn && user.globalAdmin && live"
+                    class="ml-6 text-sm text-white"
+                >
+                    Clear Cache
+                </button>
                 <a
                     class="ml-6 text-sm text-white"
                     v-if="user.loggedIn && user.globalAdmin && live"
@@ -49,16 +56,24 @@
                 </h1>
             </div>
             <div class="flex items-center flex-grow hidden ml-5 lg:block">
-                <a href="/category/hot" class="mr-3 font-semibold text-md text-grey-300"
+                <a
+                    href="/category/hot"
+                    class="mr-3 font-semibold text-md text-grey-300"
                     >Hot Deals</a
                 >
-                <a href="/category/near" class="mr-3 font-semibold text-md text-grey-300"
+                <a
+                    href="/category/near"
+                    class="mr-3 font-semibold text-md text-grey-300"
                     >Fisheries Near Me</a
                 >
-                <a href="/category/best" class="mr-3 font-semibold text-md text-grey-300"
+                <a
+                    href="/category/best"
+                    class="mr-3 font-semibold text-md text-grey-300"
                     >Best Fisheries</a
                 >
-                <a href="/login" class="mr-3 font-semibold text-md text-grey-300"
+                <a
+                    href="/login"
+                    class="mr-3 font-semibold text-md text-grey-300"
                     >Join GoFish</a
                 >
                 <span class="flex-grow"></span>

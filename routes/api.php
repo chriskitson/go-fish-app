@@ -77,6 +77,9 @@ Route::group([
     // load (with user context)
     Route::get('auth/load', [BootstrapController::class, 'load']);
 
+    // cache buster
+    Route::get('auth/cache/bust', [BootstrapController::class, 'cache_bust']);
+
     // manage venues
     Route::post('auth/venues', [VenueController::class, 'create_venue']);
     Route::put('auth/venues/{id}/details', [VenueController::class, 'manage_details']);

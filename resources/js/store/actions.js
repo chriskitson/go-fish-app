@@ -405,6 +405,22 @@ let actions = {
                 commit("SET_LOADING", false);
                 handleError(err.response.data.message);
             });
+    },
+    CLEAR_CACHE({ commit }, user) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(
+                `/api/auth/cache/bust`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                console.log('cache cleared');
+                commit("SET_LOADING", false);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
     }
 };
 export default actions;

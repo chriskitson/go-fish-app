@@ -7,6 +7,7 @@ use App\Models\Venue;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\RequestCache;
+use App\Models\SearchCache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +20,19 @@ class BootstrapController extends Controller
 
   public function __construct()
   {
+  }
+
+  public function cache_bust(Request $request)
+  {
+    $user = $request->user();
+    $is_global_admin = $user->global_admin == 1;
+    if ($is_global_admin) {
+      RequestCache::truncate();
+      SearchCache::truncate();
+      return response("Busted!", 200);
+    } else {
+      return response("Unauthorized", 401);
+    }
   }
 
   public function load(Request $request)

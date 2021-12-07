@@ -9,6 +9,7 @@
             :basketCount="basketCount"
             :basketTotal="basketTotal"
             @logout="logout"
+            @cache="clearCache"
         ></header-component>
         <div
             class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100"
@@ -154,6 +155,9 @@ export default {
         },
         change(date) {
             this.$store.dispatch("DATE_SET", date);
+        },
+        clearCache() {
+            this.$store.dispatch("CLEAR_CACHE", this.user);
         }
     },
     data: () => ({

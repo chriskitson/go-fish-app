@@ -44,7 +44,10 @@ trait GoogleMapTrait {
       $response = \GoogleMaps::load('geocoding')
         ->setParamByKey($key, $origin)
         ->get('results');
-      return $response["results"][0];
+      if (isset($response["results"]) && count($response["results"]) > 0) {
+        return $response["results"][0];
+      }
+      return null;
     }
 
     public function get_place_data($place_id) {
