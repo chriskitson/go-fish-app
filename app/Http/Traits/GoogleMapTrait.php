@@ -57,6 +57,11 @@ trait GoogleMapTrait {
       return $detail_res->json();
     }
 
+    public function get_place_photo($reference, $maxWidth = 400, $maxHeight = 300) {
+      $key = env('GOOGLE_MAP_KEY', '');
+      return "https://maps.googleapis.com/maps/api/place/photo?maxHeight=" . $maxHeight . "&maxwidth=" . $maxWidth . "&photo_reference=" . $reference . "&key=" . $key;
+    }
+
     public function calculate_distances($origin, $destinations) {
       // use google apis to get distances
       $key = env('GOOGLE_MAP_KEY', '');

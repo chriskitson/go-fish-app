@@ -4,8 +4,9 @@
 $initial_state = array();
 // pre-fetch venue data server side
 if (isset($venueid)) {   // venue detail
-    $initial_state['venueDetail'] = $venue->get($venueid)->original;
-    $initial_state['ticketDetail'] = $venue->get($venueid)->original;
+    $venue_detail = $venue->get($venueid)->original;
+    $initial_state['venueDetail'] = $venue_detail;
+    $initial_state['ticketDetail'] = $venue_detail;
     if (isset($date)) {
         $initial_state['venueDetail']['date'] = intval($date);
     }
@@ -42,7 +43,7 @@ $page_title = $page->get_title($initial_state['path']);
     <head>
         <title>{{ $page_title }}</title>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <script defer src="{{ mix('js/app-client.js') }}"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWyDnSq8kJoxf0zSdEQguVEgBBT6kuqUs&libraries=places" async defer></script>

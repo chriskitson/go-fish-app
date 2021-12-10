@@ -80,6 +80,10 @@ ADD COLUMN `place_data_updated` TIMESTAMP NULL AFTER `place_meta`,
 ADD COLUMN `rating` FLOAT NULL AFTER `place_data_updated`,
 ADD COLUMN `reviews` LONGTEXT NULL AFTER `rating`;
 
+/* 07/12/21 */
+ALTER TABLE `go_fish_app`.`venues` 
+ADD COLUMN `photos` LONGTEXT NULL AFTER `reviews`;
+
 
 
 

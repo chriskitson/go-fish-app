@@ -33,7 +33,8 @@ class Venue extends Model
         'place_meta',
         'rating',
         'reviews',
-        'place_data_updated'
+        'place_data_updated',
+        'photos'
     ];
 
     protected $table = 'venues';

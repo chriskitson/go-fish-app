@@ -8,6 +8,16 @@
                     class="w-full mb-5 rounded-md"
                     :alt="`${venueDetail.name} image`"
                 />
+                <img
+                    v-if="
+                        !venueDetail.image &&
+                            venueDetail.photos &&
+                            venueDetail.photos.length > 0
+                    "
+                    :src="venueDetail.photos[0].url"
+                    class="w-full mb-5 rounded-md"
+                    :alt="`${venueDetail.name} image`"
+                />
                 <div class="flex items-center text-xs text-gold">
                     <rating-component
                         :current="venueDetail.rating || 0"
@@ -46,21 +56,24 @@
                 </div>
             </div>
             <div class="col-span-3 md:col-span-2">
-                <date-navigation-component
-                    :date="currentDate"
-                    :prevDisabled="venueDetail.date < new Date()"
-                    @back="dateBack"
-                    @forward="dateForward"
-                ></date-navigation-component>
-                <ticket-list-component
-                    :title="ticketTitle"
-                    :tickets="venueDetail.tickets"
-                    :live="venueDetail.ticketsLoaded"
-                    :auth="false"
-                    :loggedIn="loggedIn"
-                    display="4"
-                    @book="bookTickets"
-                ></ticket-list-component>
+                <div v-if="venueDetail.ticket_count > 0">
+                    <date-navigation-component
+                        :date="currentDate"
+                        :prevDisabled="venueDetail.date < new Date()"
+                        @back="dateBack"
+                        @forward="dateForward"
+                    ></date-navigation-component>
+                    <ticket-list-component
+                        :title="ticketTitle"
+                        :tickets="venueDetail.tickets"
+                        :live="venueDetail.ticketsLoaded"
+                        :auth="false"
+                        :loggedIn="loggedIn"
+                        display="4"
+                        @book="bookTickets"
+                    ></ticket-list-component>
+                </div>
+
                 <div
                     class="flex items-center mt-10"
                     v-if="
@@ -81,6 +94,18 @@
                         />
                     </a>
                 </div>
+
+                <photos-component
+                    v-if="venueDetail.photos.length > 0"
+                    :name="venueDetail.name"
+                    :photos="venueDetail.photos"
+                />
+
+                <reviews-component
+                    v-if="venueDetail.reviews.length > 0"
+                    :name="venueDetail.name"
+                    :reviews="venueDetail.reviews"
+                />
             </div>
         </div>
     </div>
@@ -89,11 +114,18 @@
 <script>
 import ClientOnly from "vue-client-only";
 import { mapState } from "vuex";
-import { formatDateDisplay, formatLongDateDisplay } from "../../utils";
+import {
+    formatDateDisplay,
+    formatLongDateDisplay,
+    formatDateDisplayFromTime
+} from "../../utils";
 export default {
     components: {
         ClientOnly
     },
+    data: () => ({
+        formatDateDisplayFromTime
+    }),
     computed: {
         ...mapState({
             venues: state => state.venues,

@@ -45,6 +45,11 @@ export const formatDateTimeDisplay = date => {
     )}`;
 };
 
+export const formatDateDisplayFromTime = time => {
+    const fd = new Date(time * 1000);
+    return fd.toLocaleDateString("en-GB");
+};
+
 export const formatDateAPI = date => {
     const fd = new Date(date);
     return fd.toISOString().slice(0, 10);

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl mb-10">
-        <h2 class="flex items-center mb-4 text-xl font-semibold text-grey-300">
+        <h2 class="flex items-center mb-4 text-xl font-semibold">
             {{ live ? title : "Tickets loading..." }}
         </h2>
         <div

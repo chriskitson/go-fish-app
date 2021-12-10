@@ -109,13 +109,13 @@ Vue.component(
 );
 
 Vue.component(
-    "review-list-component",
-    require("./components/reviews/ReviewsListComponent.vue").default
+    "photos-component",
+    require("./components/photos/PhotosComponent.vue").default
 );
 
 Vue.component(
-    "review-item-component",
-    require("./components/reviews/ReviewsItemComponent.vue").default
+    "reviews-component",
+    require("./components/reviews/ReviewsComponent.vue").default
 );
 
 Vue.component(

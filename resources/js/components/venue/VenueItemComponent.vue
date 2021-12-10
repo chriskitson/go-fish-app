@@ -5,7 +5,7 @@
                 live ? '' : 'bg-opacity-50 '
             }bg-grey-300 bg-opacity-70 rounded-xl bg-cover`
         "
-        :style="`background-image:url('${live ? venue.image : ''}')`"
+        :style="`background-image:url('${live ? venueImage : ''}')`"
     >
         <div v-if="live" class="flex flex-col flex-wrap">
             <rating-component
@@ -30,6 +30,16 @@
 
 <script>
 export default {
-    props: ["venue", "live"]
+    props: ["venue", "live"],
+    computed: {
+        venueImage: function() {
+            let image = this.venue.image;
+            if (image === "" && this.venue.photos.length > 0) {
+                image = this.venue.photos[0];
+            }
+            return image;
+        }
+    }
+
 };
 </script>

@@ -48,6 +48,16 @@ class VenueController extends Controller
     RequestCache::truncate();
   }
 
+  public function clean_web($str) {
+    $str = str_replace("\n", "<br/>", $str);
+    return $str;
+  }
+
+  public function clean_admin($str) {
+    $str = str_replace("\n", "\\n", $str);
+    return $str;
+  }
+
   public function get_day($day)
   {
     $days_of_week = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
@@ -69,8 +79,8 @@ class VenueController extends Controller
   public function get($id)
   { // for front end website display
     $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
-    $venue->description = str_replace("\n", "<br/>", $venue->description);
-    $venue->rules = str_replace("\n", "<br/>", $venue->rules);
+    $venue->description = $this->clean_web($venue->description);
+    $venue->rules = $this->clean_web($venue->rules);
     if (isset($venue->place_id)) {  // get more info about place from Google
       if (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"]) {
         $place_detail = $this->get_place_data($venue->place_id);
@@ -78,21 +88,46 @@ class VenueController extends Controller
           if (isset($place_detail["result"]["rating"])) {
             $venue->rating = $place_detail["result"]["rating"];
           }
+          // TODO - encode these objects so they work
           // if (isset($place_detail["result"]["reviews"])) {
           //   $venue->reviews = $place_detail["result"]["reviews"];
           // }
+          if (isset($place_detail["result"]["photos"])) {
+            $venue_photos = array_map(function($v) {
+              return array(
+                "url" => $this->get_place_photo($v["photo_reference"], 650)
+              );
+            }, $place_detail["result"]["photos"]);
+            $venue->photos = $venue_photos;
+          }
+          if (isset($place_detail["result"]["reviews"])) {
+            $venue_reviews = array_map(function($r) {
+              return array(
+                "name" => $r["author_name"],
+                "text" => $this->clean_web($r["text"]),
+                "rating" => $r["rating"],
+                "time" => $r["time"]
+              );
+            }, $place_detail["result"]["reviews"]);
+            $venue->reviews = $venue_reviews;
+          }
           $venue->save();
+        } else {
+          // TODO - refresh place id - how??
         }
       }
     }
+    $venue["ticket_count"] = Ticket::where([
+      ["venue_id", "=", $venue->id]
+    ])->count();
     return response()->json($venue);
   }
 
   public function get_detail($id)
   { // for admin display
     $venue = Venue::find($id);
-    $venue->description = str_replace("\n", "\\n", $venue->description);
-    $venue->rules = str_replace("\n", "\\n", $venue->rules);
+    $venue->description = $this->clean_admin($venue->description);
+    $venue->rules = $this->clean_admin($venue->rules);
     $fields = array(
       "id" => $venue->id,
       "name" => $venue->name,
@@ -667,10 +702,11 @@ class VenueController extends Controller
           $venues = Venue::where([
             ["place_id", "!=", ""],
             ["deleted", "=", 0]
-          ])->get(["id", "name", "address", "place_id", "image", "place_meta", "rating"])->toArray();
+          ])->get(["id", "name", "address", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
 
-          // check if meta exist (if not, then fetch and save for future use)
+          // loop through all venues
           foreach ($venues as $venue) {
+            // check if meta exist (if not, then fetch and save for future use)
             if (!isset($venue->place_meta) || $venue->place_meta === "") {
               $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
               $venue["place_meta"] = $place_meta;
@@ -732,7 +768,6 @@ class VenueController extends Controller
         $venues = []; // return done, browser will fetch with client location
       }
     }
-
     return response()->json($venues);
   }
 
