@@ -119,6 +119,11 @@ Vue.component(
 );
 
 Vue.component(
+    "banner-component",
+    require("./components/shared/BannerComponent.vue").default
+);
+
+Vue.component(
     "ticket-list-component",
     require("./components/ticket/TicketListComponent.vue").default
 );

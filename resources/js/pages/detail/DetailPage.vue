@@ -56,6 +56,11 @@
                 </div>
             </div>
             <div class="col-span-3 md:col-span-2">
+                <banner-component
+                    text="There are no tickets associated with this venue. Call to action to sign up?"
+                    v-if="venueDetail.ticket_count === 0"
+                />
+
                 <div v-if="venueDetail.ticket_count > 0">
                     <date-navigation-component
                         :date="currentDate"
