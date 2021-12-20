@@ -81,7 +81,7 @@ ADD COLUMN `rating` FLOAT NULL AFTER `place_data_updated`,
 ADD COLUMN `reviews` LONGTEXT NULL AFTER `rating`;
 
 /* 07/12/21 */
-ALTER TABLE `go_fish_app`.`venues` 
+ALTER TABLE `venues` 
 ADD COLUMN `photos` LONGTEXT NULL AFTER `reviews`;
 
 
