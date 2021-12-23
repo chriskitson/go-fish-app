@@ -1,8 +1,8 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
-        <banner-component
+        <home-banner-component
             :imageURL="venueCategoryDetail.image"
-        ></banner-component>
+        ></home-banner-component>
         <venue-list-component
             :title="categoryTitle"
             :venues="venueCategory"
