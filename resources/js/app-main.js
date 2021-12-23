@@ -84,8 +84,8 @@ Vue.component(
 );
 
 Vue.component(
-    "banner-component",
-    require("./components/banner/BannerComponent.vue").default
+    "home-banner-component",
+    require("./components/shared/HomeBannerComponent.vue").default
 );
 
 Vue.component(

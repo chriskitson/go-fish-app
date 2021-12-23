@@ -99,6 +99,8 @@ class VenueController extends Controller
               );
             }, $place_detail["result"]["photos"]);
             $venue->photos = $venue_photos;
+          } else {
+            $venue->photos = [];
           }
           if (isset($place_detail["result"]["reviews"])) {
             $venue_reviews = array_map(function($r) {
@@ -110,6 +112,8 @@ class VenueController extends Controller
               );
             }, $place_detail["result"]["reviews"]);
             $venue->reviews = $venue_reviews;
+          } else {
+            $venue->reviews = [];
           }
           $venue->save();
         } else {
@@ -303,8 +307,13 @@ class VenueController extends Controller
 
       // set distances on venue collection, then convert to array
       $venues->map(function ($venue, $index) use ($distances) {
-        $venue->distance = $distances[$index]["distance"]["value"];
-        $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+        if (isset($distances[$index]["distance"])) {
+          $venue->distance = $distances[$index]["distance"]["value"];
+          $venue->distanceDisplay = $distances[$index]["distance"]["text"];
+        } else {
+          $venue->distance = "-1";
+          $venue->distanceDisplay = "Unknown";
+        }
       });
 
       // convert to array, filter  and sort

@@ -84,6 +84,7 @@
                     v-if="
                         loggedIn &&
                             basket.length > 0 &&
+                            venueDetail.tickets && 
                             venueDetail.tickets.length > 0
                     "
                 >

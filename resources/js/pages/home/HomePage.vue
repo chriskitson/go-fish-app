@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-5xl px-4 mx-auto">
-        <banner-component imageURL="/images/bg2.jpg"></banner-component>
+        <home-banner-component imageURL="/images/bg2.jpg"></home-banner-component>
         <venue-list-component
             title="Fisheries near me"
             :venues="venues"
