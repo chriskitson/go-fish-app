@@ -84,6 +84,10 @@ ADD COLUMN `reviews` LONGTEXT NULL AFTER `rating`;
 ALTER TABLE `venues` 
 ADD COLUMN `photos` LONGTEXT NULL AFTER `reviews`;
 
+/* 04/01/21 */
 
+ALTER TABLE `users` 
+CHANGE COLUMN `user_type` `user_type` INT NULL DEFAULT b'1' ;
 
-
+ALTER TABLE `users` 
+ADD COLUMN `venue_id` INT NULL AFTER `origin`;

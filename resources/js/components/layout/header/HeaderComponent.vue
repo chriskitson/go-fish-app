@@ -34,6 +34,12 @@
                 >
                 <a
                     class="ml-6 text-sm text-white"
+                    v-if="user.loggedIn && user.userType === userType.FISHERY && live"
+                    :href="`/manage-venues/${user.venue.id}`"
+                    >Manage {{user.venue.name}}</a
+                >
+                <a
+                    class="ml-6 text-sm text-white"
                     v-if="user.loggedIn && live"
                     href="/tickets"
                     >My Tickets</a
@@ -97,7 +103,11 @@
 </template>
 
 <script>
+import { userType } from "../../../store/state";
 export default {
-    props: ["user", "live", "basketCount", "basketTotal"]
+    props: ["user", "live", "basketCount", "basketTotal"],
+    data: () => ({
+        userType
+    })
 };
 </script>

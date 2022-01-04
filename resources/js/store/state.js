@@ -9,6 +9,12 @@ export const manageTabs = {
     TICKETS: 5
 };
 
+export const userType = {
+    NONE: 0,
+    FISHER: 1,
+    FISHERY: 2
+};
+
 let state = {
     live: false,
     loading: false,
@@ -23,8 +29,12 @@ let state = {
         access_token: "",
         refresh_token: "",
         token_type: "",
-        userType: 0,
-        globalAdmin: false
+        userType: userType.NONE,
+        globalAdmin: false,
+        venue: {
+            id: 0,
+            name: ""
+        }
     },
     basket: [],
     loginForm: {

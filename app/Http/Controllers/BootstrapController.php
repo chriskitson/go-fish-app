@@ -135,10 +135,19 @@ class BootstrapController extends Controller
           "origin" => $origin
         ]);
       }
+
       $response->user = array(
         "userType" => $user->user_type,
         "globalAdmin" => $user->global_admin === 1
       );
+
+      // if user is fishery owner then return venue indo
+      if ($user->user_type === 2 && $user->venue_id != '') {
+        // look up venue for user and return first
+        $venue = Venue::find($user->venue_id, ["id", "name"]);
+        $response->user["venue"] = $venue;
+      }
+
     } else {
       $response->user = array(
         "userType" => 0,

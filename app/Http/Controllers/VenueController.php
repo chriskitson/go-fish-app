@@ -469,7 +469,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -523,7 +523,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -575,7 +575,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -600,7 +600,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -641,7 +641,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -784,7 +784,7 @@ class VenueController extends Controller
   {
 
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {
@@ -818,7 +818,7 @@ class VenueController extends Controller
   public function closed_delete(Request $request, $venue_id, $id)
   {
     $user = $request->user();
-    $is_admin = false; // TODO
+    $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
 
     if ($is_admin || $is_global_admin) {

@@ -91,6 +91,14 @@ let mutations = {
                 ...state.loginForm,
                 email
             };
+            state.registerForm = {
+                messages: [],
+                errors: [],
+                name: "",
+                email: "",
+                password: "",
+                confirm: ""
+            };
             state.registerForm.messages = [MESSAGES.LOGIN.Registered];
         } else {
             state.registerForm.errors = Object.values(errors).flat();

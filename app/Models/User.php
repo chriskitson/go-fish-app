@@ -23,7 +23,8 @@ class User extends Authenticatable
         'user_type',
         'global_admin',
         'town',
-        'origin'
+        'origin',
+        'venue_id'
     ];
 
     /**
