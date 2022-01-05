@@ -76,7 +76,7 @@
         </div>
 
         <div
-          class="flex items-center mt-10"
+          class="flex items-center mt-10 mb-10"
           v-if="
             loggedIn &&
             basket.length > 0 &&
