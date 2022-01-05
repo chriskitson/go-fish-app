@@ -33,7 +33,7 @@ class BootstrapController extends Controller
         ["results", "!=", ""]
       ])->update([
         "results" => "",
-        "results_updated" => ""
+        "results_updated" => null
       ]);
       return response("Busted!", 200);
     } else {
