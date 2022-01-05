@@ -48,12 +48,14 @@ class VenueController extends Controller
     RequestCache::truncate();
   }
 
-  public function clean_web($str) {
+  public function clean_web($str)
+  {
     $str = str_replace("\n", "<br/>", $str);
     return $str;
   }
 
-  public function clean_admin($str) {
+  public function clean_admin($str)
+  {
     $str = str_replace("\n", "\\n", $str);
     return $str;
   }
@@ -93,7 +95,7 @@ class VenueController extends Controller
           //   $venue->reviews = $place_detail["result"]["reviews"];
           // }
           if (isset($place_detail["result"]["photos"])) {
-            $venue_photos = array_map(function($v) {
+            $venue_photos = array_map(function ($v) {
               return array(
                 "url" => $this->get_place_photo($v["photo_reference"], 650)
               );
@@ -103,7 +105,7 @@ class VenueController extends Controller
             $venue->photos = [];
           }
           if (isset($place_detail["result"]["reviews"])) {
-            $venue_reviews = array_map(function($r) {
+            $venue_reviews = array_map(function ($r) {
               return array(
                 "name" => $r["author_name"],
                 "text" => $this->clean_web($r["text"]),
@@ -292,7 +294,7 @@ class VenueController extends Controller
       $venues = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0]
-      ])->get(["id", "name", "address", "place_id", "image", "rating"]);
+      ])->get(["id", "name", "place_id", "image", "rating", "photos"]);
 
       // set origin
       $origin = "place_id:" . $location;
@@ -318,6 +320,30 @@ class VenueController extends Controller
 
       // convert to array, filter  and sort
       $results = $venues->toArray();
+
+      // map venues to display fields
+      $results = array_map(function ($v) {
+        $image = "#";
+        // use google photos if image missing
+        if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
+          $photos = json_decode($v["photos"]);  // pull from google photos
+          if (isset($photos) && count($photos) > 0) {
+            $image = $photos[0]->url;
+          }
+        } else {
+          $image = $v["image"];
+        }
+        return array(
+          "id" => $v["id"],
+          "name" => $v["name"],
+          "image" => $image,
+          "rating" => $v["rating"],
+          "distance" => $v["distance"],
+          "place_id" => $v["place_id"],
+          "distanceDisplay" => $v["distanceDisplay"]
+        );
+      }, $results);
+
       $results = array_filter($results, function ($v) {
         return $v["distance"] < env("SEARCH_DISTANCE_LIMIT", 0);
       });
@@ -363,7 +389,6 @@ class VenueController extends Controller
           })->values()->toArray();
 
           $result->tickets = $tickets;
-
         }
       }
 
@@ -371,7 +396,6 @@ class VenueController extends Controller
       usort($results, function ($a, $b) {
         return (count($a->tickets) > 0) < (count($b->tickets) > 0);
       });
-
     }
 
     return response()->json(array(
@@ -705,7 +729,8 @@ class VenueController extends Controller
         $category_value = $category->value;
 
         // are results older than cache amount
-        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
+        // if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
+        if (time() - strtotime($category->results_updated) > 0) {
 
           // get all venues
           $venues = Venue::where([
@@ -744,26 +769,6 @@ class VenueController extends Controller
             }
           });
 
-          // map venues to display fields
-          $venues = array_map(function ($v) {
-            if ((!isset($v["image"]) || $v["image"] === "") && $v["photos"] !== "") {
-              $image = "#";
-              $photos = json_decode($v["photos"]);  // pull from google photos
-              if (isset($photos) && count($photos) > 0) {
-                $image = $photos[0]->url;
-              }
-            } else {
-              $image = $v["image"];
-            }
-            return array(
-              "id" => $v["id"],
-              "name" => $v["name"],
-              // "address" => $v["address"],
-              "image" => $image,
-              "rating" => $v["rating"]
-            );
-          }, $venues);
-
           // cache results
           Category::find($id)->update(array(
             "results" => json_encode($venues),
@@ -771,7 +776,7 @@ class VenueController extends Controller
           ));
         } else {
 
-          // use cached results
+          // use cached results 
           $venues = json_decode($category->results);
         }
       } else {
@@ -779,13 +784,32 @@ class VenueController extends Controller
       }
     } else {
       if ($id === "hot") {
-        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating"])->toArray();   // select 12 random venues
+        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
       } elseif ($id === "best") {
-        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating"])->toArray();   // select 12 rating
+        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
       } else {
         $venues = []; // return done, browser will fetch with client location
       }
     }
+    // map venues to display fields
+    $venues = array_map(function ($v) {
+      $image = "#";
+      // use google photos if image missing
+      if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
+        $photos = json_decode($v["photos"]);  // pull from google photos
+        if (isset($photos) && count($photos) > 0) {
+          $image = $photos[0]->url;
+        }
+      } else {
+        $image = $v["image"];
+      }
+      return array(
+        "id" => $v["id"],
+        "name" => $v["name"],
+        "image" => $image,
+        "rating" => $v["rating"]
+      );
+    }, $venues);
     return response()->json($venues);
   }
 
@@ -855,7 +879,7 @@ class VenueController extends Controller
     if (isset($o) || (isset($lat) && isset($lng))) {
 
       // get all venues
-      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image"]);
+      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image", "photos", "rating"]);
 
       // set origin
       $origin = isset($o) ? $o : $lat . "," . $lng;
@@ -882,13 +906,29 @@ class VenueController extends Controller
 
       // get user town
       $town = $this->get_town($origin);
-
     }
-
+    // map venues to display fields
+    $venues_array = array_map(function ($v) {
+      $image = "#";
+      // use google photos if image missing
+      if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
+        $photos = json_decode($v["photos"]);  // pull from google photos
+        if (isset($photos) && count($photos) > 0) {
+          $image = $photos[0]->url;
+        }
+      } else {
+        $image = $v["image"];
+      }
+      return array(
+        "id" => $v["id"],
+        "name" => $v["name"],
+        "image" => $image,
+        "rating" => $v["rating"]
+      );
+    }, $venues_array);
     return response()->json(array(
       "venues" => $venues_array,
       "town" => $town
     ));
-
   }
 }

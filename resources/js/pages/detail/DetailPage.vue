@@ -95,6 +95,7 @@
         </div>
 
         <photos-component
+          v-if="photoGallery.length > 0"
           :photos="photoGallery"
           :name="venueDetail.name"
         ></photos-component>
