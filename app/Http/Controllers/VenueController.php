@@ -746,11 +746,20 @@ class VenueController extends Controller
 
           // map venues to display fields
           $venues = array_map(function ($v) {
+            if ((!isset($v["image"]) || $v["image"] === "") && $v["photos"] !== "") {
+              $image = "#";
+              $photos = json_decode($v["photos"]);  // pull from google photos
+              if (isset($photos) && count($photos) > 0) {
+                $image = $photos[0]->url;
+              }
+            } else {
+              $image = $v["image"];
+            }
             return array(
               "id" => $v["id"],
               "name" => $v["name"],
               "address" => $v["address"],
-              "image" => $v["image"],
+              "image" => $image,
               "rating" => $v["rating"]
             );
           }, $venues);
