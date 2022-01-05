@@ -32,7 +32,8 @@ class BootstrapController extends Controller
       Category::where([
         ["results", "!=", ""]
       ])->update([
-        "results" => ""
+        "results" => "",
+        "results_updated" => ""
       ]);
       return response("Busted!", 200);
     } else {
