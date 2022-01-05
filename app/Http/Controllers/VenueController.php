@@ -729,8 +729,7 @@ class VenueController extends Controller
         $category_value = $category->value;
 
         // are results older than cache amount
-        // if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
-        if (time() - strtotime($category->results_updated) > 0) {
+        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
 
           // get all venues
           $venues = Venue::where([
