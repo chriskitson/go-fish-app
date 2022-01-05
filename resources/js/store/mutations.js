@@ -12,7 +12,14 @@ let mutations = {
     },
     // Load user data
     BOOTSTRAP_DATA(state, data) {
-        state.venues = data.venues;
+        state.venues = data.venues.map(v => {
+            const photos = v.photos !== '' ? JSON.parse(v.photos) : [];
+            const venue = {
+                ...v,
+                image: !v.image && photos.length > 0 ? photos[0].url : v.image
+            };
+            return venue;
+        });
         state.userPosition = data.userPosition;
         state.locationSearch = {
             show: false,

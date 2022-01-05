@@ -758,7 +758,7 @@ class VenueController extends Controller
             return array(
               "id" => $v["id"],
               "name" => $v["name"],
-              "address" => $v["address"],
+              // "address" => $v["address"],
               "image" => $image,
               "rating" => $v["rating"]
             );
