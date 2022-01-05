@@ -4,6 +4,7 @@ import VIcon from "vue-tailwind-icons";
 import VueFilterDateFormat from "@vuejs-community/vue-filter-date-format";
 import VueFilterDateParse from "@vuejs-community/vue-filter-date-parse";
 
+
 import { router } from "./router";
 import store from "./store";
 import App from "./pages/app/App";
@@ -12,6 +13,10 @@ Vue.use(Vuex);
 Vue.use(VIcon, { set: "outline" });
 Vue.use(VueFilterDateFormat);
 Vue.use(VueFilterDateParse);
+
+
+
+
 
 Vue.component(
     "header-component",

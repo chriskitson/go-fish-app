@@ -38,6 +38,7 @@
         "vue-better-google-places-autocomplete": "^1.1.0",
         "vue-client-only": "^2.1.0",
         "vue-dynamic-star-rating": "^1.0.8",
+        "vue-masonry-wall": "^0.3.2",
         "vue-router": "^3.5.2",
         "vue-server-renderer": "^2.6.14",
         "vue-star-rating": "^1.7.0",
