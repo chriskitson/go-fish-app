@@ -29,6 +29,11 @@ class BootstrapController extends Controller
     if ($is_global_admin) {
       RequestCache::truncate();
       SearchCache::truncate();
+      Category::where([
+        ["results", "!=", ""]
+      ])->update([
+        "results" => ""
+      ]);
       return response("Busted!", 200);
     } else {
       return response("Unauthorized", 401);
