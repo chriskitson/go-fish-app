@@ -285,6 +285,7 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
+
     } else { // look up location based data search results
 
       // get search by place_id
@@ -790,9 +791,13 @@ class VenueController extends Controller
         $venues = []; // return done, browser will fetch with client location
       }
     }
+
     // map venues to display fields
     $venues = array_map(function ($v) {
       $image = "#";
+
+      $v = (array)$v;
+
       // use google photos if image missing
       if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
         $photos = json_decode($v["photos"]);  // pull from google photos
