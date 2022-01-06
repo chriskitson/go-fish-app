@@ -813,7 +813,7 @@ class VenueController extends Controller
         "image" => $image,
         "rating" => $v["rating"]
       );
-    }, $venues);
+    }, (array)$venues);
     return response()->json($venues);
   }
 
