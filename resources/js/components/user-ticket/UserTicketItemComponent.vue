@@ -8,13 +8,9 @@
             <span
                 class="flex-grow font-semibold text-center text-white md:text-left"
             >
-                {{
-                    live
-                        ? `${padNumber(ticket.id, 5)} - ${formatDateDisplay(
-                              ticket.date
-                          )}`
-                        : "&nbsp;"
-                }}
+                {{ padNumber(ticket.id, 5) }}
+                &nbsp;-&nbsp;
+                {{ ticket.tickets.length > 0 ? ticket.tickets[0].venue_name : "Unknown" }}
             </span>
             <span
                 class="px-3 py-1 mt-4 text-lg font-semibold text-white bg-orange-200 rounded-full md:mt-0"
@@ -28,45 +24,25 @@
         >
             <div class="flex flex-col">
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Transaction Date</div>
+                    <div class="font-semibold">Booking date</div>
                     <div class="md:col-span-4">
-                        {{ formatDateTimeDisplay(ticket.date) }}
+                    {{ formatDateDisplay(ticket.date) }}
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Total Cost</div>
+                    <div class="font-semibold">Ticket(s)</div>
                     <div class="flex items-center md:col-span-4">
-                        {{ formatCurrency(ticket.total) }}
+                        <div v-for="t in ticket.tickets" :key="`user-ticket-${t.id}`">
+                            {{ t.ticket_name }} - {{ formatCurrency(t.booking_cost) }}
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Booking Fee</div>
-                    <div class="md:col-span-4">
-                        {{ formatCurrency(ticket.booking_fee) }}
+                    <div class="font-semibold">Booking cost</div>
+                    <div class="flex items-center md:col-span-4">
+                        {{ formatCurrency(ticket.total) }} <em> (inc. {{ formatCurrency(ticket.booking_fee) }} booking fee)</em>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold">Venue</div>
-                    <div class="md:col-span-4">
-                        {{ ticket.tickets.length > 0 ? ticket.tickets[0].venue_name : "Unknown" }}
-                    </div>
-                </div>
-                <!-- <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
-                    <div class="font-semibold"></div>
-                    <div class="md:col-span-4">
-                        <a
-                            :href="`/confirm/${ticket.session}`"
-                            v-if="ticket.session && ticket.session !== ''"
-                            class="flex items-center text-sm text-orange-200"
-                        >
-                            <icon
-                                name="ticket"
-                                class="w-5 h-5 mr-1 text-lg"
-                            />
-                            View Tickets
-                        </a>
-                    </div>
-                </div> -->
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
                     <div class="font-semibold"></div>
                     <div class="md:col-span-4">

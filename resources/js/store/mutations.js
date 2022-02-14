@@ -390,6 +390,9 @@ let mutations = {
             town
         }
         state.loading = false;
+    },
+    VENUE_BOOKINGS_GET(state, res) {
+        state.venueBookings = res;
     }
 };
 export default mutations;

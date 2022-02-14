@@ -99,7 +99,8 @@ let state = {
         start: today,
         end: tomorrow
     },
-    venueManageTab: manageTabs.DETAILS
+    venueManageTab: manageTabs.DETAILS,
+    venueBookings: []
 };
 
 export default state;

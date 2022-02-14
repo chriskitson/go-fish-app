@@ -59,3 +59,7 @@ Route::get('/add-venue', function () {
 Route::get('/category/{categoryid}', function ($categoryid) {
     return view('index', ['categoryid' => $categoryid]);
 });
+
+Route::get('/bookings', function () {
+    return view('index');
+});

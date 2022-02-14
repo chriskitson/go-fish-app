@@ -74,6 +74,9 @@ Route::group([
     Route::get('auth/bookings/user', [BookingController::class, 'user']);
     Route::get('auth/booking/{id}', [BookingController::class, 'get']);
 
+    // venue bookings
+    Route::get('auth/bookings/venue', [BookingController::class, 'venue']);
+
     // load (with user context)
     Route::get('auth/load', [BootstrapController::class, 'load']);
 

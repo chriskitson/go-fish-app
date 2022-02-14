@@ -83,7 +83,7 @@ class VenueController extends Controller
     $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
-    if (isset($venue->place_id)) {  // get more info about place from Google
+    if (isset($venue->place_id) && env('OFFLINE_MODE', True) === False) {  // get more info about place from Google
       if (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"]) {
         $place_detail = $this->get_place_data($venue->place_id);
         if (isset($place_detail["result"])) {
@@ -730,7 +730,7 @@ class VenueController extends Controller
         $category_value = $category->value;
 
         // are results older than cache amount
-        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"]) {
+        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"] && env('OFFLINE_MODE', True) === False) {
 
           // get all venues
           $venues = Venue::where([

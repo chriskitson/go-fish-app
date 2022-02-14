@@ -10,7 +10,6 @@ export const bindState = (context, state, client) => {
                 date: new Date(context.venueDetail.date)
             };
         }
-
     }
     if (context.venueSearchResults) {
         state.venueSearchResults = context.venueSearchResults.results;

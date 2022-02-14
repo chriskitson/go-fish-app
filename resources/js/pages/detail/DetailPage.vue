@@ -95,13 +95,13 @@
         </div>
 
         <photos-component
-          v-if="photoGallery.length > 0"
+          v-if="photoGallery && photoGallery.length > 0"
           :photos="photoGallery"
           :name="venueDetail.name"
         ></photos-component>
 
         <reviews-component
-          v-if="venueDetail.reviews.length > 0"
+          v-if="venueDetail.reviews && venueDetail.reviews.length > 0"
           :name="venueDetail.name"
           :reviews="venueDetail.reviews"
         />

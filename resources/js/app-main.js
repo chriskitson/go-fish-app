@@ -14,10 +14,6 @@ Vue.use(VIcon, { set: "outline" });
 Vue.use(VueFilterDateFormat);
 Vue.use(VueFilterDateParse);
 
-
-
-
-
 Vue.component(
     "header-component",
     require("./components/layout/header/HeaderComponent.vue").default
@@ -196,6 +192,16 @@ Vue.component(
 Vue.component(
     "manage-tickets-component",
     require("./components/manage/ManageTicketsComponent.vue").default
+);
+
+Vue.component(
+    "venue-booking-list-component",
+    require("./components/venue-booking/VenueBookingListComponent.vue").default
+);
+
+Vue.component(
+    "venue-booking-item-component",
+    require("./components/venue-booking/VenueBookingItemComponent.vue").default
 );
 
 export default new Vue({

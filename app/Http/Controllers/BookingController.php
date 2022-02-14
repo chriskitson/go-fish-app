@@ -286,7 +286,7 @@ class BookingController extends Controller
     $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
       ["confirmed", "=", 1],
       ["user_id", "=", $user_id]
-    ])->distinct()->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+    ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
 
     // get bookings (tickets) for each transaction
     foreach ($transactions as $transaction) {
@@ -298,6 +298,35 @@ class BookingController extends Controller
     }
 
     return response()->json($transactions);
+  }
+
+  public function venue(Request $request)
+  {
+
+    $user = $request->user();
+    $is_admin = $user->user_type == 2;
+    $venue_id = $user->venue_id;
+
+    if ($is_admin && isset($venue_id)) {
+      // get confirmed transactions
+      $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->join("tickets", "bookings.ticket_id", "tickets.id")->where([
+        ["confirmed", "=", 1],
+        ["venue_id", "=", $venue_id]
+      ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+
+      // get bookings (tickets) for each transaction
+      foreach ($transactions as $transaction) {
+        $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+          ["venue_id", "=", $venue_id],
+          ["transaction_id", "=", $transaction->id]
+        ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+        $transaction->tickets = $tickets;
+      }
+
+      return response()->json($transactions);
+    } else {
+      return response("Unauthorized", 401);
+    }
   }
 
   public function get(Request $request, $session)

@@ -104,7 +104,10 @@ let actions = {
                 commit("BOOK", res.data);
             })
             .catch(err => {
-                commit("BASKET_ERROR", err.response.data);
+                commit("BASKET_ERROR", {
+                    success: false,
+                    message: 'BasketError'
+                });
             });
     },
     LOGIN({ commit }, { email, password }) {
@@ -403,6 +406,16 @@ let actions = {
             })
             .catch(err => {
                 commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    VENUE_BOOKINGS_GET({ commit }, { user, showPast }) {
+        return axios
+            .get(`/api/auth/bookings/venue?past=${showPast}`, getTokenHeader(user))
+            .then(res => {
+                commit("VENUE_BOOKINGS_GET", res.data);
+            })
+            .catch(err => {
                 handleError(err.response.data.message);
             });
     },

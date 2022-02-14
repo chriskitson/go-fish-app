@@ -18,5 +18,8 @@ export const MESSAGES = {
   },
   TICKETS: {
     None: "You have no bookings."
+  },
+  ERRORS: {
+    BasketError: 'Unable to proceed to checkout. Please check your network connection and try again.'
   }
 };

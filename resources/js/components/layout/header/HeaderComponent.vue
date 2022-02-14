@@ -40,6 +40,12 @@
                 >
                 <a
                     class="ml-6 text-sm text-white"
+                    v-if="user.loggedIn && user.userType === userType.FISHERY && live"
+                    :href="`/bookings`"
+                    >Bookings</a
+                >
+                <a
+                    class="ml-6 text-sm text-white"
                     v-if="user.loggedIn && live"
                     href="/tickets"
                     >My Tickets</a
