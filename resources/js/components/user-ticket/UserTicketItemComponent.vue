@@ -31,7 +31,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
                     <div class="font-semibold">Ticket(s)</div>
-                    <div class="flex items-center md:col-span-4">
+                    <div class="md:col-span-4">
                         <div v-for="t in ticket.tickets" :key="`user-ticket-${t.id}`">
                             {{ t.ticket_name }} - {{ formatCurrency(t.booking_cost) }}
                         </div>
