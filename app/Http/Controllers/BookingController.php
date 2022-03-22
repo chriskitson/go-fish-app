@@ -88,11 +88,14 @@ class BookingController extends Controller
             ["id", "=", $venue_id],
           ])->get(["name", "account", "payment_fee"])->first();
 
+          // pad number for display purposes
+          $ticket_number = str_pad(strval($ticket_id), 5, "0", STR_PAD_LEFT);
+
           array_push($booking_responses, array(
             "success" => true,
             "id" => $ticket_id,
             "venue" => $venue,
-            "ticket" => $venue->name . " - " . $ticket->name . " - " . date("d M Y", strtotime($date)),
+            "ticket" => $ticket_number . " - " . $venue->name . " - " . $ticket->name . " - " . date("d M Y", strtotime($date)),
             "ticket_id" => $ticket_id,
             "qty" => $qty,
             "cost" => $cost,
