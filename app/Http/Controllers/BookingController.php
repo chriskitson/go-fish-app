@@ -140,7 +140,7 @@ class BookingController extends Controller
       // venue account
       $venue_account_id = $booking_responses[0]["account"];
 
-      // add booking fee to items
+      // add booking fee to items (for display purposes)
       array_push($booking_responses, array(
         "ticket" => "Booking fee",
         "qty" => 1,
@@ -161,7 +161,7 @@ class BookingController extends Controller
       }, $booking_responses)) * 100;
 
       // generate stripe session for payments
-      $payment_session = $this->create_checkout_session($user_id, $user->email, $items, "GBP", $venue_account_id, $application_fee, $url);
+      $payment_session = $this->create_checkout_session($user_id, $user->email, $items, "GBP", $venue_account_id, ($application_fee + ($booking_fee * 100)), $url);
 
       // create transaction record
       $transaction = new Transaction([

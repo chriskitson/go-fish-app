@@ -84,10 +84,16 @@ ADD COLUMN `reviews` LONGTEXT NULL AFTER `rating`;
 ALTER TABLE `venues` 
 ADD COLUMN `photos` LONGTEXT NULL AFTER `reviews`;
 
-/* 04/01/21 */
+/* 04/01/22 */
 
 ALTER TABLE `users` 
 CHANGE COLUMN `user_type` `user_type` INT NULL DEFAULT b'1' ;
 
 ALTER TABLE `users` 
 ADD COLUMN `venue_id` INT NULL AFTER `origin`;
+
+/* 22/02/22 */
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE `venues`
+SET payment_fee = 0;
