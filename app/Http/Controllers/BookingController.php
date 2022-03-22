@@ -309,10 +309,10 @@ class BookingController extends Controller
 
     if ($is_admin && isset($venue_id)) {
       // get confirmed transactions
-      $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->join("tickets", "bookings.ticket_id", "tickets.id")->where([
+      $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->join("tickets", "bookings.ticket_id", "tickets.id")->join("users", "bookings.user_id", "users.id")->where([
         ["confirmed", "=", 1],
-        ["venue_id", "=", $venue_id]
-      ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+        ["tickets.venue_id", "=", $venue_id]
+      ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session", "users.name"]);
 
       // get bookings (tickets) for each transaction
       foreach ($transactions as $transaction) {
