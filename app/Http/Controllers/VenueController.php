@@ -502,11 +502,16 @@ class VenueController extends Controller
       $validators = [
         "name" => ["required", "string"],
         "description" => ["required", "string"],
-        "account" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
         "place_id" => ["required", "string", "max:45"],
       ];
+
+      if ($is_global_admin) {
+        $validators = array_merge($validators,  [
+          "account" => ["required", "string"],
+        ]);
+      }
 
       $validator = Validator::make($request->all(), $validators);
 
@@ -515,10 +520,9 @@ class VenueController extends Controller
         return response()->json($error_response, 400);
       }
 
-      $fields = array(
+      $fields = [
         "name" => $request->name,
         "description" => $request->description,
-        "account" => $request->account,
         "rules" => $request->rules,
         "address" => $request->address,
         "place_id" => $request->place_id,
@@ -529,7 +533,13 @@ class VenueController extends Controller
         "open_thursday" => $request->open_thursday,
         "open_friday" => $request->open_friday,
         "open_saturday" => $request->open_saturday
-      );
+      ];
+
+      if ($is_global_admin) {
+        $fields = array_merge($fields,  [
+          "account" => $request->account
+        ]);
+      }
 
       Venue::where([
         ["id", "=", $venue_id]
