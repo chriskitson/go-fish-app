@@ -697,10 +697,10 @@ class VenueController extends Controller
     if (is_numeric($id)) {
       $category = Category::find($id, ["id", "name", "image"]);
     } else {
-      if ($id === "hot") {
+      if ($id === "latest") {
         $category = array(
-          "id" => "hot",
-          "name" => "Hot Deals",
+          "id" => "latest",
+          "name" => "Latest Fisheries",
           "image" => "/images/bg1.jpg"
         );
       } elseif ($id === "best") {
@@ -793,8 +793,8 @@ class VenueController extends Controller
         $venues = [];
       }
     } else {
-      if ($id === "hot") {
-        $venues = Venue::inRandomOrder()->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
+      if ($id === "latest") {
+        $venues = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
       } elseif ($id === "best") {
         $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
       } else {

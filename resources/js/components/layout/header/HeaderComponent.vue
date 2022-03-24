@@ -69,9 +69,9 @@
             </div>
             <div class="flex items-center flex-grow hidden ml-5 lg:block">
                 <a
-                    href="/category/hot"
+                    href="/category/latest"
                     class="mr-3 font-semibold text-md text-grey-300"
-                    >Hot Deals</a
+                    >Latest Fisheries</a
                 >
                 <a
                     href="/category/near"

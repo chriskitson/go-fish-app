@@ -171,8 +171,8 @@ export default {
                 name: "Search"
             },
             {
-                url: "/category/hot",
-                name: "Hot Deals"
+                url: "/category/latest",
+                name: "Latest Fisheries"
             },
             {
                 url: "/category/near",

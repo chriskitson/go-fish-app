@@ -39,8 +39,8 @@ class PageController extends Controller
     // categories
     if (str_contains($route, "category/")) {
       $category = explode("/", $route)[1];
-      if ($category === "hot") {
-        return "Hot Deals - " .  $title;
+      if ($category === "latest") {
+        return "Latest Fisheries - " .  $title;
       } elseif ($category === "near") {
         return "Fisheries Near Me - " .  $title;
       } elseif ($category === "best") {

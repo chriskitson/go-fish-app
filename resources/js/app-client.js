@@ -2,11 +2,6 @@ import app from "./app-main";
 import store from "./store";
 import { bindState } from "./ssr";
 
-
-
-
-
-
 // import client only
 import "./client-bootstrap";
 import 'vue2-datepicker/index.css';
