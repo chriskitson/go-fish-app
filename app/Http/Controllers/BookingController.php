@@ -197,7 +197,8 @@ class BookingController extends Controller
       "bookings" => $booking_responses,
       "user" => $user_id,
       "session_id" => $payment_session,
-      "transaction_id" => isset($transaction_id) ? $transaction_id : 0
+      "transaction_id" => isset($transaction_id) ? $transaction_id : 0,
+      "account_id" => $venue->account
     ), $booking_success ? 200 : 500);
   }
 

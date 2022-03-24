@@ -243,7 +243,9 @@ let mutations = {
     BOOK(state, res) {
         if (res.success === true) {
             state = clearErrors(state);
-            // redirect to stripe payment page
+            const stripe = Stripe(window.__STRIPE_PK__, {
+                stripeAccount: res.account_id
+            });
             stripe.redirectToCheckout({ sessionId: res.session_id });
         }
     },
