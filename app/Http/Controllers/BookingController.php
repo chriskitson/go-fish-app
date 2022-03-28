@@ -230,6 +230,8 @@ class BookingController extends Controller
     switch ($event->type) {
       case "checkout.session.completed":
 
+        // check is this a booking OR subscription
+
         // clear basket and record payment intent
         $session_id = $event->data->object->id;
         $session_payment_status = $event->data->object->payment_status;

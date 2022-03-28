@@ -101,7 +101,7 @@ trait StripeTrait
       ]],
       "metadata" => $meta_data,
       "mode" => "subscription",
-      "success_url" => $_ENV["APP_URL"] . "/signup/confirm",
+      "success_url" => $_ENV["APP_URL"] . "/signup/confirm/{CHECKOUT_SESSION_ID}",
       "cancel_url" => $_ENV["APP_URL"] . "/signup",
       "metadata" => $meta_data
     ]);

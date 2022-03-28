@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\BootstrapController;
+use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,10 +42,7 @@ Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
 Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
 // booking confirmation (from Stripe)
-Route::post('book/confirm', [BookingController::class, 'confirm']);
-
-// fishery registration confirmation (from Stripe)
-Route::post('signup/confirm', [RegisterController::class, 'signup_confirm']);
+Route::post('book/confirm', [WebhookController::class, 'confirm']);
 
 /*
 PROTECTED ENDPOINTS
