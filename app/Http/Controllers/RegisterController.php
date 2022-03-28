@@ -149,7 +149,7 @@ class RegisterController extends Controller
 
     // get venue
     $venue = Venue::where([
-      // ["account_payment_confirmed", "=", 1],
+      ["account_payment_confirmed", "=", 1],
       ["checkout_session", "=", $session]
     ])->distinct()->first(["name", "id", "account_link", "subscription"]);
 
