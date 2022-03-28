@@ -28,6 +28,7 @@ PUBLIC ENDPOINTS
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('signup', [RegisterController::class, 'signup']);
 Route::get('load', [BootstrapController::class, 'load']);
+Route::get('user', [BootstrapController::class, 'user']);
 
 // venues (no user context)
 Route::get('venues', [VenueController::class, 'all']);
@@ -83,6 +84,7 @@ Route::group([
 
     // load (with user context)
     Route::get('auth/load', [BootstrapController::class, 'load']);
+    Route::get('auth/user', [BootstrapController::class, 'user']);
 
     // cache buster
     Route::get('auth/cache/bust', [BootstrapController::class, 'cache_bust']);

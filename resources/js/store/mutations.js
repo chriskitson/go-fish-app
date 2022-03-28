@@ -27,13 +27,17 @@ let mutations = {
             detail: null
         };
         state.live = true;
+        state.categories = data.categories;
+        localStorage.setItem("homeToken", data.token);
+        localStorage.setItem("origin", data.userPosition.origin);
+    },
+    USER_DATA(state, data) {
         state.user = {
             ...state.user,
             ...data.user
         };
-        state.categories = data.categories;
-        localStorage.setItem("homeToken", data.token);
-        localStorage.setItem("origin", data.userPosition.origin);
+        localStorage.setItem("globalAdmin", data.user.globalAdmin ? "true" : "false");
+        localStorage.setItem("userType", data.user.userType);
     },
     // User register and login
     LOGIN(state, res) {
@@ -88,6 +92,8 @@ let mutations = {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("token_type");
+        localStorage.removeItem("globalAdmin");
+        localStorage.removeItem("userType");
         state.loading = false;
     },
     REGISTER(state, res) {

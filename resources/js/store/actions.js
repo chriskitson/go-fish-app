@@ -19,6 +19,21 @@ let actions = {
                 commit("LOGOUT", null);
             });
     },
+    USER_DATA_FETCH({ commit }, { user }) {
+        axios
+            .get(
+                `/api/${
+                    user.loggedIn ? "auth/" : ""
+                }user`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("USER_DATA", res.data);
+            })
+            .catch(err => {
+                commit("LOGOUT", null);
+            });
+    },
     VENUES_NEAR({ commit }, { queryString, user }) {
         axios
             .get(

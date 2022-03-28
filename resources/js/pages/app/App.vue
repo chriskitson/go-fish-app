@@ -78,6 +78,7 @@ export default {
     },
     mounted() {
         this.getUserPosition();
+        this.getUserData();
         if (this.user.loggedIn) {
             this.getBasket();
         }
@@ -100,6 +101,12 @@ export default {
         },
         getBasket() {
             this.$store.dispatch("BASKET_GET", this.user);
+        },
+        getUserData() {
+            const { user } = this;
+            this.$store.dispatch("USER_DATA_FETCH", {
+                user
+            });
         },
         getLocationData(queryString) {
             const { user } = this;

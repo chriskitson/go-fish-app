@@ -134,26 +134,38 @@ class BootstrapController extends Controller
 
     if (Auth::check()) {
       $user = $request->user();
-      // store location details against user account if logged in
+      // store location details against user account
       if ($town !== "" && $origin !== "") {
         User::find($user->id)->update([
           "town" => $town,
           "origin" => $origin
         ]);
       }
+    } 
 
+    // add location based categories
+    $response->categories = Category::inRandomOrder()->limit(4)->get(["id", "name", "image"])->toArray();
+
+    return response()->json($response);
+  }
+
+  public function user(Request $request)
+  {
+
+    $response = (object)[];
+
+    if (Auth::check()) {
+      $user = $request->user();
       $response->user = array(
         "userType" => $user->user_type,
         "globalAdmin" => $user->global_admin === 1
       );
-
       // if user is fishery owner then return venue indo
       if ($user->user_type === 2 && $user->venue_id != '') {
         // look up venue for user and return first
         $venue = Venue::find($user->venue_id, ["id", "name"]);
         $response->user["venue"] = $venue;
       }
-
     } else {
       $response->user = array(
         "userType" => 0,
@@ -161,9 +173,9 @@ class BootstrapController extends Controller
       );
     }
 
-    // add location based categories
-    $response->categories = Category::inRandomOrder()->limit(4)->get(["id", "name", "image"])->toArray();
-
     return response()->json($response);
+
   }
+
+
 }

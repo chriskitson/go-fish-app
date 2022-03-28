@@ -21,73 +21,75 @@
         bg-grey-300
       "
     >
-      <div
-        class="
-          flex flex-wrap
-          items-center
-          justify-center
-          w-full
-          mr-4
-          md:max-w-5xl md:justify-end
-        "
-      >
-        <a
-          href="/signup"
-          class="ml-6 text-sm text-white hover:underline"
-          v-if="!user.loggedIn && live"
-          >Are you a fishery owner? Sign up here</a
+      <client-only>
+        <div
+          class="
+            flex flex-wrap
+            items-center
+            justify-center
+            w-full
+            mr-4
+            md:max-w-5xl md:justify-end
+          "
         >
+          <a
+            href="/signup"
+            class="ml-6 text-sm text-white hover:underline"
+            v-if="!user.loggedIn"
+            >Are you a fishery owner? Sign up here</a
+          >
 
-        <a
-          href="/login"
-          class="ml-6 text-sm text-white hover:underline"
-          v-if="!user.loggedIn && live"
-          >Login | Register</a
-        >
-        <!-- <span
+          <a
+            href="/login"
+            class="ml-6 text-sm text-white hover:underline"
+            v-if="!user.loggedIn"
+            >Login | Register</a
+          >
+          <!-- <span
                     class="ml-3 text-sm text-white"
-                    v-if="user.loggedIn && live"
+                    v-if="user.loggedIn"
                     >Welcome back</span
                 > -->
-        <button
-          @click="$emit('cache')"
-          v-if="user.loggedIn && user.globalAdmin && live"
-          class="ml-6 text-sm text-white"
-        >
-          Clear Cache
-        </button>
-        <a
-          class="ml-6 text-sm text-white"
-          v-if="user.loggedIn && user.globalAdmin && live"
-          href="/manage-venues"
-          >Manage Venues</a
-        >
-        <a
-          class="ml-6 text-sm text-white"
-          v-if="user.loggedIn && user.userType === userType.FISHERY && live"
-          :href="`/manage-venues/${user.venue.id}`"
-          >Manage Venue</a
-        >
-        <a
-          class="ml-6 text-sm text-white"
-          v-if="user.loggedIn && user.userType === userType.FISHERY && live"
-          :href="`/bookings`"
-          >Bookings</a
-        >
-        <a
-          class="ml-6 text-sm text-white"
-          v-if="user.loggedIn && live"
-          href="/tickets"
-          >My Tickets</a
-        >
-        <button
-          @click="$emit('logout')"
-          v-if="user.loggedIn && live"
-          class="ml-6 text-sm text-white"
-        >
-          Log out
-        </button>
-      </div>
+          <button
+            @click="$emit('cache')"
+            v-if="user.loggedIn && user.globalAdmin"
+            class="ml-6 text-sm text-white"
+          >
+            Clear Cache
+          </button>
+          <a
+            class="ml-6 text-sm text-white"
+            v-if="user.loggedIn && user.globalAdmin"
+            href="/manage-venues"
+            >Manage Venues</a
+          >
+          <a
+            class="ml-6 text-sm text-white"
+            v-if="user.loggedIn && user.userType === userType.FISHERY"
+            :href="`/manage-venues/${user.venue.id}`"
+            >Manage Venue</a
+          >
+          <a
+            class="ml-6 text-sm text-white"
+            v-if="user.loggedIn && user.userType === userType.FISHERY"
+            :href="`/bookings`"
+            >Bookings</a
+          >
+          <a
+            class="ml-6 text-sm text-white"
+            v-if="user.loggedIn"
+            href="/tickets"
+            >My Tickets</a
+          >
+          <button
+            @click="$emit('logout')"
+            v-if="user.loggedIn"
+            class="ml-6 text-sm text-white"
+          >
+            Log out
+          </button>
+        </div>
+      </client-only>
     </div>
     <div class="flex flex-wrap items-center w-full max-w-5xl mx-4">
       <div class="flex items-center h-20 w-28">
@@ -131,8 +133,12 @@
 </template>
 
 <script>
+import ClientOnly from "vue-client-only";
 import { userType } from "../../../store/state";
 export default {
+  components: {
+    ClientOnly,
+  },
   props: ["user", "live", "basketCount", "basketTotal"],
   data: () => ({
     userType,
