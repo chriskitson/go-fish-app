@@ -144,6 +144,7 @@ class WebhookController extends Controller
 
       if (isset($venue)) {
         $venue->account_payment_confirmed = 1;
+        $venue->active = 1; // now visible on website
         $venue->account_payment_reference = $subscription_ref; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
         $venue->save();
 
