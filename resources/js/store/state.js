@@ -63,7 +63,8 @@ let state = {
         address: "",
         fisheryName: "",
         confirmed: false,
-        stripeUrl: "abc"
+        stripeUrl: "",
+        subscription: "lite"
     },
     userPosition: {
         error: "",

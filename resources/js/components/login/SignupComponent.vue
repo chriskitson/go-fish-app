@@ -115,6 +115,16 @@
           placeholder="Confirm Password"
           v-model="register.confirm"
         />
+        <select
+          name="subscription"
+          class="block w-full p-3 mb-4 text-sm border rounded border-grey-100"
+          v-model="register.subscription"
+        >
+          <option value="lite">
+            Fishery Manager - Lite - &pound;35 per month
+          </option>
+        </select>
+
         <button
           type="submit"
           :disabled="loading || loggedIn"

@@ -62,6 +62,7 @@ class RegisterController extends Controller
       "name" => ["required", "string", "max:255"],
       "email" => ["required", "string", "email", "max:255", "unique:users"],
       "password" => ["required", "string", "min:8", "confirmed"],
+      "subscription" => ["required", "string", "max:255"]
     ]);
 
     if ($validator->fails()) {
@@ -72,14 +73,11 @@ class RegisterController extends Controller
     }
 
     // does venue exist by place_id?
-    $venue = Venue::where("place_id", "=", $data["placeId"]);
-    if ($venue->count() > 0) {
+    if (Venue::where("place_id", "=", $data["placeId"])->exists()) {
 
-      // venue exists get id
-      $venue_id = $venue->first()->id;
-
-      // does venue have active stripe account?
-      $account_id =  $venue->first()->account;
+      // venue exists, get id and account
+      $venue_id = Venue::where("place_id", "=", $data["placeId"])->first()->id;
+      $account_id = Venue::where("place_id", "=", $data["placeId"])->first()->account;
 
     } else {
 
@@ -88,18 +86,16 @@ class RegisterController extends Controller
         "address" => $data["address"],
         "place_id" => $data["placeId"]
       ]);
-
       $venue->save();
-      $venue_id = $venue->first()->id;
 
+      $venue_id = $venue->id;
       $account_id = "";
-
     }
 
     if (!isset($account_id) || $account_id === "") { // create stripe account and generate link
-      
+
       // create connected account
-      $account_id = $this->connected_account_create($data["email"]);
+      $account_id = $this->connected_account_create($data["email"], $data["fisheryName"]);
 
       // update venue with account
       Venue::where([
@@ -107,11 +103,17 @@ class RegisterController extends Controller
       ])->update(array(
         "account" => $account_id
       ));
-
     }
 
     // generate signup link
     $signup_url = $this->connected_account_link_create($venue_id, $account_id);
+
+    // TODO subscribe account to product base on $data["subscription"]
+    // *****************
+    // *****************
+    // *****************
+    // *****************
+    // TODO
 
     // finally, create new user
     $user = User::create([
@@ -129,6 +131,5 @@ class RegisterController extends Controller
       "email" => $user->email,
       "stripe" => $signup_url
     ));
-
   }
 }

@@ -60,7 +60,7 @@ trait StripeTrait
     }
   }
 
-  public function connected_account_create($email) {
+  public function connected_account_create($email, $name) {
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
     $connected_account = $client->accounts->create([
       "type" => "express",
@@ -70,6 +70,9 @@ trait StripeTrait
         "card_payments" => ["requested" => true],
         "transfers" => ["requested" => true],
       ],
+      // "company" => [
+      //   "name" => $name
+      // ]
     ]);
     return $connected_account->id;
   }
