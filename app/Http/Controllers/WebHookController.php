@@ -52,7 +52,7 @@ class WebhookController extends Controller
     switch ($event->type) {
       case "checkout.session.completed":
 
-        if ($event->data->mode === "subscription") {  // subscription to GOFish
+        if ($event->data->object->mode === "subscription") {  // subscription to GOFish
           $this->subscription_session($event);
         } else {  // paying for tickets
           $this->booking_session($event);
@@ -62,7 +62,7 @@ class WebhookController extends Controller
 
       case "payment_intent.succeeded":
 
-        if ($event->data->mode === "subscription") {  // subscription to GOFish
+        if ($event->data->description === "Subscription creation") {  // subscription to GOFish
           $this->subscription_receipt($event);
         } else {  // paying for tickets
           $this->booking_receipt($event);
