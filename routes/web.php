@@ -20,6 +20,10 @@ Route::get('/login', function () {
     return view('index');
 })->name('login');
 
+Route::get('/signup', function () {
+    return view('index');
+})->name('login');
+
 Route::get('/venue/{venueid}', function ($venueid) {
     return view('index', ['venueid' => $venueid]);
 });

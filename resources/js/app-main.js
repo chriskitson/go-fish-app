@@ -30,6 +30,11 @@ Vue.component(
 );
 
 Vue.component(
+    "signup-component",
+    require("./components/login/SignupComponent.vue").default
+);
+
+Vue.component(
     "register-component",
     require("./components/login/RegisterComponent.vue").default
 );

@@ -43,13 +43,27 @@ let state = {
         email: "",
         password: ""
     },
-    registerForm: {
+    registerForm: { // fisherman
         messages: [],
         errors: [],
         name: "",
         email: "",
         password: "",
         confirm: ""
+    },
+    signupForm: {   // fishery
+        messages: [],
+        errors: [],
+        name: "",
+        email: "",
+        password: "",
+        confirm: "",
+        search: "",
+        placeId: "",
+        address: "",
+        fisheryName: "",
+        confirmed: false,
+        stripeUrl: "abc"
     },
     userPosition: {
         error: "",

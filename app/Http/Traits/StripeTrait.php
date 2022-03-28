@@ -59,4 +59,30 @@ trait StripeTrait
       return false;
     }
   }
+
+  public function connected_account_create($email) {
+    $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
+    $connected_account = $client->accounts->create([
+      "type" => "express",
+      "country" => "GB",
+      "email" => $email,
+      "capabilities" => [
+        "card_payments" => ["requested" => true],
+        "transfers" => ["requested" => true],
+      ],
+    ]);
+    return $connected_account->id;
+  }
+
+  public function connected_account_link_create($venue_id, $account_id) {
+    $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
+    $connected_account_link = $client->accountLinks->create([
+      "account" => $account_id,
+      "refresh_url" => env("APP_URL") . "/expired/" . $venue_id,
+      "return_url" => env("APP_URL") . "/manage-venues/" . $venue_id,
+      "type" => "account_onboarding",
+    ]);
+    return $connected_account_link->url;
+  }
+
 }

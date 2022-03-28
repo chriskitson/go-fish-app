@@ -169,6 +169,28 @@ let actions = {
                 });
             });
     },
+    SIGNUP({ commit }, { fisheryName, placeId, address, name, email, password, confirm }) {
+        commit("SET_LOADING", true);
+        return axios
+            .post(`/api/signup`, {
+                fisheryName,
+                placeId,
+                address,
+                name,
+                email,
+                password,
+                password_confirmation: confirm
+            })
+            .then(res => {
+                commit("SIGNUP", res.data);
+            })
+            .catch(err => {
+                commit("SIGNUP", {
+                    success: false,
+                    errors: [err.response.data.message]
+                });
+            });
+    },
     BASKET_GET({ commit }, user) {
         return axios
             .get(`/api/auth/basket`, getTokenHeader(user))

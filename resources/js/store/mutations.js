@@ -112,6 +112,33 @@ let mutations = {
         }
         state.loading = false;
     },
+    SIGNUP(state, res) {
+        const { success, email, errors, stripe } = res;
+        state.signupForm.errors = [];
+        if (success === true) {
+            state.loginForm = {
+                ...state.loginForm,
+                email
+            };
+            state.signupForm = {
+                messages: [],
+                errors: [],
+                name: "",
+                email: "",
+                password: "",
+                confirm: "",
+                search: "",
+                placeId: "",
+                address: "",
+                confirmed: true,
+                stripeUrl: stripe
+            };
+            state.signupForm.messages = [ MESSAGES.LOGIN.Registered ];
+        } else {
+            state.signupForm.errors = Object.values(errors).flat();
+        }
+        state.loading = false;
+    },
     // Location
     LOCATION_SEARCH_SHOW(state, show) {
         state.locationSearch = {
