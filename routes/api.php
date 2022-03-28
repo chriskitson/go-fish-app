@@ -44,7 +44,8 @@ Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
 Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 
 // booking confirmation (from Stripe)
-Route::post('book/confirm', [WebhookController::class, 'confirm']);
+Route::post('hook/direct', [WebhookController::class, 'direct']);
+Route::post('hook/connect', [WebhookController::class, 'connect']);
 
 /*
 PROTECTED ENDPOINTS

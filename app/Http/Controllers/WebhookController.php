@@ -24,12 +24,12 @@ class WebhookController extends Controller
   {
   }
 
-  public function confirm(Request $request)
+  public function direct(Request $request)
   {
 
     $event = null;
 
-    if (!$this->verify_event($request->getContent(), $_SERVER["HTTP_STRIPE_SIGNATURE"])) {
+    if (!$this->verify_event($request->getContent(), $_SERVER["HTTP_STRIPE_SIGNATURE"], env("STRIPE_DIRECT_WH_SECRET"))) {
       // handle unverified
       return response()->json(array(
         "success" => false,
@@ -52,11 +52,46 @@ class WebhookController extends Controller
     switch ($event->type) {
       case "checkout.session.completed":
 
-        if ($event->data->object->mode === "subscription") {  // subscription to GOFish
-          $this->subscription_session($event);
-        } else {  // paying for tickets
-          $this->booking_session($event);
-        }
+        $this->subscription_session($event);
+
+        break;
+
+      default:
+        echo "Received unknown event type " . $event->type;
+    }
+
+    http_response_code(200);
+  }
+
+  public function connect(Request $request)
+  {
+
+    $event = null;
+
+    if (!$this->verify_event($request->getContent(), $_SERVER["HTTP_STRIPE_SIGNATURE"], env("STRIPE_CONNECT_WH_SECRET"))) {
+      // handle unverified
+      return response()->json(array(
+        "success" => false,
+        "verify" => false
+      ), 400);
+    }
+
+    try {
+      $event = \Stripe\Event::constructFrom($request->all());
+    } catch (\UnexpectedValueException $e) {
+      // handle invalid payload
+      return response()->json(array(
+        "success" => false,
+        "verify" => true
+      ), 400);
+      exit();
+    }
+
+    // handle event
+    switch ($event->type) {
+      case "checkout.session.completed":
+
+        $this->booking_session($event);
 
         break;
 
@@ -65,11 +100,6 @@ class WebhookController extends Controller
         $this->booking_receipt($event);
 
         break;
-
-      case "customer.subscription.created":
-
-        // $this->subscription_receipt($event);
-
       default:
         echo "Received unknown event type " . $event->type;
     }

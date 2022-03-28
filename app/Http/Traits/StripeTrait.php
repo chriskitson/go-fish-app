@@ -42,10 +42,10 @@ trait StripeTrait
     return $checkout_session->id;
   }
 
-  public function verify_event($payload, $sig_header)
+  public function verify_event($payload, $sig_header, $secret)
   {
     \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
-    $endpoint_secret = $_ENV["STRIPE_WH_SECRET"];
+    $endpoint_secret = $secret;
     try {
       $event = \Stripe\Webhook::constructEvent(
         $payload,
