@@ -62,19 +62,19 @@ class WebhookController extends Controller
 
       case "payment_intent.succeeded":
 
-        if ($event->data->description === "Subscription creation") {  // subscription to GOFish
-          $this->subscription_receipt($event);
-        } else {  // paying for tickets
-          $this->booking_receipt($event);
-        }
+        $this->booking_receipt($event);
 
         break;
+
+      case "customer.subscription.created":
+
+        // $this->subscription_receipt($event);
+
       default:
         echo "Received unknown event type " . $event->type;
     }
 
     http_response_code(200);
-
   }
 
   public function booking_session($event)
@@ -92,9 +92,13 @@ class WebhookController extends Controller
         ["session", "=", $session_id]
       ])->first();
 
-      $transaction->confirmed = 1;
-      $transaction->payment = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
-      $transaction->save();
+      if (isset($transaction)) {
+        $transaction->confirmed = 1;
+        $transaction->payment = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
+        $transaction->save();
+      }
+
+
 
       // clear basket
       Basket::where([
@@ -117,8 +121,10 @@ class WebhookController extends Controller
       ["payment", "=", $payment_intent_id]
     ])->first();
 
-    $transaction->receipt_link = $payment_receipt_link;
-    $transaction->save();
+    if (isset($transaction)) {
+      $transaction->receipt_link = $payment_receipt_link;
+      $transaction->save();
+    }
   }
 
   public function subscription_session($event)
@@ -127,7 +133,7 @@ class WebhookController extends Controller
     $session_id = $event->data->object->id;
     $session_payment_status = $event->data->object->payment_status;
     $venue_id = intval($event->data->object->client_reference_id);
-    $payment_intent = $event->data->object->payment_intent;
+    $subscription_ref = $event->data->object->subscription;
 
     // update session payment if paid
     if ($session_payment_status === "paid") {
@@ -136,31 +142,30 @@ class WebhookController extends Controller
         ["checkout_session", "=", $session_id]
       ])->first();
 
-      $venue->account_payment_confirmed = 1;
-      $venue->account_payment_reference = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
-      $venue->save();
+      if (isset($venue)) {
+        $venue->account_payment_confirmed = 1;
+        $venue->account_payment_reference = $subscription_ref; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
+        $venue->save();
 
-      // TODO - send klaviyo transactional email confirming payment
-
+        // TODO - send klaviyo transactional email confirming payment
+      }
     }
   }
 
   public function subscription_receipt($event)
   {
     // record receipt for payment
-    $payment_intent_id = $event->data->object->id;
-    $payment_receipt_link = implode(", ", array_map(function ($c) {
-      return $c->receipt_url;
-    }, $event->data->object->charges->data));
+    $subscription_id = $event->data->object->id;
 
     sleep(1); // pause for a second to allow write transaction to db (race condition)
 
     $venue = Venue::where([
-      ["account_payment_reference", "=", $payment_intent_id]
+      ["account_payment_reference", "=", $subscription_id]
     ])->first();
 
-    $venue->account_payment_receipt = $payment_receipt_link;
-    $venue->save();
+    if (isset($venue)) {
+      // $venue->account_payment_receipt = $payment_receipt_link;
+      $venue->save();
+    }
   }
-
 }

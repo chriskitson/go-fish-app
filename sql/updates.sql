@@ -111,11 +111,10 @@ ALTER TABLE `venues`
 ADD COLUMN `account_link` VARCHAR(255) NULL AFTER `checkout_session`;
 
 ALTER TABLE `venues` 
-ADD COLUMN `account_payment_confirmed` BIT(1) NULL DEFAULT 0 AFTER `account_link`,
-ADD COLUMN `account_payment_receipt` VARCHAR(255) NULL AFTER `account_payment_confirmed`;
+ADD COLUMN `account_payment_confirmed` BIT(1) NULL DEFAULT 0 AFTER `account_link`;
 
 ALTER TABLE `venues` 
-ADD COLUMN `account_payment_reference` VARCHAR(255) NULL AFTER `account_payment_receipt`;
+ADD COLUMN `account_payment_reference` VARCHAR(255) NULL AFTER `account_payment_confirmed`;
 
 
 

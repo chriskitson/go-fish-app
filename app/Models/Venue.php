@@ -40,7 +40,6 @@ class Venue extends Model
         'account_link',
         'active',
         'account_payment_confirmed',
-        'account_payment_receipt',
         'account_payment_reference'
     ];
 
