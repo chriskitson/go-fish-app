@@ -188,6 +188,10 @@ class RegisterController extends Controller
           $venue->account_payment_confirmed = 1;
           $venue->account_payment_reference = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
           $venue->save();
+
+          // TODO - send klaviyo transactional email confirming payment
+            
+
         }
 
         break;
