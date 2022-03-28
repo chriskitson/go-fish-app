@@ -440,6 +440,9 @@ let mutations = {
     },
     VENUE_BOOKINGS_GET(state, res) {
         state.venueBookings = res;
-    }
+    },
+    MY_VENUE_SUBSCRIPTION_GET(state, res) {
+        state.venueSignUpDetail = res;
+    },
 };
 export default mutations;

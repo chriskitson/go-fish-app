@@ -44,6 +44,10 @@ Route::get('/confirm/{session}', function ($session) {
     return view('index', ['confirmid' => $session]);
 });
 
+Route::get('/signup/confirm/{session}', function ($session) {
+    return view('index', ['confirmid' => $session]);
+});
+
 Route::get('/tickets', function () {
     return view('index');
 });

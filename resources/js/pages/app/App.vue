@@ -104,9 +104,11 @@ export default {
         },
         getUserData() {
             const { user } = this;
-            this.$store.dispatch("USER_DATA_FETCH", {
-                user
-            });
+            if (user.loggedIn) {
+                this.$store.dispatch("USER_DATA_FETCH", {
+                    user
+                });
+            }
         },
         getLocationData(queryString) {
             const { user } = this;

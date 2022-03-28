@@ -8,6 +8,7 @@ import Login from '../pages/login/LoginPage';
 import SignUp from '../pages/signup/SignUpPage';
 import Basket from '../pages/basket/BasketPage';
 import Confirm from '../pages/confirm/ConfirmPage';
+import SignUpConfirm from '../pages/signup-confirm/SignUpConfirmPage';
 import MyTickets from '../pages/my-tickets/MyTicketsPage';
 import ManageVenues from '../pages/manage-venues/ManageVenuesPage';
 import ManageVenue from '../pages/manage-venue/ManageVenuePage';
@@ -20,6 +21,7 @@ export const routes = [
     { path: '/', component: Home, name: 'Home' },
     { path: '/login', component: Login, name: 'Login' },
     { path: '/signup', component: SignUp, name: 'SignUp' },
+    { path: '/signup/confirm/:id', component: SignUpConfirm, name: 'Signup Confirm' },
     { path: '/confirm/:id', component: Confirm, name: 'Confirm' },
     { path: '/basket', component: Basket, name: 'Basket' },
     { path: '/venue/:id', component: Detail, name: 'Venue' },

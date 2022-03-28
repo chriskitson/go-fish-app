@@ -6,10 +6,9 @@ let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, { queryString, user }) {
         axios
             .get(
-                `/api/${
-                    user.loggedIn ? "auth/" : ""
+                `/api/${user.loggedIn ? "auth/" : ""
                 }load?${queryString}&c=${localStorage.getItem("homeToken") ||
-                    ""}`,
+                ""}`,
                 getTokenHeader(user)
             )
             .then(res => {
@@ -22,8 +21,7 @@ let actions = {
     USER_DATA_FETCH({ commit }, { user }) {
         axios
             .get(
-                `/api/${
-                    user.loggedIn ? "auth/" : ""
+                `/api/${user.loggedIn ? "auth/" : ""
                 }user`,
                 getTokenHeader(user)
             )
@@ -37,8 +35,7 @@ let actions = {
     VENUES_NEAR({ commit }, { queryString, user }) {
         axios
             .get(
-                `/api/${
-                    user.loggedIn ? "auth/" : ""
+                `/api/${user.loggedIn ? "auth/" : ""
                 }venues/near?${queryString}&o=${localStorage.getItem("origin") ||
                 ""}`,
                 getTokenHeader(user)
@@ -65,8 +62,7 @@ let actions = {
     VENUE_TICKETS_GET({ commit }, { id, date, user }) {
         return axios
             .get(
-                `/api/${
-                    user.loggedIn ? "auth/" : ""
+                `/api/${user.loggedIn ? "auth/" : ""
                 }venues/tickets/${id}?d=${date.getTime()}`,
                 getTokenHeader(user)
             )
@@ -83,8 +79,7 @@ let actions = {
     VENUE_TICKET_GET({ commit }, { venue_id, id, date, user }) {
         return axios
             .get(
-                `/api/${
-                    user.loggedIn ? "auth/" : ""
+                `/api/${user.loggedIn ? "auth/" : ""
                 }venues/ticket/${venue_id}/${id}?d=${date.getTime()}`,
                 getTokenHeader(user)
             )
@@ -475,6 +470,16 @@ let actions = {
                 commit("SET_LOADING", false);
                 handleError(err.response.data.message);
             });
-    }
+    },
+    MY_VENUE_SUBSCRIPTION_GET({ commit }, { session }) {
+        return axios
+            .get(`/api/signup/${session}`)
+            .then(res => {
+                commit("MY_VENUE_SUBSCRIPTION_GET", res.data);
+            })
+            .catch(err => {
+                handleError(err.response.data.message);
+            });
+    },
 };
 export default actions;

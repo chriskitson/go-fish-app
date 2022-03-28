@@ -144,6 +144,18 @@ class RegisterController extends Controller
     ));
   }
 
+  public function get_subscription(Request $request, $session)
+  {
+
+    // get venue
+    $venue = Venue::where([
+      // ["account_payment_confirmed", "=", 1],
+      ["checkout_session", "=", $session]
+    ])->distinct()->first(["name", "id", "account_link", "subscription"]);
+
+    return response()->json($venue);
+  }
+
  
 
 }
