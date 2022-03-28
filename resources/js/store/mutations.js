@@ -113,7 +113,7 @@ let mutations = {
         state.loading = false;
     },
     SIGNUP(state, res) {
-        const { success, email, errors, stripe } = res;
+        const { success, email, errors, session_id } = res;
         state.signupForm.errors = [];
         if (success === true) {
             state.loginForm = {
@@ -130,10 +130,22 @@ let mutations = {
                 search: "",
                 placeId: "",
                 address: "",
-                confirmed: true,
-                stripeUrl: stripe
+                // confirmed: true,
+                // stripeUrl: stripe
             };
-            state.signupForm.messages = [ MESSAGES.LOGIN.Registered ];
+
+            // cs_test_a1p4OpGznLaDxKhazOhSsYIP8huT1zsCKCkzb2CaNgOEYKYD42XPFZOOP0
+            
+            // redirect to stripe session
+            const stripe = Stripe(window.__STRIPE_PK__);
+            stripe.redirectToCheckout({ sessionId: session_id });
+
+
+
+
+
+
+            // state.signupForm.messages = [ MESSAGES.LOGIN.Registered ];
         } else {
             state.signupForm.errors = Object.values(errors).flat();
         }

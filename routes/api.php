@@ -42,6 +42,9 @@ Route::get('search/{date}/{location}', [VenueController::class, 'search']);
 // booking confirmation (from Stripe)
 Route::post('book/confirm', [BookingController::class, 'confirm']);
 
+// fishery registration confirmation (from Stripe)
+Route::post('signup/confirm', [RegisterController::class, 'signup_confirm']);
+
 /*
 PROTECTED ENDPOINTS
 */

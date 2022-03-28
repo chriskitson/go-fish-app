@@ -92,8 +92,30 @@ CHANGE COLUMN `user_type` `user_type` INT NULL DEFAULT b'1' ;
 ALTER TABLE `users` 
 ADD COLUMN `venue_id` INT NULL AFTER `origin`;
 
-/* 22/02/22 */
+/* 22/03/22 */
 
 SET SQL_SAFE_UPDATES = 0;
 UPDATE `venues`
 SET payment_fee = 0;
+
+
+/* 28/03/22 */
+ALTER TABLE `venues` 
+ADD COLUMN `active` BIT(1) NULL DEFAULT 0 AFTER `photos`;
+
+ALTER TABLE `venues` 
+ADD COLUMN `subscription` VARCHAR(45) NULL AFTER `active`,
+ADD COLUMN `checkout_session` VARCHAR(255) NULL AFTER `subscription`;
+
+ALTER TABLE `venues` 
+ADD COLUMN `account_link` VARCHAR(255) NULL AFTER `checkout_session`;
+
+ALTER TABLE `venues` 
+ADD COLUMN `account_payment_confirmed` BIT(1) NULL DEFAULT 0 AFTER `account_link`,
+ADD COLUMN `account_payment_receipt` VARCHAR(255) NULL AFTER `account_payment_confirmed`;
+
+ALTER TABLE `venues` 
+ADD COLUMN `account_payment_reference` VARCHAR(255) NULL AFTER `account_payment_receipt`;
+
+
+

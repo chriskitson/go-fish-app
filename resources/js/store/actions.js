@@ -186,9 +186,12 @@ let actions = {
                 commit("SIGNUP", res.data);
             })
             .catch(err => {
+                console.log({
+                    err
+                });
                 commit("SIGNUP", {
                     success: false,
-                    errors: [err.response.data.message]
+                    errors: [err.response.data?.message]
                 });
             });
     },

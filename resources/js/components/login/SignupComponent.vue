@@ -16,7 +16,7 @@
         class="mb-8 text-xl text-center text-red-200"
         v-if="!register.confirmed"
       >
-        Add a Fishery
+        Sign up to GOFish
       </h1>
       <h1
         class="mb-8 text-xl text-center text-red-200"
@@ -39,7 +39,6 @@
           To complete your sign up and start accepting payments from GoFish, you
           must provide your bank details to Stripe, our payment partner.
         </p>
-
         <a
           :href="register.stripeUrl"
           class="
@@ -64,6 +63,24 @@
         </a>
       </div>
       <div v-if="!register.confirmed">
+        <p class="mb-4">
+          If you are a fishery owner we would love you to use our platform to
+          advertise, sell and manage your tickets online.
+        </p>
+        <p class="mb-4">Our pricing model is <strong>simple</strong>:</p>
+        <ul class="list-inside list-disc mb-8 text-sm">
+          <li>
+            You choose one of our
+            <a href="#" class="text-red-200">subscriptions</a> (from &pound;35
+            per month)
+          </li>
+          <li>GOFish collect <strong>&pound;1 booking fee</strong> for each ticket sold</li>
+          <li>
+            Our payment partner (Stripe) collect <strong>1.4% + 20p</strong> (per transaction)
+          </li>
+          <li class="mt-4 italic">
+            E.g. &pound;10 ticket, GoFish collect &pound;1, Stripe collect 34p, you get &pound;8.66</li>
+        </ul>
         <google-places-autocomplete
           class="w-full h-9x"
           :value="register.search"
@@ -147,7 +164,7 @@
             v-if="loading"
             :class="`border-t-4 border-b-3 rounded-full animate-spin w-4 h-4 mr-4`"
           ></div>
-          Create Fishery
+          Add Fishery
         </button>
         <div class="mt-4 text-xs text-center text-grey-300">
           By signing up, you agree to the

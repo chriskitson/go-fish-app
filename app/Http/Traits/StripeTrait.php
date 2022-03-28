@@ -33,8 +33,8 @@ trait StripeTrait
         "receipt_email" => $email,
       ],
       "mode" => "payment",
-      "success_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . "/confirm/{CHECKOUT_SESSION_ID}",
-      "cancel_url" => $_ENV["STRIPE_RESPONSE_ROOT"] . $url,
+      "success_url" => $_ENV["APP_URL"] . "/confirm/{CHECKOUT_SESSION_ID}",
+      "cancel_url" => $_ENV["APP_URL"] . "/basket",
       "metadata" => $meta_data
     ], [
       "stripe_account" => $account_id
@@ -86,6 +86,26 @@ trait StripeTrait
       "type" => "account_onboarding",
     ]);
     return $connected_account_link->url;
+  }
+
+  public function create_gofish_subscription($product_price_id, $venue_id, $email, $meta_data = [])
+  {
+    \Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
+    $checkout_session = \Stripe\Checkout\Session::create([
+      "payment_method_types" => ["card"],
+      "client_reference_id" => $venue_id,
+      "customer_email" => $email,
+      "line_items" => [[
+        "price" => $product_price_id,
+        "quantity" => 1
+      ]],
+      "metadata" => $meta_data,
+      "mode" => "subscription",
+      "success_url" => $_ENV["APP_URL"] . "/signup/confirm",
+      "cancel_url" => $_ENV["APP_URL"] . "/signup",
+      "metadata" => $meta_data
+    ]);
+    return $checkout_session->id;
   }
 
 }
