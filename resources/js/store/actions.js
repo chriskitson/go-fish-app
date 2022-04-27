@@ -15,7 +15,9 @@ let actions = {
                 commit("BOOTSTRAP_DATA", res.data);
             })
             .catch(err => {
-                commit("LOGOUT", null);
+                console.log({
+                    err
+                });
             });
     },
     USER_DATA_FETCH({ commit }, { user }) {
@@ -29,7 +31,9 @@ let actions = {
                 commit("USER_DATA", res.data);
             })
             .catch(err => {
-                commit("LOGOUT", null);
+                console.log({
+                    err
+                });
             });
     },
     VENUES_NEAR({ commit }, { queryString, user }) {
@@ -196,9 +200,6 @@ let actions = {
                 commit("SIGNUP", res.data);
             })
             .catch(err => {
-                console.log({
-                    err
-                });
                 commit("SIGNUP", {
                     success: false,
                     errors: [err.response.data?.message]
@@ -383,7 +384,6 @@ let actions = {
             })
             .catch(err => {
                 commit("SET_LOADING", false);
-                console.log(err.response.data);
                 handleError(err.response.data);
             });
     },

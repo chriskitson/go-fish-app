@@ -22,6 +22,15 @@ class BootstrapController extends Controller
   {
   }
 
+
+  private function split_name($name)
+  {
+      $name = trim($name);
+      $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+      $first_name = trim(preg_replace('#' . $last_name . '#', '', $name));
+      return array($first_name, $last_name);
+  }
+
   public function cache_bust(Request $request)
   {
     $user = $request->user();
@@ -156,9 +165,13 @@ class BootstrapController extends Controller
 
     if (Auth::check()) {
       $user = $request->user();
+      $name = $this->split_name($user->name);
       $response->user = array(
         "userType" => $user->user_type,
-        "globalAdmin" => $user->global_admin === 1
+        "globalAdmin" => $user->global_admin === 1,
+        "email" => $user->email,
+        "firstName" => $name[0],
+        "lastName" => $name[1],
       );
       // if user is fishery owner then return venue indo
       if ($user->user_type === 2 && $user->venue_id != '') {
@@ -169,7 +182,10 @@ class BootstrapController extends Controller
     } else {
       $response->user = array(
         "userType" => 0,
-        "globalAdmin" => false
+        "globalAdmin" => false,
+        "email" => "",
+        "firstName" => "",
+        "lastName" => ""
       );
     }
 

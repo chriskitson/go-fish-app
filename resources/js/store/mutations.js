@@ -1,6 +1,7 @@
 import { clearErrors } from "../utils";
 import { MESSAGES } from "../config/messages";
 import { manageTabs } from "./state";
+import { userRegister } from "../utils/klaviyo";
 
 let mutations = {
     // Generic
@@ -12,14 +13,14 @@ let mutations = {
     },
     // Load user data
     BOOTSTRAP_DATA(state, data) {
-        state.venues = data.venues.map(v => {
+        state.venues =  data.venues ? data.venues.map(v => {
             const photos = v.photos !== '' ? JSON.parse(v.photos) : [];
             const venue = {
                 ...v,
-                image: !v.image && photos.length > 0 ? photos[0].url : v.image
+                image: !v.image && photos && photos.length > 0 ? photos[0].url : v.image
             };
             return venue;
-        });
+        }) : [];
         state.userPosition = data.userPosition;
         state.locationSearch = {
             show: false,
@@ -29,7 +30,7 @@ let mutations = {
         state.live = true;
         state.categories = data.categories;
         localStorage.setItem("homeToken", data.token);
-        localStorage.setItem("origin", data.userPosition.origin);
+        localStorage.setItem("origin", data.userPosition?.origin);
     },
     USER_DATA(state, data) {
         state.user = {
@@ -38,6 +39,13 @@ let mutations = {
         };
         localStorage.setItem("globalAdmin", data.user.globalAdmin ? "true" : "false");
         localStorage.setItem("userType", data.user.userType);
+        const { user: { firstName, lastName, email, userType }} = state;
+        userRegister({  // klaviyo user track
+            firstName,
+            lastName,
+            email,
+            role: userType === 1 ? "Fisher" : "Fishery"
+        });
     },
     // User register and login
     LOGIN(state, res) {
@@ -50,6 +58,7 @@ let mutations = {
         } = res;
         state.loginForm.messages = [];
         state.loginForm.errors = [];
+
         if (success === true) {
             // state.loginForm.messages = ["You have been successfully logged in"];
             state.user = {
@@ -64,21 +73,21 @@ let mutations = {
             if (localStorage.getItem("referrer") !== null) {
                 const ref = localStorage.getItem("referrer");
                 localStorage.removeItem("referrer");
-                window.location.href = ref;
+                // window.location.href = ref;
             } else {
-                window.location.href = "/";
+                // window.location.href = "/";
             }
         } else {
-            state.loginForm.errors = errors;
-            state.user = {
-                loggedIn: false,
-                access_token: "",
-                refresh_token: "",
-                token_type: ""
-            };
-            localStorage.setItem("access_token", null);
-            localStorage.setItem("refresh_token", null);
-            localStorage.setItem("token_type", null);
+            // state.loginForm.errors = errors;
+            // state.user = {
+            //     loggedIn: false,
+            //     access_token: "",
+            //     refresh_token: "",
+            //     token_type: ""
+            // };
+            // localStorage.setItem("access_token", null);
+            // localStorage.setItem("refresh_token", null);
+            // localStorage.setItem("token_type", null);
         }
         state.loading = false;
     },
@@ -276,8 +285,6 @@ let mutations = {
                     const i = state.basket.findIndex(
                         b => b.basket_id == booking.basket_id
                     );
-                    console.log(state.basket);
-                    console.log(booking.basket_id);
                     if (i > -1) {
                         state.basket[i].error = MESSAGES.CHECKOUT.NoQuantity;
                     }

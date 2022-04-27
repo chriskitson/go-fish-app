@@ -65,7 +65,7 @@ $page_title = $page->get_title($initial_state['path']);
         window.__STRIPE_PK__ = '<?php echo $_ENV['STRIPE_KEY']; ?>';
     </script>
     @if (env('KLAVIYO_COMPANY') != '')
-        <script async type="text/javascript" src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id=<?php echo env('KLAVIYO_COMPANY'); ?>"></script>
+        <script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=<?php echo env('KLAVIYO_COMPANY'); ?>"></script>
     @endif
 </body>
 

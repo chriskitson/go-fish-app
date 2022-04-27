@@ -31,6 +31,9 @@ let state = {
         token_type: "",
         userType: userType.NONE,
         globalAdmin: false,
+        email: "",
+        firstName: "",
+        lastName: "",
         venue: {
             id: 0,
             name: ""
