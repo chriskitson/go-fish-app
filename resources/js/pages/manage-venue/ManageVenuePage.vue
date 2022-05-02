@@ -17,6 +17,7 @@
             border-warning
             text-warning text-center
           "
+          v-if="!venue.subscription.confirmed"
         >
           <a href="#" v-on:click="subscriptionTab($event)"
             >You do not have an active subscription with GoFish. Your venue is
