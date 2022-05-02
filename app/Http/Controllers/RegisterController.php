@@ -114,7 +114,8 @@ class RegisterController extends Controller
     $user->save();
 
     return response()->json(array(
-      "success" => true
+      "success" => true,
+      "venue_id" => $venue_id
     ));
   }
 

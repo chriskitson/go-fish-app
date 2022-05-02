@@ -73,9 +73,9 @@ let mutations = {
             if (localStorage.getItem("referrer") !== null) {
                 const ref = localStorage.getItem("referrer");
                 localStorage.removeItem("referrer");
-                // window.location.href = ref;
+                window.location.href = ref;
             } else {
-                // window.location.href = "/";
+                window.location.href = "/";
             }
         } else {
             // state.loginForm.errors = errors;
@@ -128,13 +128,9 @@ let mutations = {
         state.loading = false;
     },
     SIGNUP(state, res) {
-        const { success, email, errors, session_id } = res;
+        const { success, errors, venue_id } = res;
         state.signupForm.errors = [];
         if (success === true) {
-            state.loginForm = {
-                ...state.loginForm,
-                email
-            };
             state.signupForm = {
                 messages: [],
                 errors: [],
@@ -148,17 +144,8 @@ let mutations = {
                 confirmed: true,
                 // stripeUrl: stripe
             };
-
-
-
-
-
-            // cs_test_a1p4OpGznLaDxKhazOhSsYIP8huT1zsCKCkzb2CaNgOEYKYD42XPFZOOP0
-
-            // redirect to stripe session
-            // const stripe = Stripe(window.__STRIPE_PK__);
-            // stripe.redirectToCheckout({ sessionId: session_id });
-            // state.signupForm.messages = [ MESSAGES.LOGIN.Registered ];
+            // redirect to manage page
+            window.location.href = `/manage-venues/${venue_id}`;
         } else {
             state.signupForm.errors = Object.values(errors).flat();
         }
