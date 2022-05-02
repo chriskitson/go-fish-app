@@ -2,6 +2,7 @@
     <div class="w-full h-full max-w-5xl mx-auto">
         <div class="grid grid-cols-1 gap-6 px-4 my-24 lg:grid-cols-2">
             <login-component
+                title="Existing users login to GoFish!"
                 :login="loginForm"
                 :loggedIn="loggedIn"
                 :loading="loading"

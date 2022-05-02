@@ -5,6 +5,24 @@
         <h2 class="text-xl font-semibold text-red-200">
           {{ venue.name }}
         </h2>
+        <div
+          class="
+            p-2
+            text-sm
+            my-5
+            bg-white
+            font-bold
+            border-2
+            rounded-xl
+            border-warning
+            text-warning text-center
+          "
+        >
+          <a href="#" v-on:click="subscriptionTab($event)"
+            >You do not have an active subscription with GoFish. Your venue is
+            not active on our website.</a
+          >.
+        </div>
       </div>
       <div class="mb-4 md:col-span-2 md:mb-0">
         <manage-tabs-component
@@ -56,6 +74,13 @@
         @saveTicket="saveTicket"
         @deleteTicket="deleteTicket"
       ></manage-tickets-component>
+      <manage-subscription-component
+        v-if="venueManageTab === manageTabs.SUBSCRIPTION"
+        :venue="venue"
+        :loading="loading"
+        @create="subscriptionCreate"
+        @cancel="subscriptionCancel"
+      ></manage-subscription-component>
       <div
         class="
           flex
@@ -67,7 +92,10 @@
           md:mb-0
           bg-grey-100
         "
-        v-if="venueManageTab !== manageTabs.TICKETS"
+        v-if="
+          venueManageTab !== manageTabs.TICKETS &&
+          venueManageTab !== manageTabs.SUBSCRIPTION
+        "
       >
         <button
           @click="updateDetails"
@@ -140,12 +168,30 @@ export default {
           index: manageTabs.TICKETS,
           label: "Tickets",
         },
+        {
+          index: manageTabs.SUBSCRIPTION,
+          label: "Subscription",
+        },
       ],
     };
+  },
+  mounted() {
+    if (this.$route.query.tab) {
+      const tabIndex = this.TABS.findIndex((f) => {
+        return f.label === this.$route.query.tab;
+      });
+      if (tabIndex > -1) {
+        this.setTab(this.TABS[tabIndex].index);
+      }
+    }
   },
   methods: {
     setTab(tab) {
       this.$store.dispatch("VENUE_MANAGE_TAB", tab);
+    },
+    subscriptionTab(event) {
+      event.preventDefault();
+      this.setTab(this.TABS.SUBSCRIPTION);
     },
     errorStyle(key) {
       return this.manageVenueErrorFields.indexOf(key) > -1
@@ -278,6 +324,20 @@ export default {
       const { user } = this;
       this.$store.dispatch("VENUE_CLOSED_DELETE", {
         id,
+        venue_id: this.venue.id,
+        user,
+      });
+    },
+    subscriptionCreate() {
+      const { user } = this;
+      this.$store.dispatch("SUBSCRIPTION_CREATE", {
+        venue_id: this.venue.id,
+        user,
+      });
+    },
+    subscriptionCancel() {
+      const { user } = this;
+      this.$store.dispatch("SUBSCRIPTION_CANCEL", {
         venue_id: this.venue.id,
         user,
       });

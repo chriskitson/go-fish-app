@@ -481,5 +481,35 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
+    SUBSCRIPTION_CREATE({ commit }, { venue_id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(
+                `/api/auth/venues/${venue_id}/subscription`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("SUBSCRIPTION_CREATE", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    SUBSCRIPTION_CANCEL({ commit }, { venue_id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(
+                `/api/auth/venues/${venue_id}/subscription`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("SUBSCRIPTION_CANCEL", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
 };
 export default actions;

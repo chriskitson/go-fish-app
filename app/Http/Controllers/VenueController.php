@@ -11,6 +11,7 @@ use App\Models\SearchCache;
 use App\Models\RequestCache;
 use App\Http\Traits\GoogleMapTrait;
 use App\Http\Traits\BookingTrait;
+use App\Http\Traits\StripeTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,7 @@ class VenueController extends Controller
 
   use GoogleMapTrait;
   use BookingTrait;
+  use StripeTrait;
 
   /**
    * Create a new controller instance.
@@ -134,6 +136,14 @@ class VenueController extends Controller
     $venue = Venue::find($id);
     $venue->description = $this->clean_admin($venue->description);
     $venue->rules = $this->clean_admin($venue->rules);
+    if ($venue->account_payment_confirmed == 1 && isset($venue->account_payment_reference) && $venue->account_payment_reference !== "") { // has active subscription
+      // get subscription details from stripe
+      $subscription_confirmed = true;
+      $subscription_amount = ($this->get_gofish_subscription($venue->account_payment_reference)->plan->amount / 100);
+    } else {
+      $subscription_confirmed = false;
+      $subscription_amount = null;
+    }
     $fields = array(
       "id" => $venue->id,
       "name" => $venue->name,
@@ -143,6 +153,12 @@ class VenueController extends Controller
       "place_id" => $venue->place_id,
       "rules" => $venue->rules,
       "account" => $venue->account,
+      "subscription" => array(
+        "confirmed" => $subscription_confirmed,
+        "reference" => $venue->account_payment_reference,
+        "type" => $venue->subscription,
+        "amount" => $subscription_amount
+      ),
       "days" => array(
         "sunday" => $venue->open_sunday == 1,
         "monday" => $venue->open_monday == 1,
@@ -285,7 +301,6 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-
     } else { // look up location based data search results
 
       // get search by place_id
@@ -944,5 +959,81 @@ class VenueController extends Controller
       "venues" => $venues_array,
       "town" => $town
     ));
+  }
+
+  public function subscription_create(Request $request, $id)
+  {
+
+    $user = $request->user();
+    $is_admin = $user->user_type == 2 && $user->venue_id == $id;
+    $is_global_admin = $user->global_admin == 1;
+    $venue_id = $user->venue_id;
+    $user_email = $user->email;
+
+    if ($is_admin || $is_global_admin && ($venue_id === $id)) {
+
+      // create stripe subscription checkout session (for monthly fee to GOFish)
+      $checkout_session_id = $this->create_gofish_subscription(env("STRIPE_SUBSCRIPTION_PRODUCT_LITE"), $venue_id, $user_email);
+
+      // get venue info
+      $venue = Venue::find($venue_id);
+      $venue_name = $venue->name;
+      $account_id = $venue->account;
+
+      // create stripe connected account for receiving payments (if one doesn't exist)
+      if (!isset($account_id) || $account_id === "") {
+        $account_id = $this->connected_account_create($user_email, $venue_name);
+      }
+
+      // generate stripe signup link for account (to provide bank details for payments to fishery)
+      $account_link = $this->connected_account_link_create($venue_id, $account_id);
+
+      // update venue with stripe info
+      Venue::where([
+        ["id", "=", $venue_id]
+      ])->update(array(
+        "checkout_session" => $checkout_session_id,
+        "account_link" => $account_link,
+        "account" => $account_id
+      ));
+
+      return response()->json(array(
+        "success" => true,
+        "session_id" => $checkout_session_id  // create session for subscription
+      ));
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
+  public function subscription_cancel(Request $request, $id)
+  {
+    $user = $request->user();
+    $is_admin = $user->user_type == 2 && $user->venue_id == $id;
+    $is_global_admin = $user->global_admin == 1;
+    $venue_id = $user->venue_id;
+
+    if ($is_admin || $is_global_admin && ($venue_id === $id)) {
+
+      // cancel subscription
+      $venue = Venue::find($venue_id);
+      $subscription = $venue->account_payment_reference;
+
+      // update venue
+      $venue->update([
+        "account_payment_confirmed" => 0,
+        "account_payment_reference" => ""
+      ]);
+
+      $this->cancel_gofish_subscription($subscription); // cancel stripe subscription
+
+      return response()->json(array(
+        "success" => true,
+        "session_id" => $subscription
+      ));
+
+    } else {
+      return response("Unauthorized", 401);
+    }
   }
 }

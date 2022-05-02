@@ -60,6 +60,18 @@
         >Tickets</a
       >
     </li>
+    <li class="mr-1 -mb-px">
+      <a
+        :class="`inline-block px-4 py-2 font-semibold bg-white text-blue-dark${
+          active === manageTabs.SUBSCRIPTION
+            ? ' rounded-t border-t border-l border-r'
+            : ''
+        }`"
+        href="#"
+        @click.prevent="$emit('setTab', manageTabs.SUBSCRIPTION)"
+        >Subscription</a
+      >
+    </li>
   </ul>
 </template>
 

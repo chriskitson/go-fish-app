@@ -35,6 +35,11 @@ Vue.component(
 );
 
 Vue.component(
+    "signupconfirm-component",
+    require("./components/login/SignUpConfirmComponent.vue").default
+);
+
+Vue.component(
     "register-component",
     require("./components/login/RegisterComponent.vue").default
 );
@@ -197,6 +202,11 @@ Vue.component(
 Vue.component(
     "manage-tickets-component",
     require("./components/manage/ManageTicketsComponent.vue").default
+);
+
+Vue.component(
+    "manage-subscription-component",
+    require("./components/manage/ManageSubscriptionComponent.vue").default
 );
 
 Vue.component(

@@ -10,6 +10,7 @@ module.exports = {
             colors: {
                 error: '#ff6961',
                 success: '#4FA64F',
+                warning: '#F8AA02',
                 grey: {
                     100: '#EFEFEF',
                     200: '#c6c6c6',

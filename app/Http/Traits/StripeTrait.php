@@ -60,7 +60,8 @@ trait StripeTrait
     }
   }
 
-  public function connected_account_create($email, $name) {
+  public function connected_account_create($email, $name)
+  {
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
     $connected_account = $client->accounts->create([
       "type" => "express",
@@ -77,7 +78,8 @@ trait StripeTrait
     return $connected_account->id;
   }
 
-  public function connected_account_link_create($venue_id, $account_id) {
+  public function connected_account_link_create($venue_id, $account_id)
+  {
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
     $connected_account_link = $client->accountLinks->create([
       "account" => $account_id,
@@ -101,11 +103,23 @@ trait StripeTrait
       ]],
       "metadata" => $meta_data,
       "mode" => "subscription",
-      "success_url" => $_ENV["APP_URL"] . "/signup/confirm/{CHECKOUT_SESSION_ID}",
-      "cancel_url" => $_ENV["APP_URL"] . "/signup",
+      "success_url" => $_ENV["APP_URL"] . "/manage-venues/" . $venue_id . "?tab=Subscription",
+      "cancel_url" => $_ENV["APP_URL"] . "/manage-venues/" . $venue_id . "?tab=Subscription",
       "metadata" => $meta_data
     ]);
     return $checkout_session->id;
   }
 
+  public function get_gofish_subscription($id)
+  {
+    $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
+    return $client->subscriptions->retrieve($id, []);
+  }
+
+  public function cancel_gofish_subscription($id)
+  {
+    $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
+    return $client->subscriptions->cancel($id, []);
+  }
+  
 }

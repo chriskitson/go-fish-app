@@ -7,12 +7,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Venue;
-use App\Http\Traits\StripeTrait;
 
 class RegisterController extends Controller
 {
-
-  use StripeTrait;
 
   public function __construct()
   {
@@ -80,7 +77,6 @@ class RegisterController extends Controller
       $account_id = Venue::where("place_id", "=", $data["placeId"])->first()->account;
       $venue_active = Venue::where("place_id", "=", $data["placeId"])->first()->active;
       $checkout_session_id = "";
-
     } else {  // set up new venue
 
       $venue = Venue::create([
@@ -116,31 +112,9 @@ class RegisterController extends Controller
       "venue_id" => $venue_id
     ]);
     $user->save();
-    $user_id = $user->id;
-
-    // create stripe subscription checkout session (for monthly fee to GOFish)
-    $checkout_session_id = $this->create_gofish_subscription("price_1KiKPoHi5I5M4WuheVX53d4W", $venue_id, $data["email"]);
-
-    // create stripe connected account for receiving payments (if one doesn't exist)
-    if (!isset($account_id) || $account_id === "") { 
-      $account_id = $this->connected_account_create($data["email"], $data["fisheryName"]);
-    }
-
-    // generate stripe signup link for account (to provide bank details for payments to fishery)
-    $account_link = $this->connected_account_link_create($venue_id, $account_id);
-
-    // update venue with stripe info
-    Venue::where([
-      ["id", "=", $venue_id]
-    ])->update(array(
-      "checkout_session" => $checkout_session_id,
-      "account_link" => $account_link,
-      "account" => $account_id
-    ));
 
     return response()->json(array(
-      "success" => true,
-      "session_id" => $checkout_session_id  // create session for subscription
+      "success" => true
     ));
   }
 
@@ -155,7 +129,4 @@ class RegisterController extends Controller
 
     return response()->json($venue);
   }
-
- 
-
 }

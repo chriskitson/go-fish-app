@@ -13,7 +13,7 @@ let mutations = {
     },
     // Load user data
     BOOTSTRAP_DATA(state, data) {
-        state.venues =  data.venues ? data.venues.map(v => {
+        state.venues = data.venues ? data.venues.map(v => {
             const photos = v.photos !== '' ? JSON.parse(v.photos) : [];
             const venue = {
                 ...v,
@@ -39,7 +39,7 @@ let mutations = {
         };
         localStorage.setItem("globalAdmin", data.user.globalAdmin ? "true" : "false");
         localStorage.setItem("userType", data.user.userType);
-        const { user: { firstName, lastName, email, userType }} = state;
+        const { user: { firstName, lastName, email, userType } } = state;
         userRegister({  // klaviyo user track
             firstName,
             lastName,
@@ -145,21 +145,19 @@ let mutations = {
                 search: "",
                 placeId: "",
                 address: "",
-                // confirmed: true,
+                confirmed: true,
                 // stripeUrl: stripe
             };
 
+
+
+
+
             // cs_test_a1p4OpGznLaDxKhazOhSsYIP8huT1zsCKCkzb2CaNgOEYKYD42XPFZOOP0
-            
+
             // redirect to stripe session
-            const stripe = Stripe(window.__STRIPE_PK__);
-            stripe.redirectToCheckout({ sessionId: session_id });
-
-
-
-
-
-
+            // const stripe = Stripe(window.__STRIPE_PK__);
+            // stripe.redirectToCheckout({ sessionId: session_id });
             // state.signupForm.messages = [ MESSAGES.LOGIN.Registered ];
         } else {
             state.signupForm.errors = Object.values(errors).flat();
@@ -450,6 +448,28 @@ let mutations = {
     },
     MY_VENUE_SUBSCRIPTION_GET(state, res) {
         state.venueSignUpDetail = res;
+    },
+    SUBSCRIPTION_CREATE(state, { success, session_id }) {
+        if (success) {
+            // redirect to stripe session
+            const stripe = Stripe(window.__STRIPE_PK__);
+            stripe.redirectToCheckout({ sessionId: session_id });
+            state.signupForm.messages = [MESSAGES.LOGIN.Registered];
+        }
+    },
+    SUBSCRIPTION_CANCEL(state, { success }) {
+        if (success) {
+            state.venueDetail = {
+                ...state.venueDetail,
+                subscription: {
+                    ...state.venueDetail.subscription,
+                    confirmed: false,
+                    amount: null,
+                    type: ''
+                }
+            }
+        }
+        state.loading = false;
     },
 };
 export default mutations;

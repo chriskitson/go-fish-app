@@ -103,6 +103,12 @@ let state = {
             thursday: false,
             friday: false,
             saturday: false
+        },
+        subscription: {
+            confirmed: false,
+            reference: '',
+            type: '',
+            amount: null
         }
     },
     venueSearchResults: [],

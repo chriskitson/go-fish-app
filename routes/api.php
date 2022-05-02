@@ -53,7 +53,7 @@ PROTECTED ENDPOINTS
 Route::group([
     'middleware' => ['auth:api']
 ], function () {
-    
+
     // user
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -65,14 +65,14 @@ Route::group([
     Route::get('auth/venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);
     Route::get('auth/venues/get', [VenueController::class, 'all']);
     Route::get('auth/venues/near', [VenueController::class, 'near']);
-    
+
     // basket
     Route::get('auth/basket', [BasketController::class, 'get']);
     Route::post('auth/basket/{venue_id}/{ticket_id}/{date}', [BasketController::class, 'add']);
     Route::get('auth/basket/{id}/up', [BasketController::class, 'basket_increase']);
     Route::get('auth/basket/{id}/down', [BasketController::class, 'basket_decrease']);
     Route::delete('auth/basket/{id}', [BasketController::class, 'basket_remove']);
-    
+
     // booking
     Route::post('auth/book', [BookingController::class, 'book']);
 
@@ -100,5 +100,6 @@ Route::group([
     Route::delete('auth/venues/{id}', [VenueController::class, 'delete']);
     Route::post('auth/venues/{id}/closed', [VenueController::class, 'closed_add']);
     Route::delete('auth/venues/{venue_id}/closed/{id}', [VenueController::class, 'closed_delete']);
-    
+    Route::get('auth/venues/{id}/subscription', [VenueController::class, 'subscription_create']);
+    Route::delete('auth/venues/{id}/subscription', [VenueController::class, 'subscription_cancel']);
 });
