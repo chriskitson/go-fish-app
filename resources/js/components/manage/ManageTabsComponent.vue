@@ -24,7 +24,7 @@
         >Opening Days</a
       >
     </li>
-    <li class="mr-1 -mb-px" v-if="isGlobalAdmin">
+    <li class="mr-1 -mb-px">
       <a
         :class="`inline-block px-4 py-2 font-semibold bg-white text-blue-dark${
           active === manageTabs.PAYMENT

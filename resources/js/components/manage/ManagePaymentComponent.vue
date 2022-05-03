@@ -15,7 +15,7 @@
                             'account'
                         )}`
                     "
-                    :disabled="loading"
+                    :disabled="loading || !admin"
                     v-model="venue.account"
                 />
             </div>
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-    props: ["loading", "venue", "manageVenueErrorFields"],
+    props: ["loading", "venue", "manageVenueErrorFields", "admin"],
     methods: {
         errorStyle(key) {
             return this.manageVenueErrorFields?.indexOf(key) > -1

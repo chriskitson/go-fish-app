@@ -53,7 +53,7 @@
       </div>
       <div class="col-span-3 md:col-span-2">
         <banner-component
-          text="There are no tickets associated with this venue. Call to action to sign up?"
+          text="This venue does not have any tickets available to purchase."
           v-if="venueDetail.ticket_count === 0"
         />
 

@@ -56,6 +56,7 @@
         :loading="loading"
         :venue="venue"
         :manageVenueErrorFields="manageVenueErrorFields"
+        :admin="user.globalAdmin"
       ></manage-payment-component>
       <manage-location-component
         v-if="venueManageTab === manageTabs.LOCATION"
