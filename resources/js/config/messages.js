@@ -17,7 +17,7 @@ export const MESSAGES = {
     SoldOut: "There are no tickets availble for this venue on this date. The venue could be closed or tickets have sold out."
   },
   TICKETS: {
-    None: "You have no bookings."
+    None: "You have no tickets."
   },
   ERRORS: {
     BasketError: 'Unable to proceed to checkout. Please check your network connection and try again.'

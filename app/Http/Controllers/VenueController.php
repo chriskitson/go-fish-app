@@ -59,6 +59,7 @@ class VenueController extends Controller
 
   public function clean_admin($str)
   {
+    // https://www.thorntech.com/2012/07/4-things-you-must-do-when-putting-html-in-json/
     $str = str_replace("\n", "\\n", $str);
     $str = str_replace("<br/>", "\\n", $str);
     $str = str_replace("/", "\/", $str);

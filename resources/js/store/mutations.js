@@ -78,7 +78,7 @@ let mutations = {
                 window.location.href = "/";
             }
         } else {
-            // state.loginForm.errors = errors;
+            state.loginForm.errors = errors;
             // state.user = {
             //     loggedIn: false,
             //     access_token: "",
