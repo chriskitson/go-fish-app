@@ -144,8 +144,6 @@ let mutations = {
                 confirmed: true,
                 // stripeUrl: stripe
             };
-            // redirect to manage page
-            window.location.href = `/manage-venues/${venue_id}`;
         } else {
             state.signupForm.errors = Object.values(errors).flat();
         }
