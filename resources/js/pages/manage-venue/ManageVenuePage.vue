@@ -20,8 +20,8 @@
           v-if="!venue.subscription.confirmed"
         >
           <a href="#" v-on:click="subscriptionTab($event)"
-            >You do not have an active subscription with GoFish. Your venue is
-            not active on our website.</a
+            >You do not have an active subscription with GoFish. Your venue may
+            not be visible on our website.</a
           >.
         </div>
       </div>

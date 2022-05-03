@@ -24,6 +24,10 @@ class PageController extends Controller
     if ($route === "login") {
       return "Join " .  $title;
     }
+    // signup
+    if ($route === "signup") {
+      return "Sign up to " .  $title;
+    }
     // basket 
     if ($route === "basket") {
       return "Basket - " .  $title;

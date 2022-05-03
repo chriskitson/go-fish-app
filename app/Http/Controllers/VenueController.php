@@ -329,7 +329,7 @@ class VenueController extends Controller
           $venue->distance = $distances[$index]["distance"]["value"];
           $venue->distanceDisplay = $distances[$index]["distance"]["text"];
         } else {
-          $venue->distance = "-1";
+          $venue->distance = "999999999999";
           $venue->distanceDisplay = "Unknown";
         }
       });
@@ -365,7 +365,7 @@ class VenueController extends Controller
       });
       // sort by distance
       usort($results, function ($a, $b) {
-        return $a["distance"] < $b["distance"];
+        return $a["distance"] > $b["distance"];
       });
       // write to cache expiring in 1 week
       $cache = new SearchCache([
@@ -409,9 +409,9 @@ class VenueController extends Controller
       }
 
       // sort by tickets available
-      usort($results, function ($a, $b) {
-        return (count($a->tickets) > 0) < (count($b->tickets) > 0);
-      });
+      // usort($results, function ($a, $b) {
+      //   return (count($a->tickets) > 0) < (count($b->tickets) > 0);
+      // });
     }
 
     return response()->json(array(
