@@ -1,10 +1,7 @@
 <template>
     <div class="w-full max-w-5xl mx-auto">
         <div class="grid grid-cols-4 gap-6 px-4 mt-10 mb-20">
-            <div>
-                &nbsp;
-            </div>
-            <div class="col-span-3">
+            <div class="col-span-4">
                 <search-result-list-component
                     :results="venueSearchResults"
                     :title="title"
