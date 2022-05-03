@@ -43,7 +43,7 @@
             ml-2
             text-sm text-white
             rounded-lg
-            bg-grey-200
+            bg-orange-200
             disabled:opacity-50
           "
           :disabled="loading"

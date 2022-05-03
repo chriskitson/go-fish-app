@@ -52,6 +52,7 @@ class VenueController extends Controller
 
   public function clean_web($str)
   {
+    $str = str_replace("\\n", "<br/>", $str);
     $str = str_replace("\n", "<br/>", $str);
     return $str;
   }
@@ -59,6 +60,9 @@ class VenueController extends Controller
   public function clean_admin($str)
   {
     $str = str_replace("\n", "\\n", $str);
+    $str = str_replace("<br/>", "\\n", $str);
+    $str = str_replace("/", "\/", $str);
+    $str = str_replace("’", "'", $str);
     return $str;
   }
 
@@ -184,7 +188,12 @@ class VenueController extends Controller
   {
     $tickets = Ticket::where([
       ["venue_id", "=", $id]
-    ])->get();
+    ])->get()->toArray();
+    $tickets = array_map(function($t) {
+      $t["name"] = $this->clean_admin($t["name"]);
+      $t["description"] = $this->clean_admin($t["description"]);
+      return $t;
+    }, $tickets);
     return response()->json($tickets);
   }
 
@@ -456,7 +465,7 @@ class VenueController extends Controller
       $validators = [
         "name" => ["required", "string"],
         "description" => ["required", "string"],
-        "account" => ["required", "string"],
+        // "account" => ["required", "string"],
         "image" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
@@ -522,11 +531,11 @@ class VenueController extends Controller
         "place_id" => ["required", "string", "max:45"],
       ];
 
-      if ($is_global_admin) {
-        $validators = array_merge($validators,  [
-          "account" => ["required", "string"],
-        ]);
-      }
+      // if ($is_global_admin) {
+      //   $validators = array_merge($validators,  [
+      //     "account" => ["required", "string"],
+      //   ]);
+      // }
 
       $validator = Validator::make($request->all(), $validators);
 
