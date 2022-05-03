@@ -104,6 +104,7 @@ let mutations = {
         localStorage.removeItem("globalAdmin");
         localStorage.removeItem("userType");
         state.loading = false;
+        window.location.href = "/";
     },
     REGISTER(state, res) {
         const { success, email, errors } = res;
