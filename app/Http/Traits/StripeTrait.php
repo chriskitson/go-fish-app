@@ -71,9 +71,10 @@ trait StripeTrait
         "card_payments" => ["requested" => true],
         "transfers" => ["requested" => true],
       ],
-      // "company" => [
-      //   "name" => $name
-      // ]
+      "business_type" => "company",
+      "company" => [
+        "name" => $name
+      ]
     ]);
     return $connected_account->id;
   }
