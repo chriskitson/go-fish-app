@@ -14,6 +14,7 @@ import ManageVenues from '../pages/manage-venues/ManageVenuesPage';
 import ManageVenue from '../pages/manage-venue/ManageVenuePage';
 import Category from '../pages/category/CategoryPage';
 import Bookings from '../pages/bookings/BookingsPage';
+import Content from '../pages/content/ContentPage';
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,13 @@ export const routes = [
     { path: '/add-venue', component: ManageVenue, name: 'Add Venue' },
     { path: '/category/:id', component: Category, name: 'Category' },
     { path: '/bookings', component: Bookings, name: 'Bookings' },
+    { path: '/about', component: Content, name: 'About us' },
+    { path: '/contact', component: Content, name: 'Contact us' },
+    { path: '/privacy', component: Content, name: 'Privacy Policy' },
+    { path: '/terms', component: Content, name: 'Terms and Conditions' },
+    { path: '/privacy', component: Content, name: 'Privacy' },
+    { path: '/faq', component: Content, name: 'FAQs' },
+    { path: '/complaints', component: Content, name: 'Complaints' },
 ];
 
 export const router = new VueRouter({

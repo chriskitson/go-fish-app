@@ -767,6 +767,8 @@ class VenueController extends Controller
         // are results older than cache amount
         if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"] && env('OFFLINE_MODE', True) === False) {
 
+          echo "HERE";
+
           // get all venues
           $venues = Venue::where([
             ["place_id", "!=", ""],

@@ -2,11 +2,11 @@ export const getTokenHeader = (user, contentType = "application/json") => {
     const { loggedIn, access_token, token_type } = user;
     return loggedIn
         ? {
-              headers: {
-                  Authorization: `${token_type} ${access_token}`,
-                  "Content-Type": contentType
-              }
-          }
+            headers: {
+                Authorization: `${token_type} ${access_token}`,
+                "Content-Type": contentType
+            }
+        }
         : { "Content-Type": contentType };
 };
 
@@ -70,7 +70,7 @@ export const clearErrors = state => {
 };
 
 export const groupBy = (arr, criteria) => {
-    const newObj = arr.reduce(function(acc, currentValue) {
+    const newObj = arr.reduce(function (acc, currentValue) {
         if (!acc[currentValue[criteria]]) {
             acc[currentValue[criteria]] = [];
         }
@@ -82,5 +82,26 @@ export const groupBy = (arr, criteria) => {
 
 export const padNumber = (number, len) => {
     return String(number).padStart(len, "0");
+};
+
+export const contentTitle = (route) => {
+    switch (route) {
+        case "about":
+            return "About GoFish";
+        case "contact":
+            return "Contact us";
+        case "privacy":
+            return "Privacy Policy";
+        case "terms":
+            return "Terms and Conditions";
+        case "privacy":
+            return "Privacy Policy";
+        case "faq":
+            return "Frequently Asked Questions";
+        case "complaints":
+            return "Complaints Policy";
+        default:
+            return "GoFish";
+    }
 };
 

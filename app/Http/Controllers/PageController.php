@@ -20,6 +20,28 @@ class PageController extends Controller
   public function get_title($route)
   {
     $title = "GoFish! - Find the best fisheries near you";
+    // content
+    if ($route === "about") {
+      return "About GoFish - " .  $title;
+    }
+    if ($route === "contact") {
+      return "Contact us - " .  $title;
+    }
+    if ($route === "privacy") {
+      return "Privacy Policy - " .  $title;
+    }
+    if ($route === "terms") {
+      return "Terms and Conditions - " .  $title;
+    }
+    if ($route === "privacy") {
+      return "Privacy Policy - " .  $title;
+    }
+    if ($route === "faq") {
+      return "Frequently Asked Questions - " .  $title;
+    }
+    if ($route === "complaints") {
+      return "Complaints Policy - " .  $title;
+    }
     // login
     if ($route === "login") {
       return "Join " .  $title;

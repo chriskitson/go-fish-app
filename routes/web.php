@@ -71,3 +71,33 @@ Route::get('/category/{categoryid}', function ($categoryid) {
 Route::get('/bookings', function () {
     return view('index');
 });
+
+// content pages
+Route::get('/about', function () {
+    return view('index');
+});
+
+Route::get('/contact', function () {
+    return view('index');
+});
+
+Route::get('/privacy', function () {
+    return view('index');
+});
+
+Route::get('/terms', function () {
+    return view('index');
+});
+
+Route::get('/privacy', function () {
+    return view('index');
+});
+
+Route::get('/faq', function () {
+    return view('index');
+});
+
+Route::get('/complaints', function () {
+    return view('index');
+});
+
