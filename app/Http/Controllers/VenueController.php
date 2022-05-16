@@ -320,7 +320,8 @@ class VenueController extends Controller
       // get all venues
       $venues = Venue::where([
         ["place_id", "!=", ""],
-        ["deleted", "=", 0]
+        ["deleted", "=", 0],
+        ["active", "=", 1]
       ])->get(["id", "name", "place_id", "image", "rating", "photos"]);
 
       // set origin
@@ -781,8 +782,6 @@ class VenueController extends Controller
         // are results older than cache amount
         if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"] && env('OFFLINE_MODE', True) === False) {
 
-          echo "HERE";
-
           // get all venues
           $venues = Venue::where([
             ["place_id", "!=", ""],
@@ -835,9 +834,9 @@ class VenueController extends Controller
       }
     } else {
       if ($id === "latest") {
-        $venues = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
+        $venues = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
       } elseif ($id === "best") {
-        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
+        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
       } else {
         $venues = []; // return done, browser will fetch with client location
       }
@@ -934,7 +933,7 @@ class VenueController extends Controller
     if (isset($o) || (isset($lat) && isset($lng))) {
 
       // get all venues
-      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image", "photos", "rating"]);
+      $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "place_id", "image", "photos", "rating"]);
 
       // set origin
       $origin = isset($o) ? $o : $lat . "," . $lng;
@@ -983,7 +982,7 @@ class VenueController extends Controller
     }, $venues_array);
     return response()->json(array(
       "venues" => $venues_array,
-      "town" => $town
+      "town" => $town,
     ));
   }
 

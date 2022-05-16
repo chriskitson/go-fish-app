@@ -116,5 +116,7 @@ ADD COLUMN `account_payment_confirmed` BIT(1) NULL DEFAULT 0 AFTER `account_link
 ALTER TABLE `venues` 
 ADD COLUMN `account_payment_reference` VARCHAR(255) NULL AFTER `account_payment_confirmed`;
 
-
+-- update
+SET SQL_SAFE_UPDATES = 0;
+UPDATE venues SET active = 1;
 

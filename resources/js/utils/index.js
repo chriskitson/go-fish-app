@@ -19,7 +19,7 @@ export const handleError = err => {
 };
 
 export const formatCurrency = num => {
-    return parseInt(num).toLocaleString("en-GB", {
+    return parseFloat(num).toLocaleString("en-GB", {
         style: "currency",
         currency: "GBP"
     });
