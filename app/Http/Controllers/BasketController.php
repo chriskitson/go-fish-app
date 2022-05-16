@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Basket;
 use Illuminate\Http\Request;
 use App\Http\Traits\BookingTrait;
+use DateTime;
 
 class BasketController extends Controller
 {
@@ -22,9 +23,14 @@ class BasketController extends Controller
 
   function get_basket($user_id)
   {
-    return Basket::where([
+    $basket = Basket::where([
       ['user_id', '=', $user_id]
-    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id AS basket_id', 'basket.qty AS basket_qty', 'tickets.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.cost AS ticket_cost', 'venues.name AS venue_name', 'tickets.description as ticket_description', 'venues.id AS venue_id', 'basket.date AS date')->get();
+    ])->join('tickets', 'basket.ticket_id', 'tickets.id')->join('venues', 'basket.venue_id', 'venues.id')->select('basket.id AS basket_id', 'basket.qty AS basket_qty', 'tickets.id AS ticket_id', 'tickets.name AS ticket_name', 'tickets.cost AS ticket_cost', 'venues.name AS venue_name', 'tickets.description as ticket_description', 'venues.id AS venue_id', 'basket.date AS date')->get()->toArray();
+    $basket = array_map(function($b) {
+      $b["valid"] = new DateTime($b['date']) > new DateTime();  // date is in past
+      return $b;
+    }, $basket);
+    return $basket;
   }
 
   public function get(Request $request)

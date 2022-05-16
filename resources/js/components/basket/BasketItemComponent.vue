@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <div
-            class="flex flex-col items-center w-full px-2 py-2 border md:py-0 md:h-12 justify-items bg-grey-300 border-grey-300 md:flex-row"
+            :class="`flex flex-col items-center w-full px-2 py-2 border md:py-0 md:h-12 justify-items ${item.valid ? 'bg-grey-300 border-grey-300' : 'bg-red-200 border-red-200'} md:flex-row`"
             v-if="live"
         >
             <icon
@@ -12,6 +12,9 @@
             <span class="flex-grow font-semibold text-white">
                 {{
                     live ? `${item.venue_name} - ${item.ticket_name}` : "&nbsp;"
+                }}
+                {{
+                    !item.valid ? ' (Invalid)' : ''
                 }}
             </span>
             <span

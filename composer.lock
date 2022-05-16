@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6ccccf7f2d8464ada75e530ec5f7faf",
+    "content-hash": "747e7213017a697b24f416659eb618e9",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -1124,6 +1124,65 @@
                 "source": "https://github.com/jbroadway/urlify/tree/master"
             },
             "time": "2020-06-14T17:15:34+00:00"
+        },
+        {
+            "name": "klaviyo/sdk",
+            "version": "1.0.1.20220329",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klaviyo/klaviyo-php-sdk.git",
+                "reference": "10326484f6143f4c5e6bc997c80cd3847ac992ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klaviyo/klaviyo-php-sdk/zipball/10326484f6143f4c5e6bc997c80cd3847ac992ed",
+                "reference": "10326484f6143f4c5e6bc997c80cd3847ac992ed",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^7.3",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpunit/phpunit": "^8.0 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klaviyo\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Klaviyo",
+                    "homepage": "https://developers.klaviyo.com/en"
+                }
+            ],
+            "description": "Empowering creators to own their destiny",
+            "homepage": "https://developers.klaviyo.com/en",
+            "keywords": [
+                "api",
+                "email",
+                "klaviyo",
+                "php",
+                "rest",
+                "sdk",
+                "sms"
+            ],
+            "support": {
+                "issues": "https://github.com/klaviyo/klaviyo-php-sdk/issues",
+                "source": "https://github.com/klaviyo/klaviyo-php-sdk/tree/1.0.1.20220329"
+            },
+            "time": "2022-04-01T14:25:19+00:00"
         },
         {
             "name": "laravel/framework",
