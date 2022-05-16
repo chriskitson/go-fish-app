@@ -1,16 +1,27 @@
 const isClient = typeof window !== "undefined";
 
-if (isClient) {    
+if (isClient) {
     window._learnq = window._learnq || [];
 }
 
-export const userRegister = ({ firstName, lastName, role, email}) => {
+export const userRegister = ({ firstName, lastName, role, email }) => {
     if (isClient) {
         window._learnq.push(['identify', {
             '$email': email,
-            '$first_name' : firstName,
-            '$last_name' : lastName,
-            'role' : role
+            '$first_name': firstName,
+            '$last_name': lastName,
+            'role': role
+        }]);
+    }
+}
+
+export const trackViewedVenue = ({ name, id, image, url }) => {
+    if (isClient) {
+        window._learnq.push(["trackViewedVenue", {
+            "Id": id,
+            "Name": name,
+            "ImageUrl": image,
+            "Url": url
         }]);
     }
 }

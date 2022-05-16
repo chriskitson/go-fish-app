@@ -9,7 +9,11 @@
           :alt="`${venueDetail.name} image`"
         />
         <img
-          v-if="!venueDetail.image && venueDetail.photos && venueDetail.photos.length > 0"
+          v-if="
+            !venueDetail.image &&
+            venueDetail.photos &&
+            venueDetail.photos.length > 0
+          "
           :src="venueDetail.photos[0].url"
           class="w-full mb-5 rounded-md"
           :alt="`${venueDetail.name} image`"
@@ -30,14 +34,33 @@
           <a
             :href="directionsURL"
             target="_blank"
-            class="flex items-center justify-center px-3 py-1 mr-2 text-sm text-white bg-red-200 rounded-lg"
+            class="
+              flex
+              items-center
+              justify-center
+              px-3
+              py-1
+              mr-2
+              text-sm text-white
+              bg-red-200
+              rounded-lg
+            "
             v-if="venueDetail.place_id !== ''"
           >
             <icon name="location-marker" class="w-4 h-4 mr-2" />
             Directions
           </a>
           <button
-            class="flex items-center justify-center px-3 py-2 text-sm text-white bg-red-200 rounded-lg"
+            class="
+              flex
+              items-center
+              justify-center
+              px-3
+              py-2
+              text-sm text-white
+              bg-red-200
+              rounded-lg
+            "
           >
             <icon name="pencil" class="w-4 h-4 mr-2" />
             Review
@@ -87,7 +110,21 @@
           <span class="flex-1"> </span>
           <a
             href="/basket"
-            class="flex items-center w-full px-4 py-2 text-lg font-semibold text-center text-white bg-white bg-red-200 rounded-md cursor-pointer justify-content md:w-auto"
+            class="
+              flex
+              items-center
+              w-full
+              px-4
+              py-2
+              text-lg
+              font-semibold
+              text-center text-white
+              bg-white bg-red-200
+              rounded-md
+              cursor-pointer
+              justify-content
+              md:w-auto
+            "
           >
             <span class="flex-1">Proceed to Basket</span>
             <icon name="chevron-right" class="w-5 h-5 ml-2 text-white" />
@@ -119,7 +156,7 @@ import {
   formatLongDateDisplay,
   formatDateDisplayFromTime,
 } from "../../utils";
-import { parseISO } from "date-fns";
+import { trackViewedVenue } from "../../utils/klaviyo";
 export default {
   components: {
     ClientOnly,
@@ -161,6 +198,19 @@ export default {
   },
   mounted() {
     this.getVenueTickets(this.venueDetail.id, this.venueDetail.date);
+    const { id, name, image, photos } = this.venueDetail;
+    let venueImage = "";
+    if (image) {
+      venueImage = image;
+    } else if (photos && photos.length > 0) {
+      venueImage = photos[0].url;
+    }
+    trackViewedVenue({
+      id,
+      name,
+      image: venueImage,
+      url: `${location.protocol}//${location.host}/venue/${id}`,
+    });
   },
   methods: {
     getVenueTickets(id, date) {
