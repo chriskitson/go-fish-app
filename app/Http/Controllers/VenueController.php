@@ -54,6 +54,7 @@ class VenueController extends Controller
   {
     $str = str_replace("\\n", "<br/>", $str);
     $str = str_replace("\n", "<br/>", $str);
+    $str = str_replace("’", "'", $str);
     return $str;
   }
 
@@ -423,6 +424,19 @@ class VenueController extends Controller
       //   return (count($a->tickets) > 0) < (count($b->tickets) > 0);
       // });
     }
+
+    // clean results
+    $results = array_map(function($result) {
+      $result->name = $this->clean_web($result->name);
+      $result->place_id = "";
+      $result->image = "";
+      $result->tickets = array_map(function($ticket) {
+        $ticket["name"] = $this->clean_web($ticket["name"]);
+        $ticket["description"] = $this->clean_web($ticket["description"]);
+        return $ticket;
+      },  $result->tickets);
+      return $result;
+    }, (array) $results);
 
     return response()->json(array(
       "results" => $results,

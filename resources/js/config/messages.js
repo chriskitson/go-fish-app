@@ -10,7 +10,7 @@ export const MESSAGES = {
     Added: "Added to basket",
     NoQuantity: "Not enough tickets left. Please reduce your quantity."
   },
-  ERRORS: {
+  ALERTS: {
     MULTIPLE_VENUES: 'You cannot have a ticket for more than one venue in your basket. Please purchase your existing tickets or remove them to purchase from another venue.'
   },
   VENUE: {
