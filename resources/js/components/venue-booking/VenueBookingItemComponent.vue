@@ -20,7 +20,7 @@
       <span class="flex-grow font-semibold text-center text-white md:text-left">
         {{
           live
-            ? `${padNumber(ticket.id, 5)} - ${formatDateDisplay(ticket.date)}`
+            ? `${padNumber(ticket.id, 5)} - ${formatDateDisplay(parseISO(ticket.date))}`
             : "&nbsp;"
         }}
       </span>
@@ -53,7 +53,7 @@
         <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
           <div class="font-semibold">Transaction Date</div>
           <div class="md:col-span-4">
-            {{ formatDateTimeDisplay(ticket.date) }}
+            {{ formatDateTimeDisplay(parseISO(ticket.date)) }}
           </div>
         </div>
         <div class="grid grid-cols-2 gap-6 mb-2 md:grid-cols-6">
@@ -78,10 +78,10 @@
           <div class="font-semibold">Tickets</div>
           <div class="md:col-span-4 flex flex-col flex-wrap">
             <div
-              v-for="ticket in ticket.tickets"
-              :key="`user-ticket-${ticket.id}`"
+              v-for="(ticket, i) in ticket.tickets"
+              :key="`user-ticket-${i}`"
             >
-              {{ formatDateDisplay(ticket.booking_date) }} -
+              {{ formatDateDisplay(parseISO(ticket.booking_date)) }} -
               {{ ticket.ticket_name }} -
               {{ formatCurrency(ticket.booking_cost) }}
             </div>
@@ -119,6 +119,7 @@ import {
   formatDateTimeDisplay,
   padNumber,
 } from "../../utils";
+import { parseISO } from "date-fns";
 export default {
   props: ["ticket", "live"],
   data: () => ({
@@ -126,6 +127,7 @@ export default {
     formatDateDisplay,
     formatDateTimeDisplay,
     padNumber,
+    parseISO
   }),
 };
 </script>

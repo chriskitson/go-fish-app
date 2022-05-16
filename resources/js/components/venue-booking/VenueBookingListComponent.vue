@@ -8,8 +8,8 @@
             v-if="live && tickets.length > 0"
         >
             <venue-booking-item-component
-                v-for="ticket in tickets"
-                :key="`user-ticket-${ticket.id}`"
+                v-for="(ticket, i) in tickets"
+                :key="`user-ticket-${i}`"
                 :live="live"
                 :ticket="ticket"
             ></venue-booking-item-component>

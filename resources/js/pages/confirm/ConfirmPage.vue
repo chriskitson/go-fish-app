@@ -54,7 +54,7 @@
                     {{ t.ticket_name }}
                 </div>
                 <div>
-                    {{ formatDateDisplay(t.booking_date) }}
+                    {{ formatDateDisplay(parseISO(t.booking_date)) }}
                 </div>
                 <div>
                     {{ formatCurrency(t.booking_cost) }}
@@ -82,6 +82,7 @@ import {
     formatDateTimeDisplay,
     padNumber
 } from "../../utils";
+import { parseISO } from "date-fns";
 export default {
     computed: {
         ...mapState({
@@ -112,7 +113,8 @@ export default {
         formatCurrency,
         formatDateDisplay,
         formatDateTimeDisplay,
-        padNumber
+        padNumber,
+        parseISO
     })
 };
 </script>

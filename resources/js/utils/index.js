@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+
 export const getTokenHeader = (user, contentType = "application/json") => {
     const { loggedIn, access_token, token_type } = user;
     return loggedIn
@@ -34,15 +36,11 @@ export const formatLongDateDisplay = date => {
 };
 
 export const formatDateDisplay = date => {
-    const fd = new Date(date);
-    return fd.toLocaleDateString("en-GB");
+    return format(new Date(date), 'dd/MM/yyyy');
 };
 
 export const formatDateTimeDisplay = date => {
-    const fd = new Date(date);
-    return `${fd.toLocaleDateString("en-GB")} ${fd.toLocaleTimeString(
-        "en-GB"
-    )}`;
+    return format(new Date(date), 'dd/MM/yyyy HH:mm');
 };
 
 export const formatDateDisplayFromTime = time => {
