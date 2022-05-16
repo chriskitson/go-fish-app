@@ -17,11 +17,11 @@ export const userRegister = ({ firstName, lastName, role, email }) => {
 
 export const trackViewedVenue = ({ name, id, image, url }) => {
     if (isClient) {
-        window._learnq.push(["trackViewedVenue", {
-            "Id": id,
-            "Name": name,
-            "ImageUrl": image,
-            "Url": url
+        window._learnq.push(['track', 'Viewed Venue', {
+            id,
+            name,
+            image,
+            url
         }]);
     }
 }
