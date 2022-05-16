@@ -89,8 +89,8 @@
                     :class="`flex p-2${index % 2 ? ' bg-white' : ' bg-grey-100'}`"
                 >
                     <span class="flex-1">
-                        {{ formatDateDisplay(range.start_date) }} -
-                        {{ formatDateDisplay(range.end_date) }}
+                        {{ formatDateDisplay(parseISO(range.start_date)) }} -
+                        {{ formatDateDisplay(parseISO(range.end_date)) }}
                     </span>
                     <button
                         @click="$emit('delete', range.id)"
@@ -152,6 +152,7 @@
 import ClientOnly from "vue-client-only";
 import DatePicker from "vue2-datepicker";
 import { formatDateDisplay } from "../../utils";
+import { parseISO } from "date-fns";
 export default {
     props: ["venue", "closed", "loading"],
     components: {
@@ -164,7 +165,8 @@ export default {
         }
     },
     data: () => ({
-        formatDateDisplay
+        formatDateDisplay,
+        parseISO
     })
 };
 </script>
