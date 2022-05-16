@@ -29,7 +29,7 @@
         >
             <p class="mb-4">
                 <strong>Date of entry:</strong>
-                {{ formatDateDisplay(item.date) }}
+                {{ formatDateDisplay(parseISO(item.date)) }}
             </p>
             <p class="mb-4">{{ item.ticket_description }}</p>
             <p v-if="item.error !== ''" class="mb-4">
@@ -68,11 +68,13 @@
 
 <script>
 import { formatCurrency, formatDateDisplay } from "../../utils";
+import { parseISO } from "date-fns";
 export default {
     props: ["item", "live", "display", "auth", "loggedIn"],
     data: () => ({
         formatCurrency,
-        formatDateDisplay
+        formatDateDisplay,
+        parseISO
     })
 };
 </script>

@@ -53,7 +53,7 @@
       </div>
       <div class="col-span-3 md:col-span-2">
         <banner-component
-          :text="`This venue does not have any tickets available to purchase on GoFish. For more information please call XXXXXX`"
+          :text="`This venue does not have any tickets available to purchase on GoFish.`"
           v-if="venueDetail.ticket_count === 0"
         />
 
