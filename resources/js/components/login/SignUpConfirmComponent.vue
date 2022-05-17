@@ -1,8 +1,8 @@
 <template>
   <div class="container flex flex-col items-center flex-1 px-2 mx-auto">
     <login-component
-      title="Thank you for signing up to GOFish!"
-      description="You may now log in and manage your fishery account."
+      title="Thank you for signing up to GoFish!"
+      description="Your account needs to be verified by GoFish before you have access. Once your account has been verified we will email you."
       :login="loginForm"
       :loggedIn="loggedIn"
       :loading="loading"

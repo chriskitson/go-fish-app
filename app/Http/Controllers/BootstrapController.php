@@ -25,10 +25,10 @@ class BootstrapController extends Controller
 
   private function split_name($name)
   {
-      $name = trim($name);
-      $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-      $first_name = trim(preg_replace('#' . $last_name . '#', '', $name));
-      return array($first_name, $last_name);
+    $name = trim($name);
+    $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+    $first_name = trim(preg_replace('#' . $last_name . '#', '', $name));
+    return array($first_name, $last_name);
   }
 
   public function cache_bust(Request $request)
@@ -150,7 +150,7 @@ class BootstrapController extends Controller
           "origin" => $origin
         ]);
       }
-    } 
+    }
 
     // add location based categories
     $response->categories = Category::inRandomOrder()->limit(4)->get(["id", "name", "image"])->toArray();
@@ -169,6 +169,7 @@ class BootstrapController extends Controller
       $response->user = array(
         "userType" => $user->user_type,
         "globalAdmin" => $user->global_admin === 1,
+        "verified" =>  $user->global_admin === 1 ? true : $user->hasVerifiedEmail(),
         "email" => $user->email,
         "firstName" => $name[0],
         "lastName" => $name[1],
@@ -183,6 +184,7 @@ class BootstrapController extends Controller
       $response->user = array(
         "userType" => 0,
         "globalAdmin" => false,
+        "verified" => false,
         "email" => "",
         "firstName" => "",
         "lastName" => ""
@@ -190,8 +192,5 @@ class BootstrapController extends Controller
     }
 
     return response()->json($response);
-
   }
-
-
 }

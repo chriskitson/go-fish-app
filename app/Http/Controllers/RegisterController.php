@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\Venue;
+use App\Http\Traits\UtilTrait;
+
 
 class RegisterController extends Controller
 {
+
+  use UtilTrait;
 
   public function __construct()
   {
@@ -103,15 +108,27 @@ class RegisterController extends Controller
       ), 409);
     }
 
-    // create new user and associated with venue
+    // generate code for verification
+    $confirmation_code = $this->random_str(30);
+
+    // create new user and associate with venue
     $user = User::create([
       "name" => $data["name"],
       "email" => $data["email"],
       "password" => Hash::make($data["password"]),
       "user_type" => 2,
-      "venue_id" => $venue_id
+      "venue_id" => $venue_id,
+      "confirmation_code" => $confirmation_code
     ]);
     $user->save();
+
+    // generate verification link and send email to admin
+    $verify_link = env('APP_URL', '') . '/api/verify?id=' . $user->id . '&code=' . $confirmation_code;
+    Mail::send('emails.signup', ['email' => $data['email'], 'venueName' => $venue_id, 'verify_link' => $verify_link, 'name' =>  $data['name']], function ($m) use ($verify_link) {
+        $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        $m->to(env('MAIL_APPROVALS_TO', env('MAIL_APPROVALS_TO')));
+        $m->subject('New GoFish Fishery Registration');
+    });
 
     return response()->json(array(
       "success" => true,
@@ -129,5 +146,49 @@ class RegisterController extends Controller
     ])->distinct()->first(["name", "id", "account_link", "subscription"]);
 
     return response()->json($venue);
+  }
+
+  public function verify(Request $request)
+  {  // verify account
+
+    if ($request->has('id') && $request->has('code')) {
+
+      $id = $request->input('id');
+      $code = $request->input('code');
+
+      // find user
+      $user = User::where([
+        'id' => $id,
+        'confirmation_code' => $code
+      ])->first();
+
+      // mark as verified
+      $user->markEmailAsVerified();
+
+      // set login link
+      $login_link = env('APP_URL', '');
+      $name = $user->name;
+      $email = $user->email;
+
+      // send welcome email to user
+      // TODO - replace with Klaviyo flow
+      Mail::send('emails.welcome', ['name' => $name, 'login_link' => $login_link], function ($m) use ($name, $login_link, $email) {
+        $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        $m->to($email, $name);
+        $m->subject('New GoFish Account');
+      });
+
+      return response()->json([
+        'id' => $id,
+        'code' => $code,
+        'status' => 200,
+        'message' => 'User has been verified'
+      ]);
+    } else {
+      return response()->json([
+        'status' => 500,
+        'message' => 'Invalid request'
+      ]);
+    }
   }
 }

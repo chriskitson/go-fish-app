@@ -14,10 +14,27 @@
             font-bold
             border-2
             rounded-xl
+            border-red-500
+            text-red-500 text-center
+          "
+          v-if="!user.verified"
+        >
+          Your account is not verified by GoFish. We will send you an email once
+          your account has been verified.
+        </div>
+        <div
+          class="
+            p-2
+            text-sm
+            my-5
+            bg-white
+            font-bold
+            border-2
+            rounded-xl
             border-warning
             text-warning text-center
           "
-          v-if="!venue.subscription.confirmed"
+          v-if="user.verified && !venue.subscription.confirmed"
         >
           <a href="#" v-on:click="subscriptionTab($event)"
             >You do not have an active subscription with GoFish. Your venue may
@@ -25,99 +42,101 @@
           >.
         </div>
       </div>
-      <div class="mb-4 md:col-span-2 md:mb-0">
-        <manage-tabs-component
-          :isGlobalAdmin="user.globalAdmin"
-          :active="venueManageTab"
+      <div v-if="user.verified">
+        <div class="mb-4 md:col-span-2 md:mb-0">
+          <manage-tabs-component
+            :isGlobalAdmin="user.globalAdmin"
+            :active="venueManageTab"
+            :manageVenueErrorFields="manageVenueErrorFields"
+            @setTab="setTab"
+          ></manage-tabs-component>
+        </div>
+        <manage-details-component
+          v-if="venueManageTab === manageTabs.DETAILS"
+          :loading="loading"
+          :venue="venue"
           :manageVenueErrorFields="manageVenueErrorFields"
-          @setTab="setTab"
-        ></manage-tabs-component>
-      </div>
-      <manage-details-component
-        v-if="venueManageTab === manageTabs.DETAILS"
-        :loading="loading"
-        :venue="venue"
-        :manageVenueErrorFields="manageVenueErrorFields"
-        @deleteImage="deleteImage"
-        @uploadImage="uploadImage"
-      ></manage-details-component>
-      <manage-opening-hours-component
-        v-if="venueManageTab === manageTabs.HOURS"
-        :venue="venue"
-        :closed="venueManageClosed"
-        :loading="loading"
-        @start="venueClosedStart"
-        @end="venueClosedEnd"
-        @add="venueClosedAdd"
-        @delete="venueClosedDelete"
-      ></manage-opening-hours-component>
-      <manage-payment-component
-        v-if="venueManageTab === manageTabs.PAYMENT"
-        :loading="loading"
-        :venue="venue"
-        :manageVenueErrorFields="manageVenueErrorFields"
-        :admin="user.globalAdmin"
-      ></manage-payment-component>
-      <manage-location-component
-        v-if="venueManageTab === manageTabs.LOCATION"
-        :loading="loading"
-        :venue="venue"
-        :venueSearch="venueSearch"
-        :manageVenueErrorFields="manageVenueErrorFields"
-      ></manage-location-component>
-      <manage-tickets-component
-        v-if="venueManageTab === manageTabs.TICKETS"
-        :loading="loading"
-        :venue="venue"
-        :editMode="editMode"
-        :manageVenueNewTicket="manageVenueNewTicket"
-        :manageVenueErrorFields="manageVenueErrorFields"
-        @addNewTicket="addNewTicket"
-        @saveTicket="saveTicket"
-        @deleteTicket="deleteTicket"
-      ></manage-tickets-component>
-      <manage-subscription-component
-        v-if="venueManageTab === manageTabs.SUBSCRIPTION"
-        :venue="venue"
-        :loading="loading"
-        @create="subscriptionCreate"
-        @cancel="subscriptionCancel"
-      ></manage-subscription-component>
-      <div
-        class="
-          flex
-          items-center
-          justify-end
-          col-span-2
-          p-4
-          mb-8
-          md:mb-0
-          bg-grey-100
-        "
-        v-if="
-          venueManageTab !== manageTabs.TICKETS &&
-          venueManageTab !== manageTabs.SUBSCRIPTION
-        "
-      >
-        <button
-          @click="updateDetails"
+          @deleteImage="deleteImage"
+          @uploadImage="uploadImage"
+        ></manage-details-component>
+        <manage-opening-hours-component
+          v-if="venueManageTab === manageTabs.HOURS"
+          :venue="venue"
+          :closed="venueManageClosed"
+          :loading="loading"
+          @start="venueClosedStart"
+          @end="venueClosedEnd"
+          @add="venueClosedAdd"
+          @delete="venueClosedDelete"
+        ></manage-opening-hours-component>
+        <manage-payment-component
+          v-if="venueManageTab === manageTabs.PAYMENT"
+          :loading="loading"
+          :venue="venue"
+          :manageVenueErrorFields="manageVenueErrorFields"
+          :admin="user.globalAdmin"
+        ></manage-payment-component>
+        <manage-location-component
+          v-if="venueManageTab === manageTabs.LOCATION"
+          :loading="loading"
+          :venue="venue"
+          :venueSearch="venueSearch"
+          :manageVenueErrorFields="manageVenueErrorFields"
+        ></manage-location-component>
+        <manage-tickets-component
+          v-if="venueManageTab === manageTabs.TICKETS"
+          :loading="loading"
+          :venue="venue"
+          :editMode="editMode"
+          :manageVenueNewTicket="manageVenueNewTicket"
+          :manageVenueErrorFields="manageVenueErrorFields"
+          @addNewTicket="addNewTicket"
+          @saveTicket="saveTicket"
+          @deleteTicket="deleteTicket"
+        ></manage-tickets-component>
+        <manage-subscription-component
+          v-if="venueManageTab === manageTabs.SUBSCRIPTION"
+          :venue="venue"
+          :loading="loading"
+          @create="subscriptionCreate"
+          @cancel="subscriptionCancel"
+        ></manage-subscription-component>
+        <div
           class="
             flex
             items-center
-            justify-center
-            px-3
-            py-2
-            ml-2
-            text-sm text-white
-            bg-orange-200
-            rounded-lg
-            disabled:opacity-50
+            justify-end
+            col-span-2
+            p-4
+            mb-8
+            md:mb-0
+            bg-grey-100
           "
-          :disabled="loading"
+          v-if="
+            venueManageTab !== manageTabs.TICKETS &&
+            venueManageTab !== manageTabs.SUBSCRIPTION
+          "
         >
-          <icon name="save" class="w-4 h-4 mr-2" />
-          {{ editMode ? "Update details" : "Create Venue" }}
-        </button>
+          <button
+            @click="updateDetails"
+            class="
+              flex
+              items-center
+              justify-center
+              px-3
+              py-2
+              ml-2
+              text-sm text-white
+              bg-orange-200
+              rounded-lg
+              disabled:opacity-50
+            "
+            :disabled="loading"
+          >
+            <icon name="save" class="w-4 h-4 mr-2" />
+            {{ editMode ? "Update details" : "Create Venue" }}
+          </button>
+        </div>
       </div>
     </div>
     <page-spinner-component v-if="loading" />
@@ -199,10 +218,6 @@ export default {
       return this.manageVenueErrorFields.indexOf(key) > -1
         ? " border-red-200"
         : "";
-    },
-    findVenue({ place_id, formatted_address }) {
-      this.venue.place_id = place_id;
-      this.venue.address = formatted_address;
     },
     updateDetails() {
       const { user } = this;

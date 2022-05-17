@@ -537,8 +537,8 @@ class VenueController extends Controller
     $user = $request->user();
     $is_admin = $user->user_type == 2 && $user->venue_id == $venue_id;
     $is_global_admin = $user->global_admin == 1;
-
-    if ($is_admin || $is_global_admin) {
+    $is_verified =  $user->hasVerifiedEmail();
+    if (($is_admin && $is_verified) || $is_global_admin) {
 
       $validators = [
         "name" => ["required", "string"],

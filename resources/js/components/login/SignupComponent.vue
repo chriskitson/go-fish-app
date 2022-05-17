@@ -96,7 +96,7 @@
               @keydown.down.prevent="actions.shiftResultsSelection"
               @keydown.up.prevent="actions.unshiftResultsSelection"
               type="search"
-              placeholder="Enter address of fishery"
+              placeholder="Enter name or address of fishery"
               :class="`w-full p-3 mb-4 text-sm border rounded border-grey-100 disabled:background-grey-200${errorStyle(
                 'place_id'
               )}`"
