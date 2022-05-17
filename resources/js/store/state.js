@@ -89,6 +89,7 @@ let state = {
         id: 0,
         name: "",
         address: "",
+        phone: "",
         description: "",
         tickets: [],
         closed: [],

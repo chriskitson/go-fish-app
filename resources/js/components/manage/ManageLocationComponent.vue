@@ -21,7 +21,7 @@
               @keydown.down.prevent="actions.shiftResultsSelection"
               @keydown.up.prevent="actions.unshiftResultsSelection"
               type="search"
-              placeholder="Enter a city, post code or location"
+              placeholder="Enter business name or address"
               :class="`w-full p-2 mb-5 text-sm border rounded-md b-grey-200 disabled:background-grey-200${errorStyle(
                 'place_id'
               )}`"
@@ -66,6 +66,26 @@
           v-model="venue.place_id"
         />
       </div>
+        <div class="mb-8 md:mb-0">
+        <label class="block mb-2 font-semibold text-grey-300"
+          >Phone Number</label
+        >
+        <input
+          type="text"
+          class="
+            w-full
+            p-2
+            mb-5
+            text-sm
+            border
+            rounded-md
+            b-grey-200
+            disabled:background-grey-200
+          "
+          :disabled="true"
+          v-model="venue.phone"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -83,9 +103,10 @@ export default {
         ? " border-red-200"
         : "";
     },
-    findVenue({ place_id, formatted_address }) {
-      this.venue.place_id = place_id;
-      this.venue.address = formatted_address;
+    findVenue({ place_id, formatted_address, formatted_phone_number }) {
+      this.venue.place_id = place_id || '';
+      this.venue.address = formatted_address || '';
+      this.venue.phone = formatted_phone_number || '';
     },
   },
 };

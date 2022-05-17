@@ -88,7 +88,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
+    $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
     if (isset($venue->place_id) && env('OFFLINE_MODE', True) === False) {  // get more info about place from Google
@@ -155,6 +155,7 @@ class VenueController extends Controller
       "name" => $venue->name,
       "image" => $venue->image,
       "address" => $venue->address,
+      "phone" => $venue->phone,
       "description" => $venue->description,
       "place_id" => $venue->place_id,
       "rules" => $venue->rules,
@@ -485,6 +486,7 @@ class VenueController extends Controller
         "image" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
+        "phone" => ["required", "string", "max:45"],
         "place_id" => ["required", "string", "max:45"],
       ];
 
@@ -500,6 +502,7 @@ class VenueController extends Controller
         "description" => $request->description,
         "rules" => $request->rules,
         "address" => $request->address,
+        "phone" => $request->phone,
         "place_id" => $request->place_id,
         "image" => $request->image,
         "account" => $request->account,
@@ -524,7 +527,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "phone", "place_id"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -544,6 +547,7 @@ class VenueController extends Controller
         "description" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
+        "phone" => ["required", "string", "max:45"],
         "place_id" => ["required", "string", "max:45"],
       ];
 
@@ -565,6 +569,7 @@ class VenueController extends Controller
         "description" => $request->description,
         "rules" => $request->rules,
         "address" => $request->address,
+        "phone" => $request->phone,
         "place_id" => $request->place_id,
         "open_sunday" => $request->open_sunday,
         "open_monday" => $request->open_monday,
@@ -588,7 +593,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "phone", "place_id"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -786,7 +791,7 @@ class VenueController extends Controller
           $venues = Venue::where([
             ["place_id", "!=", ""],
             ["deleted", "=", 0]
-          ])->get(["id", "name", "address", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
+          ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
 
           // loop through all venues
           foreach ($venues as $venue) {
@@ -933,7 +938,7 @@ class VenueController extends Controller
     if (isset($o) || (isset($lat) && isset($lng))) {
 
       // get all venues
-      $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "place_id", "image", "photos", "rating"]);
+      $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "phone", "place_id", "image", "photos", "rating"]);
 
       // set origin
       $origin = isset($o) ? $o : $lat . "," . $lng;

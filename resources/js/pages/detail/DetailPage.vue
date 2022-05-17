@@ -76,10 +76,13 @@
       </div>
       <div class="col-span-3 md:col-span-2">
         <banner-component
-          :text="`This venue does not have any tickets available to purchase on GoFish.`"
+          :text="`This venue does not have any tickets available to purchase on GoFish.${
+            venueDetail.phone
+              ? ' For more information please call ' + venueDetail.phone + '.'
+              : ''
+          }`"
           v-if="venueDetail.ticket_count === 0"
         />
-
         <div v-if="venueDetail.ticket_count > 0">
           <date-navigation-component
             :date="currentDate"

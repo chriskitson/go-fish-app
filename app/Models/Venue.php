@@ -19,6 +19,7 @@ class Venue extends Model
         'name',
         'account',
         'address',
+        'phone',
         'description',
         'place_id',
         'distance',
