@@ -134,9 +134,9 @@ class RegisterController extends Controller
     // TODO - replace with Klaviyo flow
     $verify_link = env('APP_URL', '') . '/api/verify?id=' . $user->id . '&code=' . $confirmation_code;
     Mail::send('emails.signup', ['email' => $data['email'], 'venue_name' => $venue_name, 'venue_address' => $venue_address, 'verify_link' => $verify_link, 'name' =>  $data['name']], function ($m) use ($verify_link) {
-        $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        $m->to(env('MAIL_APPROVALS_TO', env('MAIL_APPROVALS_TO')));
-        $m->subject('New GoFish Fishery Registration');
+      $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+      $m->to(env('MAIL_APPROVALS_TO', env('MAIL_APPROVALS_TO')));
+      $m->subject('New GoFish Fishery Registration');
     });
 
     return response()->json(array(
@@ -195,12 +195,14 @@ class RegisterController extends Controller
       $venue->update(array(
         "account_link" => $account_link
       ));
-      $list_id = $_ENV['KLAVIYO_FISHERY_LIST'];
-      $first_name = $this->split_name($name)[0];
-      $last_name = $this->split_name($name)[1];
 
-      // add user info to Klaviyo
-      $this->add_connected_account_link_to_profile( $list_id, $email, $first_name, $last_name, $venue->name, $account_link);
+      if (env('KLAVIYO_FISHERY_LIST', '') !== '') {
+        $list_id = env('KLAVIYO_FISHERY_LIST');
+        $first_name = $this->split_name($name)[0];
+        $last_name = $this->split_name($name)[1];
+        // add user info to Klaviyo
+        $this->add_connected_account_link_to_profile($list_id, $email, $first_name, $last_name, $venue->name, $account_link);
+      }
 
       // send welcome email to user
       // TODO - replace with Klaviyo flow
