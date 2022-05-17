@@ -430,8 +430,8 @@ class VenueController extends Controller
     // clean results
     $results = array_map(function($result) {
       $result->name = $this->clean_web($result->name);
-      $result->place_id = "";
-      $result->image = "";
+      // $result->place_id = "";
+      // $result->image = "";
       $result->tickets = array_map(function($ticket) {
         $ticket["name"] = $this->clean_web($ticket["name"]);
         $ticket["description"] = $this->clean_web($ticket["description"]);
