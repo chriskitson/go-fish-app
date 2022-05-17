@@ -103,3 +103,15 @@ export const contentTitle = (route) => {
     }
 };
 
+export const getDay = (d) => {
+    const days = [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thur",
+        "Fri",
+        "Sat"
+    ];
+    return days[d];
+}

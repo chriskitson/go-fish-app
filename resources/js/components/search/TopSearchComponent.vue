@@ -30,7 +30,7 @@
             :disabled-date="disableDate"
             v-on:change="$emit('change', $event)"
             class="w-full top-date-picker"
-            format="DD/MM/YYYY"
+            format="DD MMM YYYY"
           ></date-picker>
         </client-only>
       </div>
@@ -95,6 +95,7 @@
 import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
 import ClientOnly from "vue-client-only";
 import DatePicker from "vue2-datepicker";
+import { getDay } from "../../utils";
 export default {
   props: ["venueSearch", "date"],
   components: {
@@ -107,5 +108,8 @@ export default {
       return date < new Date();
     },
   },
+  data: () => ({
+    getDay,
+  }),
 };
 </script>
