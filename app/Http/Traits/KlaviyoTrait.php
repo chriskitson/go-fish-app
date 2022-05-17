@@ -2,15 +2,25 @@
 
 namespace App\Http\Traits;
 
+use Klaviyo\Client;
+
 trait KlaviyoTrait
 {
 
-  public function add_connected_account_link_to_profile($profile, $link)
+  public function add_connected_account_link_to_profile($list_id, $email, $first_name, $last_name, $venue_name, $stripe_link)
   {
-      echo json_encode(array(
-          "profile" => $profile,
-          "link" => $link
-      ));
+    $client = new Client($_ENV['KLAVIYO_PRIVATE'], $_ENV['KLAVIYO_PUBLIC']);
+    $profiles = array(
+      "profiles" => [
+        array(
+          "email" => $email,
+          "first_name" => $first_name,
+          "last_name" => $last_name,
+          "$" . "venue_name" => $venue_name,
+          "$" . "stripe_link" => $stripe_link
+        )
+      ]
+    );
+    return $client->ListsSegments->subscribe($list_id, $profiles);
   }
-  
 }

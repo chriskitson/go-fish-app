@@ -10,13 +10,14 @@ use App\Models\User;
 use App\Models\Venue;
 use App\Http\Traits\UtilTrait;
 use App\Http\Traits\StripeTrait;
-
+use App\Http\Traits\KlaviyoTrait;
 
 class RegisterController extends Controller
 {
 
   use UtilTrait;
   use StripeTrait;
+  use KlaviyoTrait;
 
   public function __construct()
   {
@@ -194,8 +195,12 @@ class RegisterController extends Controller
       $venue->update(array(
         "account_link" => $account_link
       ));
+      $list_id = $_ENV['KLAVIYO_FISHERY_LIST'];
+      $first_name = $this->split_name($name)[0];
+      $last_name = $this->split_name($name)[1];
 
-      // TODO - add user to Klaviyo with account link
+      // add user info to Klaviyo
+      $this->add_connected_account_link_to_profile( $list_id, $email, $first_name, $last_name, $venue->name, $account_link);
 
       // send welcome email to user
       // TODO - replace with Klaviyo flow
