@@ -52,7 +52,7 @@ export default {
       venueSearch: (state) => state.venueSearch,
       dateSearch: (state) => state.dateSearch,
       bgColor: (state) => {
-        if (state.path === "login" || state.path === "signup") {
+        if (state.path === "login" || state.path === "signup" || state.path === "signup/confirm") {
           return `bg-cover bg-login bg-grey-100`;
         }
         return "";

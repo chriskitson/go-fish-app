@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
 Route::get('/login', function () {
     return view('index');
@@ -22,7 +22,11 @@ Route::get('/login', function () {
 
 Route::get('/signup', function () {
     return view('index');
-})->name('login');
+});
+
+Route::get('/signup/confirm', function () {
+    return view('index');
+})->name('confirm');
 
 Route::get('/venue/{venueid}', function ($venueid) {
     return view('index', ['venueid' => $venueid]);

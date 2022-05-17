@@ -22,7 +22,7 @@ export const routes = [
     { path: '/', component: Home, name: 'Home' },
     { path: '/login', component: Login, name: 'Login' },
     { path: '/signup', component: SignUp, name: 'SignUp' },
-    { path: '/signup/confirm/:id', component: SignUpConfirm, name: 'Signup Confirm' },
+    { path: '/signup/confirm', component: SignUpConfirm, name: 'Signup Confirm' },
     { path: '/confirm/:id', component: Confirm, name: 'Confirm' },
     { path: '/basket', component: Basket, name: 'Basket' },
     { path: '/venue/:id', component: Detail, name: 'Venue' },

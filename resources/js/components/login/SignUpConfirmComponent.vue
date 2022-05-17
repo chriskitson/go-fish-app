@@ -2,7 +2,7 @@
   <div class="container flex flex-col items-center flex-1 px-2 mx-auto">
     <login-component
       title="Thank you for signing up to GoFish!"
-      description="Your account needs to be verified by GoFish before you have access. Once your account has been verified we will email you."
+      description="Your account has now been verified. You may now log into GoFish below."
       :login="loginForm"
       :loggedIn="loggedIn"
       :loading="loading"

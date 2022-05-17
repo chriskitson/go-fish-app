@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\Venue;
 use App\Http\Traits\UtilTrait;
+use App\Http\Traits\StripeTrait;
 
 
 class RegisterController extends Controller
 {
 
   use UtilTrait;
+  use StripeTrait;
 
   public function __construct()
   {
@@ -122,9 +124,15 @@ class RegisterController extends Controller
     ]);
     $user->save();
 
+    // lookup venue info
+    $venue = Venue::find($venue_id);
+    $venue_name = $venue->name;
+    $venue_address = $venue->address;
+
     // generate verification link and send email to admin
+    // TODO - replace with Klaviyo flow
     $verify_link = env('APP_URL', '') . '/api/verify?id=' . $user->id . '&code=' . $confirmation_code;
-    Mail::send('emails.signup', ['email' => $data['email'], 'venueName' => $venue_id, 'verify_link' => $verify_link, 'name' =>  $data['name']], function ($m) use ($verify_link) {
+    Mail::send('emails.signup', ['email' => $data['email'], 'venue_name' => $venue_name, 'venue_address' => $venue_address, 'verify_link' => $verify_link, 'name' =>  $data['name']], function ($m) use ($verify_link) {
         $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         $m->to(env('MAIL_APPROVALS_TO', env('MAIL_APPROVALS_TO')));
         $m->subject('New GoFish Fishery Registration');
@@ -165,25 +173,40 @@ class RegisterController extends Controller
       // mark as verified
       $user->markEmailAsVerified();
 
-      // set login link
-      $login_link = env('APP_URL', '');
+      // generate login link
+      $login_link = env('APP_URL', '') . '/signup/confirm';
       $name = $user->name;
       $email = $user->email;
 
+      // look up venue
+      $venue = Venue::find($user->venue_id);
+      $account_id = $venue->account;
+
+      // create stripe connected account for receiving payments (if one doesn't exist)
+      if (!isset($account_id) || $account_id === "") {
+        $account_id = $this->connected_account_create($email, $venue->name);
+      }
+
+      // generate stripe signup link for account (to provide bank details for payments to fishery)
+      $account_link = $this->connected_account_link_create($venue->id, $account_id);
+
+      // update venue with account link
+      $venue->update(array(
+        "account_link" => $account_link
+      ));
+
+      // TODO - add user to Klaviyo with account link
+
       // send welcome email to user
       // TODO - replace with Klaviyo flow
-      Mail::send('emails.welcome', ['name' => $name, 'login_link' => $login_link], function ($m) use ($name, $login_link, $email) {
+      Mail::send('emails.welcome', ['name' => $name, 'login_link' => $login_link, 'stripe_link' => $account_link], function ($m) use ($name, $login_link, $email) {
         $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         $m->to($email, $name);
         $m->subject('New GoFish Account');
       });
 
-      return response()->json([
-        'id' => $id,
-        'code' => $code,
-        'status' => 200,
-        'message' => 'User has been verified'
-      ]);
+      return redirect()->route('home');  // redirect to confirm route
+
     } else {
       return response()->json([
         'status' => 500,

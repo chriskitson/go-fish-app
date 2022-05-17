@@ -8,9 +8,30 @@
         :loading="loading"
         @register="register"
       ></signup-component>
-      <signupconfirm-component
+
+      <div
         v-if="signupForm.confirmed"
-      ></signupconfirm-component>
+        class="
+          w-full
+          px-6
+          py-8
+          text-black
+          bg-white
+          rounded
+          shadow-md
+          bg-opacity-80
+        "
+      >
+        <h1 class="mb-8 text-xl text-center text-red-200">
+          Thank you for signing up to GoFish!
+        </h1>
+        <p class="mb-8 text-center font-semibold">
+          Your account needs to be verified by GoFish before you gain access.
+        </p>
+        <p class="mb-8 text-center">
+          Once your account has been verified we will email you.
+        </p>
+      </div>
     </div>
   </div>
 </template>
