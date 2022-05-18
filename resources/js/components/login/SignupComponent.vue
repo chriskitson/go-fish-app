@@ -205,6 +205,6 @@ export default {
       this.register.placeId = place_id;
       this.register.address = formatted_address;
     },
-  },
+  }
 };
 </script>

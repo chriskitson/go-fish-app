@@ -129,8 +129,7 @@ let mutations = {
         state.loading = false;
     },
     SIGNUP(state, res) {
-        const { success, errors, venue_id } = res;
-        state.signupForm.errors = [];
+        const { success, errors, data } = res;
         if (success === true) {
             state.signupForm = {
                 messages: [],
@@ -146,7 +145,11 @@ let mutations = {
                 // stripeUrl: stripe
             };
         } else {
-            state.signupForm.errors = Object.values(errors).flat();
+            if (data.venue_managed) {
+                state.signupForm.errors = [MESSAGES.ERRORS.VenueManaged];
+            } else if (errors && errors.length > 0) {
+                state.signupForm.errors = Object.values(errors).flat();
+            }
         }
         state.loading = false;
     },

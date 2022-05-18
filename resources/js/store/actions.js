@@ -15,8 +15,8 @@ let actions = {
                 commit("BOOTSTRAP_DATA", res.data);
             })
             .catch(err => {
-                console.log({
-                    err
+                commit("LOGOUT", {
+                    success: true
                 });
             });
     },
@@ -31,8 +31,8 @@ let actions = {
                 commit("USER_DATA", res.data);
             })
             .catch(err => {
-                console.log({
-                    err
+                commit("LOGOUT", {
+                    success: true
                 });
             });
     },
@@ -202,7 +202,8 @@ let actions = {
             .catch(err => {
                 commit("SIGNUP", {
                     success: false,
-                    errors: [err.response.data?.message]
+                    errors: [ err.response?.data?.message ],
+                    data: err.response?.data
                 });
             });
     },

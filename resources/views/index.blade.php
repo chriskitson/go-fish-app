@@ -38,6 +38,13 @@ $initial_state['bookingFee'] = $_ENV['BOOKING_FEE'];
 if ($initial_state['path'] === 'manage-venues') {
     $initial_state['manageVenues'] = $venue->names()->original;
 }
+if ($initial_state['path'] === 'signup' && Request::get('p') !== '') {
+    $initial_state['signupPlace'] = array(
+        "placeId" => Request::get('p'),
+        "address" => Request::get('a'),
+        "name" => Request::get('n')
+    );
+}
 $initial_state['allCategories'] = $venue->get_categories()->original;
 $page_title = $page->get_title($initial_state['path']);
 @endphp

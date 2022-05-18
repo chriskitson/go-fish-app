@@ -6,6 +6,7 @@ use App\Models\Venue;
 use App\Models\VenueClosed;
 use App\Models\Category;
 use App\Models\Ticket;
+use App\Models\User;
 use App\Models\Booking;
 use App\Models\SearchCache;
 use App\Models\RequestCache;
@@ -89,6 +90,10 @@ class VenueController extends Controller
   public function get($id)
   { // for front end website display
     $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
+    // is venue managed?
+    $venue_user = User::where("venue_id", "=", $venue->id);
+    $venue_managed = $venue_user ->count() > 0 && $venue_user->first()->hasVerifiedEmail();
+    // clean up fields for display
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
     if (isset($venue->place_id) && env('OFFLINE_MODE', True) === False) {  // get more info about place from Google
@@ -131,6 +136,7 @@ class VenueController extends Controller
         }
       }
     }
+    $venue["managed"] = $venue_managed;
     $venue["ticket_count"] = Ticket::where([
       ["venue_id", "=", $venue->id]
     ])->count();

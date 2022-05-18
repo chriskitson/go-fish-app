@@ -82,9 +82,8 @@ class RegisterController extends Controller
 
       // venue exists, get info
       $venue_id = Venue::where("place_id", "=", $data["placeId"])->first()->id;
-      $account_id = Venue::where("place_id", "=", $data["placeId"])->first()->account;
-      $venue_active = Venue::where("place_id", "=", $data["placeId"])->first()->active;
-      $checkout_session_id = "";
+      $venue_managed = User::where("venue_id", "=", $venue_id)->count() > 0;
+
     } else {  // set up new venue
 
       $venue = Venue::create([
@@ -98,16 +97,15 @@ class RegisterController extends Controller
       $venue->save();
 
       $venue_id = $venue->id;
-      $account_id = "";
-      $venue_active = false;
-      $checkout_session_id = "";
+      $venue_managed = false;
+
     }
 
     // if venue is active then don't proceed
-    if ($venue_active) {
+    if ($venue_managed) {
       return response()->json(array(
         "success" => false,
-        "venue_active" => true
+        "venue_managed" => true
       ), 409);
     }
 
@@ -184,8 +182,12 @@ class RegisterController extends Controller
       $account_id = $venue->account;
 
       // create stripe connected account for receiving payments (if one doesn't exist)
-      if (!isset($account_id) || $account_id === "") {
+      if (!isset($account_id) || $account_id === "" || $account_id === "none") {
         $account_id = $this->connected_account_create($email, $venue->name);
+        // update account against venue
+        $venue->update(array(
+          "account" => $account_id 
+        ));
       }
 
       // generate stripe signup link for account (to provide bank details for payments to fishery)

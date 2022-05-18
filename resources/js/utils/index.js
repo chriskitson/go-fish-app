@@ -13,7 +13,7 @@ export const getTokenHeader = (user, contentType = "application/json") => {
 };
 
 export const handleError = err => {
-    if (err && err.message === "Unauthenticated.") {
+    if (err && (err.message === "Unauthenticated." || err.response.status === 401)) {
         window.location.href = "/login";
     }
 };

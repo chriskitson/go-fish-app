@@ -20,6 +20,7 @@ export const MESSAGES = {
     None: "You have no tickets."
   },
   ERRORS: {
-    BasketError: 'Unable to proceed to checkout. Please check your network connection and try again.'
-  }
+    BasketError: 'Unable to proceed to checkout. Please check your network connection and try again.',
+    VenueManaged: 'This venue is already managed.'
+  },
 };

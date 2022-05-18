@@ -39,6 +39,15 @@ export const bindState = (context, state, client) => {
     if (context.allCategories) {
         state.allCategories = context.allCategories;
     }
+    if (context.signupPlace) {
+        state.signupForm = {
+            ...state.signupForm,
+            fisheryName: context.signupPlace.name,
+            search: context.signupPlace.name,
+            placeId: context.signupPlace.placeId,
+            address: context.signupPlace.address
+        }
+    }
     if (client) {
         state.user = {
             ...state.user,

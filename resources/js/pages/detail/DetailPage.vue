@@ -75,15 +75,51 @@
         </div>
       </div>
       <div class="col-span-3 md:col-span-2">
+        <div
+          v-if="!venueDetail.managed"
+          class="p-4 mb-5 bg-grey-100 rounded-xl"
+        >
+          <h3 class="mb-2 font-semibold">
+            {{ venueDetail.name }} is currently not managed on GoFish.
+          </h3>
+          <p class="mb-2">
+            If you would like to claim it please click the button bellow and
+            register:
+          </p>
+          <a
+            :href="`/signup?p=${venueDetail.place_id}&a=${encodeURIComponent(
+              venueDetail.address
+            )}&n=${encodeURIComponent(venueDetail.name)}`"
+            class="
+              flex
+              items-center
+              px-4
+              py-2
+              text-md
+              font-semibold
+              text-center text-white
+              bg-white bg-red-200
+              rounded-md
+              cursor-pointer
+              justify-content
+              md:w-auto
+            "
+          >
+            <span class="flex-1"
+              >Register {{ venueDetail.name }} on GoFish!</span
+            >
+            <icon name="chevron-right" class="w-5 h-5 ml-2 text-white" />
+          </a>
+        </div>
         <banner-component
           :text="`This venue does not have any tickets available to purchase on GoFish.${
             venueDetail.phone
               ? ' For more information please call ' + venueDetail.phone + '.'
               : ''
           }`"
-          v-if="venueDetail.ticket_count === 0"
+          v-if="venueDetail.managed && venueDetail.ticket_count === 0"
         />
-        <div v-if="venueDetail.ticket_count > 0">
+        <div v-if="venueDetail.managed && venueDetail.ticket_count > 0">
           <date-navigation-component
             :date="currentDate"
             :prevDisabled="venueDetail.date < new Date()"

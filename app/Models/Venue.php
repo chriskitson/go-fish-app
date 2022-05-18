@@ -46,10 +46,4 @@ class Venue extends Model
 
     protected $table = 'venues';
     protected $primaryKey = 'id';
-
-    // determine if venue should be shown on website
-    // public function getActiveAttribute() {
-    //     return $this->account_payment_confirmed == 1;
-    //     // return true;
-    // }
 }
