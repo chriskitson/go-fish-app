@@ -135,3 +135,8 @@ body {
     overflow: hidden;
     white-space: nowrap;
 }
+
+.content-page ul,
+.content-page p {
+    margin-bottom: 20px;
+}
