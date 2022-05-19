@@ -105,7 +105,9 @@ export default {
   },
   methods: {
     disableDate(date) {
-      return date < new Date();
+      const midnight = new Date();
+      midnight.setHours(0,0,0,0);
+      return date < midnight;
     },
   },
   data: () => ({
