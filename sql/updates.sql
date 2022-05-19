@@ -127,4 +127,9 @@ ADD COLUMN `phone` VARCHAR(45) NULL AFTER `payment_fee`;
 ALTER TABLE `users` 
 ADD COLUMN `confirmation_code` VARCHAR(30) NULL AFTER `venue_id`;
 
-
+-- 19/05/22 
+UPDATE `categories` SET `image` = '/images/locations/mid-east-antrim.jpg' WHERE (`id` = '1');
+UPDATE `categories` SET `image` = '/images/locations/mid-ulster.jpg' WHERE (`id` = '2');
+UPDATE `categories` SET `image` = '/images/locations/ards-north-down.jpg' WHERE (`id` = '3');
+UPDATE `categories` SET `image` = '/images/locations/caueway-coast.jpg' WHERE (`id` = '4');
+UPDATE `categories` SET `image` = '/images/locations/northern-ireland.jpg' WHERE (`id` = '5');

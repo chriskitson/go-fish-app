@@ -77,7 +77,7 @@ class VenueController extends Controller
 
   public function all()
   {
-    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get();
+    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get()->toarray();
     return response()->json($venues);
   }
 
@@ -87,12 +87,37 @@ class VenueController extends Controller
     return response()->json($venues);
   }
 
+  public function manage_venues(Request $request)
+  {
+    $user = $request->user();
+    $is_global_admin = $user->global_admin == 1;
+    $venues = [];
+    if ($is_global_admin) {
+      $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get();
+      foreach ($venues as $v) {
+        $v->claimed =  $v->claimed;
+        $v->claimed_user =  $v->claimed_user;
+        $v->payment_active =  $v->payment_active;
+      }
+      $venues = array_map(function ($v) {
+        return array(
+          "id" => $v["id"],
+          "name" => $v["name"],
+          "claimed" => $v["claimed"],
+          "claimed_user" => $v["claimed_user"],
+          "payment_active" => $v["payment_active"],
+        );
+      }, $venues->toArray());
+    }
+    return response()->json($venues);
+  }
+
   public function get($id)
   { // for front end website display
     $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
     // is venue managed?
     $venue_user = User::where("venue_id", "=", $venue->id);
-    $venue_managed = $venue_user ->count() > 0 && $venue_user->first()->hasVerifiedEmail();
+    $venue_managed = $venue_user->count() > 0 && $venue_user->first()->hasVerifiedEmail();
     // clean up fields for display
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
@@ -198,7 +223,7 @@ class VenueController extends Controller
     $tickets = Ticket::where([
       ["venue_id", "=", $id]
     ])->get()->toArray();
-    $tickets = array_map(function($t) {
+    $tickets = array_map(function ($t) {
       $t["name"] = $this->clean_admin($t["name"]);
       $t["description"] = $this->clean_admin($t["description"]);
       return $t;
@@ -434,9 +459,9 @@ class VenueController extends Controller
     }
 
     // clean results
-    $results = array_map(function($result) {
+    $results = array_map(function ($result) {
       $result->name = $this->clean_web($result->name);
-      $result->tickets = array_map(function($ticket) {
+      $result->tickets = array_map(function ($ticket) {
         $ticket["name"] = $this->clean_web($ticket["name"]);
         $ticket["description"] = $this->clean_web($ticket["description"]);
         return $ticket;
@@ -1065,7 +1090,6 @@ class VenueController extends Controller
         "success" => true,
         "session_id" => $subscription
       ));
-
     } else {
       return response("Unauthorized", 401);
     }

@@ -45,11 +45,6 @@
             v-if="!user.loggedIn"
             >Login | Register</a
           >
-          <!-- <span
-                    class="ml-3 text-sm text-white"
-                    v-if="user.loggedIn"
-                    >Welcome back</span
-                > -->
           <button
             @click="$emit('cache')"
             v-if="user.loggedIn && user.globalAdmin"
@@ -91,13 +86,26 @@
         </div>
       </client-only>
     </div>
-    <div class="flex flex-wrap items-center w-full max-w-5xl mx-4">
+    <div class="flex items-center w-full max-w-5xl mx-4">
       <div class="flex items-center h-20 w-28">
         <h1>
           <a href="/"><img src="/images/logo.png" alt="GoFish Logo" /></a>
         </h1>
       </div>
-      <div class="flex items-center flex-grow hidden ml-5 lg:block">
+      <div class="flex items-center justify-end ml-3 flex-grow md:hidden">
+        <a
+          href="/category/latest"
+          class="mr-3 font-semibold text-sm text-grey-300"
+          >Latest</a
+        >
+        <a
+          href="/category/best"
+          class="mr-3 font-semibold text-sm text-grey-300"
+          >Best</a
+        >
+      </div>
+
+      <div class="flex items-center flex-grow hidden ml-5 md:block">
         <a
           href="/category/latest"
           class="mr-3 font-semibold text-md text-grey-300"
@@ -113,7 +121,10 @@
           class="mr-3 font-semibold text-md text-grey-300"
           >Best Fisheries</a
         >
-        <a href="/login" class="mr-3 font-semibold text-md text-grey-300"
+        <a
+          href="/login"
+          v-if="live && !user.loggedIn"
+          class="mr-3 font-semibold text-md text-grey-300"
           >Join GoFish</a
         >
         <span class="flex-grow"></span>
@@ -122,7 +133,7 @@
         <a
           href="/basket"
           class="flex items-center px-5 py-2 text-lg font-semibold text-red-200"
-          v-if="user.loggedIn && live"
+          v-if="live"
         >
           <icon name="shopping-cart" class="mr-2 w-7 h-7" v-if="live" />
           {{ basketTotal }}</a

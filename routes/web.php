@@ -104,4 +104,3 @@ Route::get('/faq', function () {
 Route::get('/complaints', function () {
     return view('index');
 });
-

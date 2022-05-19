@@ -49,6 +49,28 @@ class RegisterController extends Controller
     ]);
     $user->save();
 
+    // get info
+    $login_link = env('APP_URL', '') . '/signup/confirm';
+    $name = $user->name;
+    $email = $user->email;
+
+    // add user to klaviyo
+    if (env('KLAVIYO_FISHER_LIST', '') !== '') {
+      $list_id = env('KLAVIYO_FISHER_LIST');
+      $first_name = $this->split_name($name)[0];
+      $last_name = $this->split_name($name)[1];
+      // add user info to Klaviyo
+      $this->add_profile($list_id, $email, $first_name, $last_name);
+    }
+
+    // send welcome email to user
+    // TODO - replace with Klaviyo flow
+    Mail::send('emails.welcomefisher', ['name' => $name, 'login_link' => $login_link], function ($m) use ($name, $email) {
+      $m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+      $m->to($email, $name);
+      $m->subject('Welcome to GoFish');
+    });
+
     return response()->json(array(
       "success" => true,
       "email" => $user->email
@@ -136,6 +158,8 @@ class RegisterController extends Controller
       $m->to(env('MAIL_APPROVALS_TO', env('MAIL_APPROVALS_TO')));
       $m->subject('New GoFish Fishery Registration');
     });
+
+    // 
 
     return response()->json(array(
       "success" => true,

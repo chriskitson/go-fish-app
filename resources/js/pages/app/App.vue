@@ -52,7 +52,11 @@ export default {
       venueSearch: (state) => state.venueSearch,
       dateSearch: (state) => state.dateSearch,
       bgColor: (state) => {
-        if (state.path === "login" || state.path === "signup" || state.path === "signup/confirm") {
+        if (
+          state.path === "login" ||
+          state.path === "signup" ||
+          state.path === "signup/confirm"
+        ) {
           return `bg-cover bg-login bg-grey-100`;
         }
         return "";
@@ -168,7 +172,9 @@ export default {
         name: "Join GoFish",
       },
       {
-        url: "/search",
+        url: `/search/${new Date(
+          new Date().setDate(new Date().getDate() + 1)
+        ).getTime()}/ChIJO4rQ1_3_YEgRMcXH7ywWVy4`,
         name: "Search",
       },
       {

@@ -35,9 +35,6 @@ if (isset($categoryid)) {
 }
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV['BOOKING_FEE'];
-if ($initial_state['path'] === 'manage-venues') {
-    $initial_state['manageVenues'] = $venue->names()->original;
-}
 if ($initial_state['path'] === 'signup' && Request::get('p') !== '') {
     $initial_state['signupPlace'] = array(
         "placeId" => Request::get('p'),

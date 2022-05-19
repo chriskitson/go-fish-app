@@ -174,7 +174,7 @@ let actions = {
                 password_confirmation: confirm
             })
             .then(res => {
-                commit("REGISTER", res.data);
+               commit("REGISTER", res.data);
             })
             .catch(err => {
                 commit("REGISTER", {
@@ -506,6 +506,21 @@ let actions = {
             )
             .then(res => {
                 commit("SUBSCRIPTION_CANCEL", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    VENUES_ADMIN({ commit }, { venue_id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(
+                `/api/auth/venues/admin`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                commit("VENUES_ADMIN", res.data);
             })
             .catch(err => {
                 commit("SET_LOADING", false);

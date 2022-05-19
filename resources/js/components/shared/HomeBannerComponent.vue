@@ -15,7 +15,7 @@
   >
     <span
       v-if="message && message !== ''"
-      class="text-2xl text-white font-semibold"
+      class="text-2xl text-white font-semibold text-center p-4"
       >{{ message }}</span
     >
     &nbsp;

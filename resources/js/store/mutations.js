@@ -145,9 +145,9 @@ let mutations = {
                 // stripeUrl: stripe
             };
         } else {
-            if (data.venue_managed) {
+            if (data?.venue_managed) {
                 state.signupForm.errors = [MESSAGES.ERRORS.VenueManaged];
-            } else if (errors && errors.length > 0) {
+            } else if (errors) {
                 state.signupForm.errors = Object.values(errors).flat();
             }
         }
@@ -460,5 +460,9 @@ let mutations = {
         }
         state.loading = false;
     },
+    VENUES_ADMIN(state, res) {
+        state.manageVenues = res;
+        state.loading = false;
+    }
 };
 export default mutations;

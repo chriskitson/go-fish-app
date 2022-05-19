@@ -41,9 +41,26 @@ class Venue extends Model
         'account_link',
         'active',
         'account_payment_confirmed',
-        'account_payment_reference'
+        'account_payment_reference',
     ];
 
     protected $table = 'venues';
     protected $primaryKey = 'id';
+
+    protected $appends = [];
+
+    public function getClaimedAttribute()
+    {
+        return User::where("venue_id", "=", $this->id)->count() > 0;
+    }
+
+    public function getClaimedUserAttribute()
+    {
+        return User::where("venue_id", "=", $this->id)->count() > 0 ? User::where("venue_id", "=", $this->id)->first()->email : '';
+    }
+
+    public function getPaymentActiveAttribute()
+    {
+        return isset($this->account);
+    }
 }

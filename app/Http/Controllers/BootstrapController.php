@@ -83,7 +83,7 @@ class BootstrapController extends Controller
       $venues_array = [];
 
       // get all venues
-      $venues = Venue::where(["deleted" => 0])->get(["id", "name", "address", "place_id", "image", "rating", "photos"]);
+      $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "place_id", "image", "rating", "photos"]);
 
       // TODO - if lat/lng NOT set by browser, can it be detected by IP?
 
@@ -138,6 +138,19 @@ class BootstrapController extends Controller
           "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
         ]);
         $cache->save();
+      
+      } else {  // bring back random venues as we don't know location
+
+        $venues_random = array_map(function($v) use($venues) {
+          return $venues[$v];
+        }, array_rand($venues->toArray(), 4));
+
+        $response = (object) array(
+          "venues" => $venues_random,  // return random
+          "userPosition" => null,
+          "token" => null
+        );
+
       }
     }
 

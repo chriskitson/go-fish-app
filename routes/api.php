@@ -103,4 +103,5 @@ Route::group([
     Route::delete('auth/venues/{venue_id}/closed/{id}', [VenueController::class, 'closed_delete']);
     Route::get('auth/venues/{id}/subscription', [VenueController::class, 'subscription_create']);
     Route::delete('auth/venues/{id}/subscription', [VenueController::class, 'subscription_cancel']);
+    Route::get('auth/venues/admin', [VenueController::class, 'manage_venues']);
 });

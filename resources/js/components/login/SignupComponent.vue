@@ -144,7 +144,7 @@
 
         <button
           type="submit"
-          :disabled="loading || loggedIn"
+          :disabled="loading"
           class="
             flex
             w-full
