@@ -128,8 +128,6 @@ class WebhookController extends Controller
         $transaction->save();
       }
 
-
-
       // clear basket
       Basket::where([
         ["user_id", "=", $user_id]
@@ -139,13 +137,14 @@ class WebhookController extends Controller
 
   public function booking_receipt($event)
   {
+
+    sleep(1); // pause for a second to allow write transaction to db (race condition)
+
     // record receipt for payment
     $payment_intent_id = $event->data->object->id;
     $payment_receipt_link = implode(", ", array_map(function ($c) {
       return $c->receipt_url;
     }, $event->data->object->charges->data));
-
-    sleep(1); // pause for a second to allow write transaction to db (race condition)
 
     $transaction = Transaction::where([
       ["payment", "=", $payment_intent_id]
@@ -185,10 +184,12 @@ class WebhookController extends Controller
 
   public function subscription_receipt($event)
   {
-    // record receipt for payment
-    $subscription_id = $event->data->object->id;
+
 
     sleep(1); // pause for a second to allow write transaction to db (race condition)
+    
+    // record receipt for payment
+    $subscription_id = $event->data->object->id;
 
     $venue = Venue::where([
       ["account_payment_reference", "=", $subscription_id]
