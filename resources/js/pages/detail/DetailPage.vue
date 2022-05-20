@@ -50,21 +50,25 @@
             <icon name="location-marker" class="w-4 h-4 mr-2" />
             Directions
           </a>
-          <button
+   <a
+            :href="`https://search.google.com/local/writereview?placeid=${venueDetail.place_id}`"
+            target="_blank"
             class="
               flex
               items-center
               justify-center
               px-3
-              py-2
+              py-1
+              mr-2
               text-sm text-white
               bg-red-200
               rounded-lg
             "
+            v-if="venueDetail.place_id !== ''"
           >
             <icon name="pencil" class="w-4 h-4 mr-2" />
             Review
-          </button>
+          </a>
         </div>
         <div
           class="p-5 mt-10 border border-grey-200 text-grey-300"
@@ -202,11 +206,7 @@ export default {
     VueMasonryWall,
   },
   data: () => ({
-    formatDateDisplayFromTime,
-    items: [
-      { title: "Item 0", content: "Content" },
-      { title: "Item 1", content: "Content" },
-    ],
+    formatDateDisplayFromTime
   }),
   computed: {
     ...mapState({
