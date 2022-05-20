@@ -87,7 +87,7 @@
             {{ venueDetail.name }} is currently not managed on GoFish.
           </h3>
           <p class="mb-2">
-            If you would like to claim it please click the button bellow and
+            If you would like to claim it please click the button below and
             register:
           </p>
           <a

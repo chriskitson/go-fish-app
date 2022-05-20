@@ -17,7 +17,7 @@
             border-red-500
             text-red-500 text-center
           "
-          v-if="!user.verified"
+          v-if="live && !user.verified"
         >
           Your account is not verified by GoFish. We will send you an email once
           your account has been verified.
@@ -34,7 +34,7 @@
             border-warning
             text-warning text-center
           "
-          v-if="user.verified && !venue.subscription.confirmed"
+          v-if="live && user.verified && !venue.subscription.confirmed"
         >
           <a href="#" v-on:click="subscriptionTab($event)"
             >You do not have an active subscription with GoFish. Your venue may
