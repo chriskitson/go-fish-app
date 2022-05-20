@@ -3,6 +3,52 @@
     <h2 class="flex items-center mb-4 text-xl font-semibold">
       {{ title }}
     </h2>
+
+    <div v-if="path === 'about'">
+      <p>
+        GOFish was launched in 2022 by Trevor Finlay from Ballymena, N. Ireland.
+        Trevor is an avid fly-fisherman and was frustrated at how difficult it
+        was to make advance bookings for any of his fishing trips.
+      </p>
+      <p>
+        The platform has been built on Google Cloud and has provides Fisheries
+        with a simple sign-up process and way to setup and manage their calendar
+        and available tickets.
+      </p>
+
+      <p>
+        Anglers can easily find and book fisheries throughout the country, and
+        find up-to-date information on fishery tickets, amenities and other
+        services.
+      </p>
+
+      <p>
+        For more information please
+        <a href="mailto:info@gofish.world" class="text-red-500"
+          >info@gofish.world</a
+        >.
+      </p>
+    </div>
+    <div v-if="path === 'contact'">
+      <p>Head Office:<br /></p>
+      <p>
+        Galgorm Holdings Limited<br />
+        27-28 The Courtyard Galgorm Castle<br />
+        BALLYMENA<br />
+        BT42 1HL<br />
+        UK
+      </p>
+
+      <p>Phone: +44 28 2565 6000</p>
+      <p>GMT/BST 9.00am – 5.00pm (Monday to Friday, excluding 25 December)</p>
+
+      <p>
+        Email:
+        <a href="mailto:support@GOFish.World" class="text-red-500"
+          >support@GOFish.World</a
+        >
+      </p>
+    </div>
     <div v-if="path == 'privacy'">
       <p>INFORMATION CAPTURE OVERVIEW</p>
 
