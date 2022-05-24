@@ -75,6 +75,7 @@
           :venue="venue"
           :manageVenueErrorFields="manageVenueErrorFields"
           :admin="user.globalAdmin"
+          @create="accountCreate"
         ></manage-payment-component>
         <manage-location-component
           v-if="venueManageTab === manageTabs.LOCATION"
@@ -358,6 +359,13 @@ export default {
     subscriptionCancel() {
       const { user } = this;
       this.$store.dispatch("SUBSCRIPTION_CANCEL", {
+        venue_id: this.venue.id,
+        user,
+      });
+    },
+    accountCreate() {
+      const { user } = this;
+      this.$store.dispatch("STRIPE_ACCOUNT_CREATE", {
         venue_id: this.venue.id,
         user,
       });

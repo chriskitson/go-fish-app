@@ -527,5 +527,21 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
+    STRIPE_ACCOUNT_CREATE({ commit }, { venue_id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(
+                `/api/auth/venues/${venue_id}/account`,
+                getTokenHeader(user)
+            )
+            .then(res => {
+                console.log(res.data);
+                commit("STRIPE_ACCOUNT_CREATE", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response?.data.message);
+            });
+    },
 };
 export default actions;

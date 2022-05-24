@@ -463,6 +463,25 @@ let mutations = {
     VENUES_ADMIN(state, res) {
         state.manageVenues = res;
         state.loading = false;
+    },
+    STRIPE_ACCOUNT_CREATE(state, { success, account, accountLink, venue_id }) {
+        if (success) {
+            state.venueDetail = {
+                ...state.venueDetail,
+                account,
+                accountLink
+            }
+            if (accountLink && accountLink !== '') {
+                window.location.href = accountLink; // redirect to stripe
+            } else {
+                state.loading = false;
+            }
+        } else {
+            state.loading = false;
+        }
     }
 };
 export default mutations;
+
+
+

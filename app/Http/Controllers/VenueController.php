@@ -1020,6 +1020,50 @@ class VenueController extends Controller
     ));
   }
 
+  public function account_create(Request $request, $id)
+  {
+    $user = $request->user();
+    $is_admin = $user->user_type == 2 && $user->venue_id == $id;
+    $is_global_admin = $user->global_admin == 1;
+    $venue_id = $user->venue_id;
+    $user_email = $user->email;
+
+    if ($is_admin || $is_global_admin && ($venue_id === $id)) {
+
+      // get venue info
+      $venue = Venue::find($venue_id);
+      $venue_name = $venue->name;
+      $account_id = $venue->account;
+
+      // create stripe connected account for receiving payments (if one doesn't exist)
+      if (!isset($account_id) || $account_id === "") {
+        $account_id = $this->connected_account_create($user_email, $venue_name);
+      }
+
+      // generate stripe signup link for account (to provide bank details for payments to fishery)
+      $account_link = $this->connected_account_link_create($venue_id, $account_id);
+
+      // update venue with stripe info
+      Venue::where([
+        ["id", "=", $venue_id]
+      ])->update(array(
+        "account_link" => $account_link,
+        "account" => $account_id
+      ));
+    
+      return response()->json(array(
+        "success" => true,
+        "venue_id" => $venue_id,
+        "accountLink" => $account_link,
+        "account" => $account_id
+      ));
+      
+    } else {
+      return response("Unauthorized", 401);
+    }
+  }
+
+
   public function subscription_create(Request $request, $id)
   {
 

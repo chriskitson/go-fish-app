@@ -96,6 +96,7 @@ let state = {
         ticketsLoaded: false,
         date: tomorrow,
         account: "",
+        accountLink: "",
         days: {
             sunday: false,
             monday: false,
