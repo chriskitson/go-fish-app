@@ -53,6 +53,15 @@ $page_title = $page->get_title($initial_state['path']);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @if (env('GOOGLE_ANALYTICS_TRACKING_KEY') != '')
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo env('GOOGLE_ANALYTICS_TRACKING_KEY'); ?>"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<?php echo env('GOOGLE_ANALYTICS_TRACKING_KEY'); ?>');
+        </script>
+    @endif
     <script defer src="{{ mix('js/app-client.js') }}"></script>
     <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWyDnSq8kJoxf0zSdEQguVEgBBT6kuqUs&libraries=places" async
