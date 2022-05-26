@@ -18,10 +18,13 @@ class BootstrapController extends Controller
 
   use GoogleMapTrait;
 
+  public $USE_GOOGLE = False;
+
   public function __construct()
   {
+    // $this->USE_GOOGLE = env('GOOGLE_ENABLE', False);
+    $this->USE_GOOGLE = False;
   }
-
 
   private function split_name($name)
   {
@@ -85,10 +88,8 @@ class BootstrapController extends Controller
       // get all venues
       $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "place_id", "image", "rating", "photos"]);
 
-      // TODO - if lat/lng NOT set by browser, can it be detected by IP?
-
       // determine location based on lat lng if supplied
-      if (isset($lat) && isset($lng)) {
+      if ($this->USE_GOOGLE === True && isset($lat) && isset($lng)) {
 
         // set origin
         $origin = $lat . "," . $lng;

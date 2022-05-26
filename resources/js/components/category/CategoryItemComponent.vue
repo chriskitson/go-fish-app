@@ -1,7 +1,7 @@
 <template>
   <a
     :href="category ? `/category/${category.id}` : '#'"
-    :class="`w-full h-40 flex items-end bg-cover p-3 ${
+    :class="`w-full h-40 flex items-end bg-cover bg-bottom p-3 ${
       live ? '' : 'bg-opacity-20 '
     }bg-grey-300 rounded-xl`"
     :style="`background-image:url('${category ? category.image : ''}')`"

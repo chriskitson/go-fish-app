@@ -25,6 +25,8 @@ class VenueController extends Controller
   use BookingTrait;
   use StripeTrait;
 
+  public $USE_GOOGLE = False;
+
   /**
    * Create a new controller instance.
    *
@@ -32,6 +34,8 @@ class VenueController extends Controller
    */
   public function __construct()
   {
+    // $this->USE_GOOGLE = env('GOOGLE_ENABLE', False);
+    $this->USE_GOOGLE = False;
   }
 
   public function check_in_range($start_date, $end_date, $date)
@@ -122,7 +126,7 @@ class VenueController extends Controller
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
     if (isset($venue->place_id) && env('OFFLINE_MODE', True) === False) {  // get more info about place from Google
-      if (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"]) {
+      if ($this->USE_GOOGLE === True && (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"])) { // fetch new data
         $place_detail = $this->get_place_data($venue->place_id);
         if (isset($place_detail["result"])) {
           if (isset($place_detail["result"]["rating"])) {
@@ -156,8 +160,10 @@ class VenueController extends Controller
             $venue->reviews = [];
           }
           $venue->save();
-        } else {
-          // TODO - refresh place id - how??
+        } else {  // use existing data from database
+          $venue_data = Venue::find($id, ["photos", "reviews"]);
+          $venue->photos = json_decode($venue_data->photos);
+          $venue->reviews = json_decode($venue_data->reviews);
         }
       }
     }
@@ -321,7 +327,7 @@ class VenueController extends Controller
 
   function get_town_by_place_id($place_id)
   {
-    return $this->get_town($place_id, "place_id");
+    return $this->USE_GOOGLE === True ? $this->get_town($place_id, "place_id") : "";
   }
 
   function search($date, $location)
@@ -344,7 +350,8 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-    } else { // look up location based data search results
+    
+    } elseif ($this->USE_GOOGLE === True) { // look up location based data search results
 
       // get search by place_id
       $search = $this->get_address($location, "place_id");
@@ -422,6 +429,10 @@ class VenueController extends Controller
 
       // read results back from cache (better performance)
       $results = json_decode($cache->data);
+    
+    } else {  // no access to Google or cache, so no results returned
+      $search = "";
+      $results = [];
     }
 
     if (count($results) > 0) {
@@ -825,7 +836,7 @@ class VenueController extends Controller
           // loop through all venues
           foreach ($venues as $venue) {
             // check if meta exist (if not, then fetch and save for future use)
-            if (!isset($venue->place_meta) || $venue->place_meta === "") {
+            if ((!isset($venue->place_meta) || $venue->place_meta === "") && $this->USE_GOOGLE === True) {
               $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
               $venue["place_meta"] = $place_meta;
               Venue::where([
@@ -963,11 +974,11 @@ class VenueController extends Controller
     $venues_array = [];
     $town = "";
 
-    // determine location based on lat lng
-    if (isset($o) || (isset($lat) && isset($lng))) {
+    // get all venues
+    $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "phone", "place_id", "image", "photos", "rating"]);
 
-      // get all venues
-      $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "phone", "place_id", "image", "photos", "rating"]);
+    // determine location based on lat lng
+    if ($this->USE_GOOGLE === True && isset($o) || (isset($lat) && isset($lng))) {
 
       // set origin
       $origin = isset($o) ? $o : $lat . "," . $lng;
@@ -994,6 +1005,11 @@ class VenueController extends Controller
 
       // get user town
       $town = $this->get_town($origin);
+    } else {   // bring back random venues as we don't know location (no access to Google)
+
+      $venues_array = array_map(function ($v) use ($venues) {
+        return $venues[$v];
+      }, array_rand($venues->toArray(), 12));
     }
     // map venues to display fields
     $venues_array = array_map(function ($v) {
@@ -1050,14 +1066,13 @@ class VenueController extends Controller
         "account_link" => $account_link,
         "account" => $account_id
       ));
-    
+
       return response()->json(array(
         "success" => true,
         "venue_id" => $venue_id,
         "accountLink" => $account_link,
         "account" => $account_id
       ));
-      
     } else {
       return response("Unauthorized", 401);
     }

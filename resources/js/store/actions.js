@@ -4,11 +4,13 @@ import { handleError, getTokenHeader } from "../utils";
 
 let actions = {
     BOOTSTRAP_DATA_FETCH({ commit }, { queryString, user }) {
+        // TODO - uncomment to use location based caching
+        // const token = localStorage.getItem("homeToken") || "";
+        const token = null;
         axios
             .get(
                 `/api/${user.loggedIn ? "auth/" : ""
-                }load?${queryString}&c=${localStorage.getItem("homeToken") ||
-                ""}`,
+                }load?${queryString}&c=${token}`,
                 getTokenHeader(user)
             )
             .then(res => {
@@ -64,6 +66,7 @@ let actions = {
         commit("DATE_SET", date);
     },
     VENUE_TICKETS_GET({ commit }, { id, date, user }) {
+        commit("SET_LOADING", true);
         return axios
             .get(
                 `/api/${user.loggedIn ? "auth/" : ""
@@ -174,7 +177,7 @@ let actions = {
                 password_confirmation: confirm
             })
             .then(res => {
-               commit("REGISTER", res.data);
+                commit("REGISTER", res.data);
             })
             .catch(err => {
                 commit("REGISTER", {
@@ -202,7 +205,7 @@ let actions = {
             .catch(err => {
                 commit("SIGNUP", {
                     success: false,
-                    errors: [ err.response?.data?.message ],
+                    errors: [err.response?.data?.message],
                     data: err.response?.data
                 });
             });

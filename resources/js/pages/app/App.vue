@@ -57,7 +57,7 @@ export default {
           state.path === "signup" ||
           state.path === "signup/confirm"
         ) {
-          return `bg-cover bg-login bg-grey-100`;
+          return `bg-cover bg-login bg-bottom bg-grey-100`;
         }
         return "";
       },
@@ -78,7 +78,9 @@ export default {
     }),
   },
   mounted() {
-    this.getUserPosition();
+    this.getLocationData('');
+    // TODO - uncomment below line if wish to use location based services
+    // this.getUserPosition();
     this.getUserData();
     if (this.user.loggedIn) {
       this.getBasket();

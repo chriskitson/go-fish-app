@@ -178,7 +178,8 @@ let mutations = {
             ticketsLoaded: true,
             date
         };
-        // state.dateSearch = date;
+        state.loading = false;
+        state.dateSearch = date;
     },
     VENUE_TICKET_SET(state, ticket) {
         state.venueDetail = {

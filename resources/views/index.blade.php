@@ -36,11 +36,11 @@ if (isset($categoryid)) {
 $initial_state['path'] = Request::path();
 $initial_state['bookingFee'] = $_ENV['BOOKING_FEE'];
 if ($initial_state['path'] === 'signup' && Request::get('p') !== '') {
-    $initial_state['signupPlace'] = array(
-        "placeId" => Request::get('p'),
-        "address" => Request::get('a'),
-        "name" => Request::get('n')
-    );
+    $initial_state['signupPlace'] = [
+        'placeId' => Request::get('p'),
+        'address' => Request::get('a'),
+        'name' => Request::get('n'),
+    ];
 }
 $initial_state['allCategories'] = $venue->get_categories()->original;
 $page_title = $page->get_title($initial_state['path']);
@@ -56,16 +56,20 @@ $page_title = $page->get_title($initial_state['path']);
     @if (env('GOOGLE_ANALYTICS_TRACKING_KEY') != '')
         <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo env('GOOGLE_ANALYTICS_TRACKING_KEY'); ?>"></script>
         <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){window.dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '<?php echo env('GOOGLE_ANALYTICS_TRACKING_KEY'); ?>');
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                window.dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', '<?php echo env('GOOGLE_ANALYTICS_TRACKING_KEY'); ?>');
         </script>
     @endif
     <script defer src="{{ mix('js/app-client.js') }}"></script>
-    <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWyDnSq8kJoxf0zSdEQguVEgBBT6kuqUs&libraries=places" async
-        defer></script>
+    @if (env('GOOGLE_MAP_CLIENT_KEY') != '')
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo env('GOOGLE_MAP_CLIENT_KEY'); ?>&libraries=places"
+                async defer></script>
+    @endif
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 
@@ -78,7 +82,8 @@ $page_title = $page->get_title($initial_state['path']);
         window.__STRIPE_PK__ = '<?php echo $_ENV['STRIPE_KEY']; ?>';
     </script>
     @if (env('KLAVIYO_COMPANY') != '')
-        <script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=<?php echo env('KLAVIYO_COMPANY'); ?>"></script>
+        <script async type="text/javascript"
+                src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=<?php echo env('KLAVIYO_COMPANY'); ?>"></script>
     @endif
 </body>
 

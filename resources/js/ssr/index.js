@@ -5,9 +5,17 @@ export const bindState = (context, state, client) => {
             ...context.venueDetail,
         };
         if (context.venueDetail.date) {
+            const date = new Date(context.venueDetail.date);
             state.venueDetail = {
                 ...state.venueDetail,
-                date: new Date(context.venueDetail.date)
+                date
+            };
+            state.dateSearch = date;
+        }
+        if (context.venueDetail.name) {
+            state.venueSearch = {
+                ...state.venueSearch,
+                search: context.venueDetail.name
             };
         }
     }

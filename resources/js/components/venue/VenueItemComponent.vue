@@ -3,7 +3,7 @@
     :href="live ? `/venue/${venue.id}` : '#'"
     :class="`mb-4 flex items-end w-full h-48 p-3 ${
       live ? '' : 'bg-opacity-50 '
-    }bg-grey-300 bg-opacity-70 rounded-xl bg-cover`"
+    }bg-grey-300 bg-opacity-70 rounded-xl bg-cover bg-bottom`"
     :style="`background-image:url('${live ? venueImage : ''}')`"
   >
     <div v-if="live" class="flex flex-col flex-wrap">

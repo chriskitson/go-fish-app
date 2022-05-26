@@ -50,7 +50,7 @@
             <icon name="location-marker" class="w-4 h-4 mr-2" />
             Directions
           </a>
-   <a
+          <a
             :href="`https://search.google.com/local/writereview?placeid=${venueDetail.place_id}`"
             target="_blank"
             class="
@@ -133,14 +133,13 @@
           <ticket-list-component
             :title="ticketTitle"
             :tickets="venueDetail.tickets"
-            :live="venueDetail.ticketsLoaded"
+            :live="venueDetail.ticketsLoaded && !loading"
             :auth="false"
             :loggedIn="loggedIn"
             display="4"
             @book="bookTickets"
           ></ticket-list-component>
         </div>
-
         <div
           class="flex items-center mt-10 mb-10"
           v-if="
@@ -206,12 +205,13 @@ export default {
     VueMasonryWall,
   },
   data: () => ({
-    formatDateDisplayFromTime
+    formatDateDisplayFromTime,
   }),
   computed: {
     ...mapState({
       venues: (state) => state.venues,
       live: (state) => state.live,
+      loading: (state) => state.loading,
       basket: (state) => state.basket,
       venueDetail: (state) => state.venueDetail,
       loggedIn: (state) => state.user.loggedIn,
@@ -224,7 +224,11 @@ export default {
           : "No tickets available",
       currentDate: (state) => formatLongDateDisplay(state.venueDetail.date),
       directionsURL: (state) => {
-        return `https://www.google.com/maps/dir/?api=1&origin=${state.userPosition.town}&destination_place_id=${state.venueDetail.place_id}&destination=${state.venueDetail.address}`;
+        return `https://www.google.com/maps/dir/?api=1&origin=${
+          state.userPosition?.town || ""
+        }&destination_place_id=${state.venueDetail.place_id}&destination=${
+          state.venueDetail.address
+        }`;
       },
       photoGallery: (state) => {
         return state.venueDetail.photos?.length > 0

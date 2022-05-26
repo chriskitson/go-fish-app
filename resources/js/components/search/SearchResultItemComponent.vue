@@ -7,7 +7,7 @@
                         result.image ? result.image : ''
                     }')`
                 "
-                class="flex items-center w-48 h-32 mr-4 bg-cover bg-grey-200 justify-content"
+                class="flex items-center w-48 h-32 mr-4 bg-cover bg-bottom bg-grey-200 justify-content"
                 ></span
             >
         </a>

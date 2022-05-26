@@ -2,14 +2,13 @@
   <div
     class="
       my-5
-      bg-cover
+      bg-cover bg-bottom
       h-72
       rounded-xl
       flex
       items-center
       justify-center
-      bg-grey-300
-      bg-opacity-50
+      bg-grey-300 bg-opacity-50
     "
     :style="`background-image: url('${imageURL}');`"
   >
