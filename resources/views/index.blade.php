@@ -1,6 +1,5 @@
 @inject('venue', 'App\Http\Controllers\VenueController')
 @inject('page', 'App\Http\Controllers\PageController')
-@inject('basket', 'App\Http\Controllers\BasketController')
 @inject('register', 'App\Http\Controllers\RegisterController')
 @php
 $initial_state = [];
