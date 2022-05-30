@@ -54,6 +54,7 @@ export default {
       locationSearch: (state) => state.locationSearch,
       venueSearch: (state) => state.venueSearch,
       dateSearch: (state) => state.dateSearch,
+      path: (state) => state.path,
       bgColor: (state) => {
         if (
           state.path === "login" ||
@@ -88,6 +89,7 @@ export default {
     if (this.user.loggedIn) {
       this.getBasket();
     }
+    console.log(this.path);
   },
   methods: {
     getUserPosition() {

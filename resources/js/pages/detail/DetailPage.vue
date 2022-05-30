@@ -1,5 +1,11 @@
 <template>
   <div class="w-full max-w-5xl px-4 mx-auto">
+    <overlay-component
+      v-scroll-lock="true"
+      v-if="overlayShown"
+      :html="overlayContent"
+      @close="hideOverlay"
+    ></overlay-component>
     <div class="grid grid-cols-3 gap-6 mt-5 mb-20 md:mt-10">
       <div class="col-span-3 md:col-span-1">
         <div class="flex justify-center items-center">
@@ -205,13 +211,11 @@
             <icon name="chevron-right" class="w-5 h-5 ml-2 text-white" />
           </a>
         </div>
-
         <photos-component
           v-if="photoGallery && photoGallery.length > 0"
           :photos="photoGallery"
           :name="venueDetail.name"
         ></photos-component>
-
         <reviews-component
           v-if="venueDetail.reviews && venueDetail.reviews.length > 0"
           :name="venueDetail.name"
@@ -224,6 +228,7 @@
 
 <script>
 import ClientOnly from "vue-client-only";
+import VScrollLock from "v-scroll-lock";
 import VueMasonryWall from "vue-masonry-wall";
 import { mapState } from "vuex";
 import {
@@ -232,14 +237,17 @@ import {
   formatDateDisplayFromTime,
 } from "../../utils";
 import { trackViewedVenue } from "../../utils/klaviyo";
+import ModalComponent from "../../components/shared/ModalComponent.vue";
 export default {
   components: {
     ClientOnly,
     VueMasonryWall,
+    VScrollLock,
   },
   data: () => ({
     formatDateDisplayFromTime,
-    revealDetails: false,
+    overlayShown: false,
+    overlayContent: "bananananaassss adasdasdasd",
   }),
   computed: {
     ...mapState({
@@ -324,10 +332,16 @@ export default {
       this.getVenueTickets(this.venueDetail.id, date);
     },
     viewRules() {
-      console.log("view rules");
+      this.overlayContent = this.venueDetail.rules;
+      this.overlayShown = true;
     },
     viewDescription() {
-      console.log("view description");
+      this.overlayContent = this.venueDetail.description;
+      this.overlayShown = true;
+    },
+    hideOverlay() {
+      this.overlayContent = "";
+      this.overlayShown = false;
     },
   },
 };

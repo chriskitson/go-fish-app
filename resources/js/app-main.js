@@ -85,6 +85,11 @@ Vue.component(
 );
 
 Vue.component(
+    "overlay-component",
+    require("./components/shared/OverlayComponent.vue").default
+);
+
+Vue.component(
     "quantity-selector-component",
     require("./components/shared/QuantitySelectorComponent.vue").default
 );

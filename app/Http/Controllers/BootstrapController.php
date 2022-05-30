@@ -12,11 +12,13 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Traits\GoogleMapTrait;
+use App\Http\Traits\StripeTrait;
 
 class BootstrapController extends Controller
 {
 
   use GoogleMapTrait;
+  use StripeTrait;
 
   public $USE_GOOGLE = False;
 
@@ -139,10 +141,9 @@ class BootstrapController extends Controller
           "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
         ]);
         $cache->save();
-      
       } else {  // bring back random venues as we don't know location
 
-        $venues_random = array_map(function($v) use($venues) {
+        $venues_random = array_map(function ($v) use ($venues) {
           return $venues[$v];
         }, array_rand($venues->toArray(), 4));
 
@@ -151,7 +152,6 @@ class BootstrapController extends Controller
           "userPosition" => null,
           "token" => null
         );
-
       }
     }
 

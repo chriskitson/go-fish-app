@@ -122,5 +122,10 @@ trait StripeTrait
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
     return $client->subscriptions->cancel($id, []);
   }
-  
+
+  public function get_subscription_prices()
+  {
+    $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
+    return $client->prices->retrieve($_ENV["STRIPE_SUBSCRIPTION_PRODUCT_PRICES"], ['expand' => ['tiers']]);
+  }
 }

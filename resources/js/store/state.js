@@ -20,6 +20,7 @@ let state = {
     loading: false,
     path: "",
     bookingFee: 0,
+    prices: [],
     venues: [],
     categories: [],
     allCategories: [],

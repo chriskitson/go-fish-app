@@ -57,6 +57,9 @@ export const bindState = (context, state, client) => {
             address: context.signupPlace.address
         }
     }
+    if (context.prices) {
+        state.prices = context.prices;
+    }
     if (client) {
         state.user = {
             ...state.user,

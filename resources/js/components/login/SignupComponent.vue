@@ -70,17 +70,32 @@
         <p class="mb-4">Our pricing model is <strong>simple</strong>:</p>
         <ul class="list-inside list-disc mb-8 text-sm">
           <li>
-            You choose one of our
-            <a href="#" class="text-red-200">subscriptions</a> (from &pound;35
-            per month)
+            You pay a fixed monthly fee based on volume of tickets sold
           </li>
-          <li>GOFish collect <strong>&pound;1 booking fee</strong> for each ticket sold</li>
           <li>
-            Our payment partner (Stripe) collect <strong>1.4% + 20p</strong> (per transaction)
+            In addition GoFish collects <strong>&pound;1 booking fee</strong> for each ticket
+            sold
+          </li>
+          <li>
+            Our payment partner (Stripe) collects
+            <strong>1.4% + 20p</strong> (per transaction)
           </li>
           <li class="mt-4 italic">
-            E.g. &pound;10 ticket, GoFish collect &pound;1, Stripe collect 34p, you get &pound;8.66</li>
+            E.g. &pound;10 ticket, GoFish collect &pound;1, Stripe collect 34p,
+            you get &pound;8.66
+          </li>
         </ul>
+        <div class="bg-white p-4 mb-8 border-grey-300 border">
+          <p class="font-semibold mb-4 text-lg">Our low cost monthly fee:</p>
+          <table class="w-full">
+            <tbody>
+              <tr v-for="(price, i) in prices" :key="`price-${i}`">
+                <td>Up to {{ price.up_to ? price.up_to : 'unlimited' }} tickets sold</td>
+                <td>{{ formatCurrency(price.flat_amount / 100) }} per month</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <google-places-autocomplete
           class="w-full h-9x"
           :value="register.search"
@@ -132,16 +147,6 @@
           placeholder="Confirm Password"
           v-model="register.confirm"
         />
-        <select
-          name="subscription"
-          class="block w-full p-3 mb-4 text-sm border rounded border-grey-100"
-          v-model="register.subscription"
-        >
-          <option value="lite">
-            Fishery Manager - Lite - &pound;35 per month
-          </option>
-        </select>
-
         <button
           type="submit"
           :disabled="loading"
@@ -189,8 +194,12 @@
 
 <script>
 import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
+import { formatCurrency } from "../../utils";
 export default {
-  props: ["register", "loggedIn", "loading"],
+  props: ["register", "loggedIn", "loading", "prices"],
+  data: () => ({
+    formatCurrency,
+  }),
   components: {
     GooglePlacesAutocomplete,
   },
@@ -205,6 +214,6 @@ export default {
       this.register.placeId = place_id;
       this.register.address = formatted_address;
     },
-  }
+  },
 };
 </script>

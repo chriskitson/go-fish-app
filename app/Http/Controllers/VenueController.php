@@ -1025,7 +1025,7 @@ class VenueController extends Controller
     if ($is_admin || $is_global_admin && ($venue_id === $id)) {
 
       // create stripe subscription checkout session (for monthly fee to GOFish)
-      $checkout_session_id = $this->create_gofish_subscription(env("STRIPE_SUBSCRIPTION_PRODUCT_LITE"), $venue_id, $user_email);
+      $checkout_session_id = $this->create_gofish_subscription(env("STRIPE_SUBSCRIPTION_PRODUCT_PRICES"), $venue_id, $user_email);
 
       // get venue info
       $venue = Venue::find($venue_id);

@@ -1,6 +1,7 @@
 @inject('venue', 'App\Http\Controllers\VenueController')
 @inject('page', 'App\Http\Controllers\PageController')
 @inject('basket', 'App\Http\Controllers\BasketController')
+@inject('register', 'App\Http\Controllers\RegisterController')
 @php
 $initial_state = [];
 // pre-fetch venue data server side
@@ -43,6 +44,8 @@ if ($initial_state['path'] === 'signup' && Request::get('p') !== '') {
     ];
 }
 $initial_state['allCategories'] = $venue->get_categories()->original;
+$initial_state['prices'] = $register->get_prices();
+
 $page_title = $page->get_title($initial_state['path']);
 @endphp
 <!doctype html>

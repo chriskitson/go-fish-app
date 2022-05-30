@@ -6,6 +6,7 @@
         :register="signupForm"
         :loggedIn="loggedIn"
         :loading="loading"
+        :prices="prices"
         @register="register"
       ></signup-component>
 
@@ -44,6 +45,7 @@ export default {
       signupForm: (state) => state.signupForm,
       loggedIn: (state) => state.user.loggedIn,
       loading: (state) => state.loading,
+      prices: (state) => state.prices,
     }),
   },
   methods: {

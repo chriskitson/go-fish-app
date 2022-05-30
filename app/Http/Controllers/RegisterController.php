@@ -247,4 +247,11 @@ class RegisterController extends Controller
       ]);
     }
   }
+
+  public function get_prices()
+  {
+    $pricing_tiers =  $this->get_subscription_prices();
+    return $pricing_tiers->tiers;
+  }
+
 }
