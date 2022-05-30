@@ -18,7 +18,7 @@
     </h2>
     <div
       :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4`"
-      v-if="live && venues"
+      v-if="live && !loading && venues"
     >
       <venue-item-component
         v-for="(venue, i) in venues"
@@ -27,15 +27,15 @@
         :venue="venue"
       ></venue-item-component>
     </div>
-    <p v-if="live && venues.length === 0">
-      There are no venues currently listed in {{category}}
+    <p v-if="live && !loading && venues.length === 0">
+      There are no venues currently listed in {{ category }}
     </p>
     <div
       :class="`grid w-full grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4`"
-      v-if="!live"
+      v-if="!live || loading"
     >
       <venue-item-component
-        :live="live"
+        :live="false"
         v-for="index in display"
         :key="`temp-${index}`"
       ></venue-item-component>
@@ -45,6 +45,14 @@
 
 <script>
 export default {
-  props: ["title", "venues", "live", "userPosition", "display", "category"],
+  props: [
+    "title",
+    "venues",
+    "live",
+    "userPosition",
+    "display",
+    "category",
+    "loading",
+  ],
 };
 </script>

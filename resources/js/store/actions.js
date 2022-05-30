@@ -39,6 +39,7 @@ let actions = {
             });
     },
     VENUES_NEAR({ commit }, { queryString, user }) {
+        commit("SET_LOADING", true);
         axios
             .get(
                 `/api/${user.loggedIn ? "auth/" : ""

@@ -13,6 +13,7 @@
       category="my area"
       :venues="venues"
       :live="live"
+      :loading="loading"
       :userPosition="userPosition"
       :display="4"
       @showLocation="showLocationSearch"
@@ -22,11 +23,6 @@
       :categories="categories"
       :live="true"
     ></category-list-component>
-    <!-- <category-list-component
-            title="How do you GoFish?"
-            :categories="types"
-            :live="true"
-        ></category-list-component> -->
   </div>
 </template>
 
@@ -37,6 +33,7 @@ export default {
     ...mapState({
       venues: (state) => state.venues,
       live: (state) => state.live,
+      loading: (state) => state.loading,
       userPosition: (state) => state.userPosition,
       locationSearch: (state) => state.locationSearch,
       venueDetail: (state) => state.venueDetail,

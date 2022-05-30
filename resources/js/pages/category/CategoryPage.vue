@@ -9,6 +9,7 @@
             :category="venueCategoryDetail.name"
             :venues="venueCategory"
             :live="true"
+            :loading="loading"
             :display="12"
             :userPosition="
                 venueCategoryDetail.id !== 'near' ? null : userPosition
@@ -24,6 +25,7 @@ export default {
     computed: {
         ...mapState({
             live: state => state.live,
+            loading: state => state.loading,
             venueCategory: state => state.venueCategory,
             venueCategoryDetail: state => state.venueCategoryDetail,
             userPosition: state => state.userPosition,
