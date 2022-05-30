@@ -1,16 +1,16 @@
 <template>
   <div
-    class="
-      my-5
-      bg-cover bg-bottom
+    :class="`my-5
+      bg-cover bg-${position === 'center' || position === 'center' ? '' : ''}${
+      position === 'bottom' ? 'bottom' : ''
+    }${position === 'top' ? 'top' : ''}
       h-72
       rounded-xl
       flex
       items-center
       justify-center
-      bg-grey-300 bg-opacity-50
-    "
-    :style="`background-image: url('${imageURL}');`"
+      bg-grey-300 bg-opacity-50 bg-login`"
+    :style="`background-image:url('${imageURL}')`"
   >
     <span
       v-if="message && message !== ''"
@@ -23,6 +23,6 @@
 
 <script>
 export default {
-  props: ["imageURL", "message"],
+  props: ["imageURL", "message", "position"],
 };
 </script>

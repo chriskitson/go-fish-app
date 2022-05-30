@@ -11,7 +11,10 @@
       @logout="logout"
       @cache="clearCache"
     ></header-component>
-    <div class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100" v-if="showSearch">
+    <div
+      class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100 hidden md:block"
+      v-if="showSearch"
+    >
       <top-search-component
         :venueSearch="venueSearch"
         :date="dateSearch"
@@ -78,7 +81,7 @@ export default {
     }),
   },
   mounted() {
-    this.getLocationData('');
+    this.getLocationData("");
     // TODO - uncomment below line if wish to use location based services
     // this.getUserPosition();
     this.getUserData();

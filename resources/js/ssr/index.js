@@ -15,7 +15,8 @@ export const bindState = (context, state, client) => {
         if (context.venueDetail.name) {
             state.venueSearch = {
                 ...state.venueSearch,
-                search: context.venueDetail.name
+                search: context.venueDetail.name,
+
             };
         }
     }

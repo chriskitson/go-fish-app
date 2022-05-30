@@ -121,10 +121,10 @@ class VenueController extends Controller
     // is venue managed?
     $venue_user = User::where("venue_id", "=", $venue->id);
     $venue_managed = $venue_user->count() > 0 && $venue_user->first()->hasVerifiedEmail();
+
     // clean up fields for display
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
-
     // get reviews and photos (cached in db)
     $venue_data = Venue::find($id, ["photos", "reviews"]);
     $venue->photos = json_decode($venue_data->photos);
@@ -807,8 +807,6 @@ class VenueController extends Controller
             return false;
           }
         }));
-
-
       } else {
         $venues = [];
       }

@@ -1,23 +1,25 @@
 <template>
   <div class="w-full max-w-5xl px-4 mx-auto">
-    <div class="grid grid-cols-3 gap-6 mt-10 mb-20">
+    <div class="grid grid-cols-3 gap-6 mt-5 mb-20 md:mt-10">
       <div class="col-span-3 md:col-span-1">
-        <img
-          v-if="venueDetail.image"
-          :src="venueDetail.image"
-          class="w-full mb-5 rounded-md"
-          :alt="`${venueDetail.name} image`"
-        />
-        <img
-          v-if="
-            !venueDetail.image &&
-            venueDetail.photos &&
-            venueDetail.photos.length > 0
-          "
-          :src="venueDetail.photos[0].url"
-          class="w-full mb-5 rounded-md"
-          :alt="`${venueDetail.name} image`"
-        />
+        <div class="flex justify-center items-center">
+          <img
+            v-if="venueDetail.image"
+            :src="venueDetail.image"
+            class="w-auto mb-5 rounded-md max-h-40 md:w-full md:max-h-full"
+            :alt="`${venueDetail.name} image`"
+          />
+          <img
+            v-if="
+              !venueDetail.image &&
+              venueDetail.photos &&
+              venueDetail.photos.length > 0
+            "
+            :src="venueDetail.photos[0].url"
+            class="w-auto mb-5 rounded-md max-h-40 md:w-full md:max-h-full"
+            :alt="`${venueDetail.name} image`"
+          />
+        </div>
         <div class="flex items-center text-xs text-gold">
           <rating-component
             :current="venueDetail.rating || 0"
@@ -26,10 +28,24 @@
           {{ venueDetail.rating || 0 }} / 5
         </div>
         <h1 class="text-xl font-semibold">{{ venueDetail.name }}</h1>
-        <p class="mb-10 text-sm font-semibold">
+        <p class="mb-2 md:mb-10 text-sm font-semibold">
           {{ venueDetail.address }}
         </p>
-        <p class="text-sm" v-html="venueDetail.description"></p>
+        <p class="text-sm hidden md:block" v-html="venueDetail.description"></p>
+        <div class="block md:hidden">
+          <span
+            class="text-sm"
+            v-html="
+              venueDetail.description.length > 100
+                ? `${venueDetail.description.substring(0, 100)}...`
+                : venueDetail.description
+            "
+          ></span>
+          <button @click="viewDescription()" class="text-sm text-red-200">
+            Read more
+          </button>
+        </div>
+
         <div class="flex mt-5">
           <a
             :href="directionsURL"
@@ -69,9 +85,26 @@
             <icon name="pencil" class="w-4 h-4 mr-2" />
             Review
           </a>
+          <button
+            @click="viewRules()"
+            class="
+              flex
+              items-center
+              justify-center
+              px-3
+              py-1
+              mr-2
+              text-sm text-white
+              bg-red-200
+              rounded-lg
+            "
+          >
+            <icon name="view-list" class="w-4 h-4 mr-2" />
+            Rules
+          </button>
         </div>
         <div
-          class="p-5 mt-10 border border-grey-200 text-grey-300"
+          class="p-5 mt-10 border border-grey-200 text-grey-300 hidden md:block"
           v-if="venueDetail.rules !== ''"
         >
           <h2 class="mb-2 font-semibold">Rules</h2>
@@ -206,6 +239,7 @@ export default {
   },
   data: () => ({
     formatDateDisplayFromTime,
+    revealDetails: false,
   }),
   computed: {
     ...mapState({
@@ -288,6 +322,12 @@ export default {
       const today = new Date(this.venueDetail.date);
       const date = new Date(today.getTime() + 24 * 60 * 60 * 1000);
       this.getVenueTickets(this.venueDetail.id, date);
+    },
+    viewRules() {
+      console.log("view rules");
+    },
+    viewDescription() {
+      console.log("view description");
     },
   },
 };
