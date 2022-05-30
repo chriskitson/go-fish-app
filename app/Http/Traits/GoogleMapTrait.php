@@ -41,19 +41,6 @@ trait GoogleMapTrait
     return $response["results"][0]["formatted_address"];
   }
 
-  public function get_address_data($origin, $key = "latlng")
-  {
-    // Ref: https://github.com/alexpechkarev/google-maps
-    // get user location based on lat lng
-    $response = \GoogleMaps::load('geocoding')
-      ->setParamByKey($key, $origin)
-      ->get('results');
-    if (isset($response["results"]) && count($response["results"]) > 0) {
-      return $response["results"][0];
-    }
-    return null;
-  }
-
   public function calculate_distances($origin, $destinations)
   {
     // use google apis to get distances

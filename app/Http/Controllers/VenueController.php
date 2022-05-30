@@ -124,7 +124,7 @@ class VenueController extends Controller
     // clean up fields for display
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
-    
+
     // get reviews and photos (cached in db)
     $venue_data = Venue::find($id, ["photos", "reviews"]);
     $venue->photos = json_decode($venue_data->photos);
@@ -313,7 +313,6 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-    
     } elseif ($this->USE_GOOGLE === True) { // look up location based data search results
 
       // get search by place_id
@@ -392,7 +391,6 @@ class VenueController extends Controller
 
       // read results back from cache (better performance)
       $results = json_decode($cache->data);
-    
     } else {  // no access to Google or cache, so no results returned
       $search = "";
       $results = [];
@@ -787,56 +785,30 @@ class VenueController extends Controller
         $category_key = $category->key;
         $category_value = $category->value;
 
-        // are results older than cache amount
-        if (time() - strtotime($category->results_updated) > $_ENV["CACHE_CATEGORIES"] && env('OFFLINE_MODE', True) === False) {
+        // get all venues
+        $venues = Venue::where([
+          ["active", "=", 1],
+          ["deleted", "=", 0]
+        ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
 
-          // get all venues
-          $venues = Venue::where([
-            ["place_id", "!=", ""],
-            ["deleted", "=", 0]
-          ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
-
-          // loop through all venues
-          foreach ($venues as $venue) {
-            // check if meta exist (if not, then fetch and save for future use)
-            if ((!isset($venue->place_meta) || $venue->place_meta === "") && $this->USE_GOOGLE === True) {
-              $place_meta = json_encode($this->get_address_data($venue["place_id"], "place_id"));
-              $venue["place_meta"] = $place_meta;
-              Venue::where([
-                ["id", "=", $venue["id"]]
-              ])->update(array(
-                "place_meta" => $place_meta
-              ));
-            }
+        // filter venues based on location category
+        $venues = array_values(array_filter($venues, function ($venue) use ($category_key, $category_value) {
+          $place_meta = json_decode($venue["place_meta"]);
+          if (isset($place_meta) && $place_meta !== "") {
+            $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
+              return in_array($category_key, $component->types);
+            }));
+          } else {
+            $place_component_match = null;
           }
+          if ($place_component_match) {
+            return $place_component_match->long_name === $category_value;
+          } else {
+            return false;
+          }
+        }));
 
-          // filter venues based on location category
-          $venues = array_filter($venues, function ($venue) use ($category_key, $category_value) {
-            $place_meta = json_decode($venue["place_meta"]);
-            if (isset($place_meta) && $place_meta !== "") {
-              $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
-                return in_array($category_key, $component->types);
-              }));
-            } else {
-              $place_component_match = null;
-            }
-            if ($place_component_match) {
-              return $place_component_match->long_name === $category_value;
-            } else {
-              return false;
-            }
-          });
 
-          // cache results
-          Category::find($id)->update(array(
-            "results" => json_encode($venues),
-            "results_updated" => Carbon::now()
-          ));
-        } else {
-
-          // use cached results 
-          $venues = json_decode($category->results);
-        }
       } else {
         $venues = [];
       }
@@ -872,6 +844,7 @@ class VenueController extends Controller
         "rating" => $v["rating"]
       );
     }, (array)$venues);
+
     return response()->json($venues);
   }
 

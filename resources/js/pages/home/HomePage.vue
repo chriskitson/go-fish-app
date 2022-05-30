@@ -5,7 +5,12 @@
       message="The fastest and easiest way to book your next fishing trip!"
     ></home-banner-component>
     <venue-list-component
-      :title="userPosition === null ? 'Fisheries in Northern Ireland' : 'Fisheries near me'"
+      :title="
+        userPosition === null
+          ? 'Fisheries in Northern Ireland'
+          : 'Fisheries near me'
+      "
+      category="my area"
       :venues="venues"
       :live="live"
       :userPosition="userPosition"

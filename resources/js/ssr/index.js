@@ -38,7 +38,7 @@ export const bindState = (context, state, client) => {
     if (context.manageVenues) {
         state.manageVenues = context.manageVenues;
     }
-    if (context.venueCategory) {
+    if (context.venueCategory && context.venueCategory.length > 0) {
         state.venueCategory = context.venueCategory;
     }
     if (context.venueCategoryDetail) {

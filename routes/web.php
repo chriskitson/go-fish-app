@@ -40,6 +40,10 @@ Route::get('/basket', function () {
     return view('index');
 });
 
+Route::get('/search', function () {
+    return view('index');
+});
+
 Route::get('/search/{date}/{location}', function ($date, $location) {
     return view('index', ['date' => $date, 'location' => $location]);
 });

@@ -1,0 +1,32 @@
+<template>
+    <div class="w-full max-w-5xl mx-auto">
+        <div class="grid grid-cols-4 gap-6 px-4 mt-10 mb-20">
+            <div class="col-span-4">
+                <search-result-list-component
+                    :results="venueSearchResults"
+                    :title="title"
+                    :date="dateSearch"
+                    :dateStamp="dateStamp"
+                ></search-result-list-component>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+import { formatDateDisplay } from "../../utils";
+export default {
+    computed: {
+        ...mapState({
+            venues: state => state.venues,
+            live: state => state.live,
+            venueDetail: state => state.venueDetail,
+            venueSearchResults: state => state.venueSearchResults,
+            title: state => state.venueSearch.search !== '' ? `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:` : '',
+            dateSearch: state => formatDateDisplay(state.dateSearch),
+            dateStamp: state => state.dateSearch.getTime()
+        })
+    }
+};
+</script>

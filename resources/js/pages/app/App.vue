@@ -174,9 +174,7 @@ export default {
         name: "Join GoFish",
       },
       {
-        url: `/search/${new Date(
-          new Date().setDate(new Date().getDate() + 1)
-        ).getTime()}/ChIJO4rQ1_3_YEgRMcXH7ywWVy4`,
+        url: "/search",
         name: "Search",
       },
       {

@@ -1,32 +1,12 @@
 <template>
-    <div class="w-full max-w-5xl mx-auto">
-        <div class="grid grid-cols-4 gap-6 px-4 mt-10 mb-20">
-            <div class="col-span-4">
-                <search-result-list-component
-                    :results="venueSearchResults"
-                    :title="title"
-                    :date="dateSearch"
-                    :dateStamp="dateStamp"
-                ></search-result-list-component>
-            </div>
-        </div>
-    </div>
+  <div class="w-full max-w-5xl px-4 mx-auto">
+    <home-banner-component
+      imageURL="/images/bg2.jpg"
+      message="Find your next fishing venue to GoFish!"
+    ></home-banner-component>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { formatDateDisplay } from "../../utils";
-export default {
-    computed: {
-        ...mapState({
-            venues: state => state.venues,
-            live: state => state.live,
-            venueDetail: state => state.venueDetail,
-            venueSearchResults: state => state.venueSearchResults,
-            title: state => `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:`,
-            dateSearch: state => formatDateDisplay(state.dateSearch),
-            dateStamp: state => state.dateSearch.getTime()
-        })
-    }
-};
+export default {};
 </script>

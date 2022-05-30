@@ -2,9 +2,11 @@
     <div class="w-full max-w-5xl px-4 mx-auto">
         <home-banner-component
             :imageURL="venueCategoryDetail.image"
+            :message="venueCategoryDetail.name"
         ></home-banner-component>
         <venue-list-component
             :title="categoryTitle"
+            :category="venueCategoryDetail.name"
             :venues="venueCategory"
             :live="true"
             :display="12"

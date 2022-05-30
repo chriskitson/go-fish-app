@@ -144,5 +144,5 @@ INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Lisburn and Castlerea
 INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Newry, Mourne and Down', 'administrative_area_level_2', 'Newry, Mourne and Down');
 
 -- 30/05/22
-ALTER TABLE `venues` 
-ADD COLUMN `places_updated_at` TIMESTAMP NULL AFTER `account_payment_reference`;
+SET SQL_SAFE_UPDATES = 0;
+UPDATE venues SET place_data_updated = NULL;
