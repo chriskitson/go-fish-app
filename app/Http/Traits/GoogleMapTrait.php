@@ -54,20 +54,6 @@ trait GoogleMapTrait
     return null;
   }
 
-  public function get_place_data($place_id)
-  {
-    // use google apis to get distances
-    $key = env('GOOGLE_MAP_SERVER_KEY', '');
-    $detail_res = Http::get("https://maps.googleapis.com/maps/api/place/details/json?place_id=" . $place_id . "&key=" . $key);
-    return $detail_res->json();
-  }
-
-  public function get_place_photo($reference, $maxWidth = 400, $maxHeight = 300)
-  {
-    $key = env('GOOGLE_MAP_SERVER_KEY', '');
-    return "https://maps.googleapis.com/maps/api/place/photo?maxHeight=" . $maxHeight . "&maxwidth=" . $maxWidth . "&photo_reference=" . $reference . "&key=" . $key;
-  }
-
   public function calculate_distances($origin, $destinations)
   {
     // use google apis to get distances

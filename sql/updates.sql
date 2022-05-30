@@ -133,3 +133,16 @@ UPDATE `categories` SET `image` = '/images/locations/mid-ulster.jpg' WHERE (`id`
 UPDATE `categories` SET `image` = '/images/locations/ards-north-down.jpg' WHERE (`id` = '3');
 UPDATE `categories` SET `image` = '/images/locations/caueway-coast.jpg' WHERE (`id` = '4');
 UPDATE `categories` SET `image` = '/images/locations/northern-ireland.jpg' WHERE (`id` = '5');
+
+-- 26/05/22
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Antrim and Newtownabbey', 'administrative_area_level_2', 'Antrim and Newtownabbey');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Armagh City, Banbridge and Craigavon', 'administrative_area_level_2', 'Armagh City, Banbridge and Craigavon');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Belfast City', 'administrative_area_level_2', 'Belfast City');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Derry City and Strabane', 'administrative_area_level_2', 'Derry City and Strabane');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Fermanagh and Omagh', 'administrative_area_level_2', 'Fermanagh and Omagh');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Lisburn and Castlereagh', 'administrative_area_level_2', 'Lisburn and Castlereagh');
+INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Newry, Mourne and Down', 'administrative_area_level_2', 'Newry, Mourne and Down');
+
+-- 30/05/22
+ALTER TABLE `venues` 
+ADD COLUMN `places_updated_at` TIMESTAMP NULL AFTER `account_payment_reference`;

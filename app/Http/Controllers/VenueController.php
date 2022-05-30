@@ -34,8 +34,7 @@ class VenueController extends Controller
    */
   public function __construct()
   {
-    // $this->USE_GOOGLE = env('GOOGLE_ENABLE', False);
-    $this->USE_GOOGLE = False;
+    $this->USE_GOOGLE = env('GOOGLE_ENABLE', False);
   }
 
   public function check_in_range($start_date, $end_date, $date)
@@ -125,48 +124,12 @@ class VenueController extends Controller
     // clean up fields for display
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
-    if (isset($venue->place_id) && env('OFFLINE_MODE', True) === False) {  // get more info about place from Google
-      if ($this->USE_GOOGLE === True && (time() - strtotime($venue->place_data_updated) > $_ENV["CACHE_PLACE_DATA"])) { // fetch new data
-        $place_detail = $this->get_place_data($venue->place_id);
-        if (isset($place_detail["result"])) {
-          if (isset($place_detail["result"]["rating"])) {
-            $venue->rating = $place_detail["result"]["rating"];
-          }
-          // TODO - encode these objects so they work
-          // if (isset($place_detail["result"]["reviews"])) {
-          //   $venue->reviews = $place_detail["result"]["reviews"];
-          // }
-          if (isset($place_detail["result"]["photos"])) {
-            $venue_photos = array_map(function ($v) {
-              return array(
-                "url" => $this->get_place_photo($v["photo_reference"], 650)
-              );
-            }, $place_detail["result"]["photos"]);
-            $venue->photos = $venue_photos;
-          } else {
-            $venue->photos = [];
-          }
-          if (isset($place_detail["result"]["reviews"])) {
-            $venue_reviews = array_map(function ($r) {
-              return array(
-                "name" => $r["author_name"],
-                "text" => $this->clean_web($r["text"]),
-                "rating" => $r["rating"],
-                "time" => $r["time"]
-              );
-            }, $place_detail["result"]["reviews"]);
-            $venue->reviews = $venue_reviews;
-          } else {
-            $venue->reviews = [];
-          }
-          $venue->save();
-        } else {  // use existing data from database
-          $venue_data = Venue::find($id, ["photos", "reviews"]);
-          $venue->photos = json_decode($venue_data->photos);
-          $venue->reviews = json_decode($venue_data->reviews);
-        }
-      }
-    }
+    
+    // get reviews and photos (cached in db)
+    $venue_data = Venue::find($id, ["photos", "reviews"]);
+    $venue->photos = json_decode($venue_data->photos);
+    $venue->reviews = json_decode($venue_data->reviews);
+
     $venue["managed"] = $venue_managed;
     $venue["ticket_count"] = Ticket::where([
       ["venue_id", "=", $venue->id]
