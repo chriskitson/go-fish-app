@@ -1,7 +1,7 @@
 <template>
   <div class="w-full max-w-5xl px-4 mx-auto">
     <home-banner-component
-      imageURL="/images/bg2.jpg"
+      imageURL="/images/bg3.jpg"
       message="The fastest and easiest way to book your next fishing trip!"
     ></home-banner-component>
     <venue-list-component

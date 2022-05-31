@@ -253,8 +253,8 @@ class RegisterController extends Controller
 
   public function get_prices()
   {
-    $pricing_tiers =  $this->get_subscription_prices();
-    return $pricing_tiers->tiers;
+    $pricing_tiers =  current($this->get_subscription_prices()->data)["tiers"];
+    return $pricing_tiers;
   }
 
 }

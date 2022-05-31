@@ -18145,6 +18145,10 @@ video {
   background-image: url('/images/bg2.jpg');
 }
 
+.bg-banner-2 {
+  background-image: url('/images/bg3.jpg');
+}
+
 .from-transparent {
   --tw-gradient-from: transparent;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -50829,6 +50833,10 @@ body {
     background-image: url('/images/bg2.jpg');
   }
 
+  .sm\:bg-banner-2 {
+    background-image: url('/images/bg3.jpg');
+  }
+
   .sm\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -83354,6 +83362,10 @@ body {
 
   .md\:bg-banner-1 {
     background-image: url('/images/bg2.jpg');
+  }
+
+  .md\:bg-banner-2 {
+    background-image: url('/images/bg3.jpg');
   }
 
   .md\:from-transparent {
@@ -115883,6 +115895,10 @@ body {
     background-image: url('/images/bg2.jpg');
   }
 
+  .lg\:bg-banner-2 {
+    background-image: url('/images/bg3.jpg');
+  }
+
   .lg\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -148410,6 +148426,10 @@ body {
     background-image: url('/images/bg2.jpg');
   }
 
+  .xl\:bg-banner-2 {
+    background-image: url('/images/bg3.jpg');
+  }
+
   .xl\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -180935,6 +180955,10 @@ body {
 
   .\32xl\:bg-banner-1 {
     background-image: url('/images/bg2.jpg');
+  }
+
+  .\32xl\:bg-banner-2 {
+    background-image: url('/images/bg3.jpg');
   }
 
   .\32xl\:from-transparent {

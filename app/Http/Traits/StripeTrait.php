@@ -126,6 +126,9 @@ trait StripeTrait
   public function get_subscription_prices()
   {
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
-    return $client->prices->retrieve($_ENV["STRIPE_SUBSCRIPTION_PRODUCT_PRICES"], ['expand' => ['tiers']]);
+    // look up default prices for product
+
+    //STRIPE_SUBSCRIPTION_PRODUCT
+    return $client->prices->all(['product' => env('STRIPE_SUBSCRIPTION_PRODUCT'), 'expand' => ['data.tiers']]);
   }
 }
