@@ -51,6 +51,7 @@
             @setTab="setTab"
           ></manage-tabs-component>
         </div>
+
         <manage-details-component
           v-if="venueManageTab === manageTabs.DETAILS"
           :loading="loading"
@@ -99,6 +100,7 @@
           v-if="venueManageTab === manageTabs.SUBSCRIPTION"
           :venue="venue"
           :loading="loading"
+          :prices="prices"
           @create="subscriptionCreate"
           @cancel="subscriptionCancel"
         ></manage-subscription-component>
@@ -164,6 +166,7 @@ export default {
       venueSearch: (state) => state.venueSearch,
       venueManageClosed: (state) => state.venueManageClosed,
       venueManageTab: (state) => state.venueManageTab,
+      prices: (state) => state.prices
     }),
   },
   data: () => {

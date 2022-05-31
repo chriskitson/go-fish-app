@@ -89,7 +89,6 @@ export default {
     if (this.user.loggedIn) {
       this.getBasket();
     }
-    console.log(this.path);
   },
   methods: {
     getUserPosition() {

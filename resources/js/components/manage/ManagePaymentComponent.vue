@@ -1,6 +1,7 @@
 <template>
   <div class="mb-8">
     <h3 class="my-8 text-xl font-semibold text-red-200">Payment</h3>
+    <p class="mb-8">Set up or manage your payment information through our payment partner Stripe.</p>
     <div class="md:grid md:grid-cols-2 md:gap-6">
       <div class="mb-8 md:mb-0">
         <label class="block mb-2 font-semibold text-grey-300"

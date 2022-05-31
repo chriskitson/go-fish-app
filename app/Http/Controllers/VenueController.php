@@ -487,7 +487,6 @@ class VenueController extends Controller
         "image" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
-        "phone" => ["required", "string", "max:45"],
         "place_id" => ["required", "string", "max:45"],
       ];
 
@@ -548,7 +547,6 @@ class VenueController extends Controller
         "description" => ["required", "string"],
         "rules" => ["required", "string"],
         "address" => ["required", "string", "max:255"],
-        "phone" => ["required", "string", "max:45"],
         "place_id" => ["required", "string", "max:45"],
       ];
 

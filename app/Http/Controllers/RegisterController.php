@@ -222,6 +222,9 @@ class RegisterController extends Controller
         "account_link" => $account_link
       ));
 
+      // generate account link from venue page
+      $account_link = env('APP_URL', '') . '/manage-venues/' . $venue->id . '?tab=Payment';
+
       if (env('KLAVIYO_FISHERY_LIST', '') !== '') {
         $list_id = env('KLAVIYO_FISHERY_LIST');
         $first_name = $this->split_name($name)[0];

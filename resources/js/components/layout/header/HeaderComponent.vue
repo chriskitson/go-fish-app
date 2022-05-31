@@ -45,13 +45,13 @@
             v-if="!user.loggedIn"
             >Login | Register</a
           >
-          <button
+          <!-- <button
             @click="$emit('cache')"
             v-if="user.loggedIn && user.globalAdmin"
             class="ml-6 text-sm text-white"
           >
             Clear Cache
-          </button>
+          </button> -->
           <a
             class="ml-6 text-sm text-white"
             v-if="user.loggedIn && user.globalAdmin"

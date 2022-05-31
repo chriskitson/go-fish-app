@@ -539,7 +539,6 @@ let actions = {
                 getTokenHeader(user)
             )
             .then(res => {
-                console.log(res.data);
                 commit("STRIPE_ACCOUNT_CREATE", res.data);
             })
             .catch(err => {

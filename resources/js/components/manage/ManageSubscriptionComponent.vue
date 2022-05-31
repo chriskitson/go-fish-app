@@ -1,6 +1,19 @@
 <template>
   <div class="mb-8">
     <h3 class="my-8 text-xl font-semibold text-red-200">Subscription</h3>
+    <p class="mb-8">
+      You will be billed according to how many tickets you sell per month:
+    </p>
+    <table class="w-full mb-8 text-red-200">
+      <tbody>
+        <tr v-for="(price, i) in prices" :key="`price-${i}`">
+          <td>
+            Up to {{ price.up_to ? price.up_to : "unlimited" }} tickets sold
+          </td>
+          <td>{{ formatCurrency(price.flat_amount / 100) }} per month</td>
+        </tr>
+      </tbody>
+    </table>
     <div v-if="venue.subscription.confirmed">
       <p class="mb-8">
         You have an active
@@ -59,7 +72,7 @@
 <script>
 import { formatCurrency } from "../../utils";
 export default {
-  props: ["loading", "venue"],
+  props: ["loading", "venue", "prices"],
   data: () => ({
     formatCurrency,
   }),
