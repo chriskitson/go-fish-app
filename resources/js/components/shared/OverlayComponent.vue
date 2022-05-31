@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 z-10 overflow-y-auto w-full h-full"
+    class="fixed inset-0 z-10 overflow-y-auto w-full"
     aria-labelledby="modal-title"
     role="dialog"
     aria-modal="true"
@@ -16,7 +16,6 @@
         pb-20
         text-center
         sm:block sm:p-0
-        h-full
         w-full
       "
     >
@@ -51,7 +50,7 @@
           >
             <icon name="x" class="w-6 h-6" />
           </button>
-          <div v-html="html"></div>
+          <div v-html="html" class="pt-8"></div>
         </div>
       </div>
     </div>

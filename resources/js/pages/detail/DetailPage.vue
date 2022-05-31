@@ -1,7 +1,6 @@
 <template>
   <div class="w-full max-w-5xl px-4 mx-auto">
     <overlay-component
-      v-scroll-lock="true"
       v-if="overlayShown"
       :html="overlayContent"
       @close="hideOverlay"
@@ -228,7 +227,6 @@
 
 <script>
 import ClientOnly from "vue-client-only";
-import VScrollLock from "v-scroll-lock";
 import VueMasonryWall from "vue-masonry-wall";
 import { mapState } from "vuex";
 import {
@@ -237,12 +235,10 @@ import {
   formatDateDisplayFromTime,
 } from "../../utils";
 import { trackViewedVenue } from "../../utils/klaviyo";
-import ModalComponent from "../../components/shared/ModalComponent.vue";
 export default {
   components: {
     ClientOnly,
-    VueMasonryWall,
-    VScrollLock,
+    VueMasonryWall
   },
   data: () => ({
     formatDateDisplayFromTime,

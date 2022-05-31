@@ -166,7 +166,7 @@ export default {
       venueSearch: (state) => state.venueSearch,
       venueManageClosed: (state) => state.venueManageClosed,
       venueManageTab: (state) => state.venueManageTab,
-      prices: (state) => state.prices
+      prices: (state) => state.prices,
     }),
   },
   data: () => {
