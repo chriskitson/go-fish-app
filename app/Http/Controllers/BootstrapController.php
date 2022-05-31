@@ -93,54 +93,57 @@ class BootstrapController extends Controller
       // determine location based on lat lng if supplied
       if ($this->USE_GOOGLE === True && isset($lat) && isset($lng)) {
 
-        // set origin
-        $origin = $lat . "," . $lng;
+        // TODO - removed due to load on requests
+        
+        // // set origin
+        // $origin = $lat . "," . $lng;
 
-        // set destinations
-        $destinations = $venues->map(function ($venue) {
-          return 'place_id:' . $venue->place_id;
-        })->toArray();
+        // // set destinations
+        // $destinations = $venues->map(function ($venue) {
+        //   return 'place_id:' . $venue->place_id;
+        // })->toArray();
 
-        // calculate distances
-        $distances = $this->calculate_distances($origin, $destinations);
+        // // calculate distances
+        // $distances = $this->calculate_distances($origin, $destinations);
 
-        // set distances on venue collection, then convert to array
-        $venues->map(function ($venue, $index) use ($distances) {
-          $venue->distance = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["value"] : 0;
-          $venue->distanceDisplay = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["text"] : "";
-        });
+        // // set distances on venue collection, then convert to array
+        // $venues->map(function ($venue, $index) use ($distances) {
+        //   $venue->distance = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["value"] : 0;
+        //   $venue->distanceDisplay = isset($distances[$index]["distance"]) ? $distances[$index]["distance"]["text"] : "";
+        // });
 
-        // convert to array and sort
-        $venues_array = $venues->toArray();
-        usort($venues_array, function ($a, $b) {
-          return $a["distance"] > $b["distance"];
-        });
+        // // convert to array and sort
+        // $venues_array = $venues->toArray();
+        // usort($venues_array, function ($a, $b) {
+        //   return $a["distance"] > $b["distance"];
+        // });
 
-        // get user town
-        $town = $this->get_town($origin);
+        // // get user town
+        // $town = $this->get_town($origin);
 
-        // generate cache id
-        $cache_id = Str::uuid();
+        // // generate cache id
+        // $cache_id = Str::uuid();
 
-        // create response array
-        $response = (object) array(
-          "venues" => array_slice($venues_array, 0, 4),
-          "userPosition" => array(
-            "latitude" => $lat,
-            "longitude" => $lng,
-            "town" => $town,
-            "origin" => $lat . "," . $lng
-          ),
-          "token" => $cache_id,
-        );
+        // // create response array
+        // $response = (object) array(
+        //   "venues" => array_slice($venues_array, 0, 4),
+        //   "userPosition" => array(
+        //     "latitude" => $lat,
+        //     "longitude" => $lng,
+        //     "town" => $town,
+        //     "origin" => $lat . "," . $lng
+        //   ),
+        //   "token" => $cache_id,
+        // );
 
-        // write to cache expiring in 1 week
-        $cache = new RequestCache([
-          "id" => $cache_id,
-          "data" => json_encode($response),
-          "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
-        ]);
-        $cache->save();
+        // // write to cache expiring in 1 week
+        // $cache = new RequestCache([
+        //   "id" => $cache_id,
+        //   "data" => json_encode($response),
+        //   "expires" => date('Y-m-d', strtotime(env('CACHE_EXPIRES', '+1 week')))
+        // ]);
+        // $cache->save();
+
       } else {  // bring back random venues as we don't know location
 
         $venues_random = array_map(function ($v) use ($venues) {

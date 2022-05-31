@@ -149,12 +149,21 @@ export default {
     setLocation(detail) {
       this.$store.dispatch("LOCATION_SEARCH_SET", detail);
     },
+    getTown(detail) {
+      return "adasdasdas";
+    },
     searchVenues() {
       const { dateSearch, venueSearch } = this.$store.state;
       if (dateSearch && venueSearch.detail) {
+        let town = venueSearch.detail.address_components.filter(
+          (a) => a.types.indexOf("postal_town") > -1
+        );
+        town = town.length > 0 ? town[0].long_name : "";
         window.location.href = `/search/${dateSearch.getTime()}/${
           venueSearch.detail.place_id
-        }`;
+        }?address=${encodeURIComponent(
+          venueSearch.detail.formatted_address
+        )}&town=${encodeURIComponent(town)}`;
       }
     },
     logout() {

@@ -288,12 +288,7 @@ class VenueController extends Controller
     return response()->json($ticket);
   }
 
-  function get_town_by_place_id($place_id)
-  {
-    return $this->USE_GOOGLE === True ? $this->get_town($place_id, "place_id") : "";
-  }
-
-  function search($date, $location)
+  function search($date, $location, $address)
   {
 
     $date = gmdate("Y-m-d", $date / 1000);
@@ -313,10 +308,12 @@ class VenueController extends Controller
 
       $search = $req->search;
       $results = json_decode($req->data);
-    } elseif ($this->USE_GOOGLE === True) { // look up location based data search results
 
-      // get search by place_id
-      $search = $this->get_address($location, "place_id");
+    // } elseif ($this->USE_GOOGLE === True) { // look up location based data search results
+    } elseif (True === True) { // look up location based data search results
+
+      // get address from URL string
+      $search = $address;
 
       // get all venues
       $venues = Venue::where([

@@ -7,40 +7,6 @@ use Illuminate\Support\Facades\Http;
 trait GoogleMapTrait
 {
 
-  public function get_town($origin, $key = "latlng")
-  {
-    // Ref: https://github.com/alexpechkarev/google-maps
-
-    // get user location based on lat lng
-    $response = \GoogleMaps::load('geocoding')
-      ->setParamByKey($key, $origin)
-      ->get('results');
-
-    if ($response["results"] && count($response["results"]) > 0) {
-      $town_filter = current(array_filter($response["results"][0]["address_components"], function ($a) {
-        return in_array("postal_town", $a["types"]);
-      }));
-
-      $town = isset($town_filter["long_name"]) ? $town_filter["long_name"] : "";
-    } else {
-      $town = '';
-    }
-
-    return $town;
-  }
-
-  public function get_address($origin, $key = "latlng")
-  {
-    // Ref: https://github.com/alexpechkarev/google-maps
-
-    // get user location based on lat lng
-    $response = \GoogleMaps::load('geocoding')
-      ->setParamByKey($key, $origin)
-      ->get('results');
-
-    return $response["results"][0]["formatted_address"];
-  }
-
   public function calculate_distances($origin, $destinations)
   {
     // use google apis to get distances

@@ -18,13 +18,14 @@ if (isset($venuemanageid)) {
     $initial_state['venueDetail']['tickets'] = $venue->get_tickets_detail($venuemanageid)->original;
     $initial_state['venueDetail']['closed'] = $venue->get_closures($venuemanageid)->original;
 }
-if (isset($date) && isset($location)) {
+if (isset($date) && isset($location) && request()->get('address') !== '' && request()->get('town') !== '') {
     // venue search
-    $initial_state['venueSearchResults'] = $venue->search($date, $location)->original;
+    $initial_state['venueSearchResults'] = $venue->search($date, $location, request()->get('address'))->original;
     $initial_state['venueSearch'] = [
-        'search' => $venue->get_town_by_place_id($location, 'place_id'),
+        'search' => request()->get('town'),
         'detail' => [
             'place_id' => $location,
+            'address' => request()->get('address')
         ],
     ];
     $initial_state['dateSearch'] = intval($date);

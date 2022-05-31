@@ -98,7 +98,7 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
-    VENUE_SEARCH_RESULTS_GET({ commit }, { date, location }) {
+    VENUE_SEARCH_RESULTS_GET({ commit }, { date, location, address }) {
         return axios
             .get(`/api/search/${date.getTime()}/${location}`)
             .then(res => {
