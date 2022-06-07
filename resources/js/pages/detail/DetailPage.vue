@@ -92,6 +92,7 @@
           </a>
           <button
             @click="viewRules()"
+            v-if="venueDetail.rules !== ''"
             class="
               flex
               items-center
@@ -102,6 +103,7 @@
               text-sm text-white
               bg-red-200
               rounded-lg
+              md:hidden
             "
           >
             <icon name="view-list" class="w-4 h-4 mr-2" />

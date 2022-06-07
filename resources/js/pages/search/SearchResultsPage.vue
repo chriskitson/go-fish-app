@@ -23,7 +23,7 @@ export default {
             live: state => state.live,
             venueDetail: state => state.venueDetail,
             venueSearchResults: state => state.venueSearchResults,
-            title: state => state.venueSearch.search !== '' ? `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:` : '',
+            title: state => state.venueSearch.search && state.venueSearch.search !== '' ? `Search Results for ${formatDateDisplay(state.dateSearch)} in ${state.venueSearch.search}:` : '',
             dateSearch: state => formatDateDisplay(state.dateSearch),
             dateStamp: state => state.dateSearch.getTime()
         })

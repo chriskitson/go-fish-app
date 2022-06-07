@@ -66,7 +66,7 @@
               @keydown.down.prevent="actions.shiftResultsSelection"
               @keydown.up.prevent="actions.unshiftResultsSelection"
               type="search"
-              placeholder="Enter a city, post code or location"
+              placeholder="Enter a UK or Ireland location"
               class="w-full px-4 py-2 rounded-md"
             />
           </div>
@@ -82,7 +82,9 @@
           border border-orange-200
           rounded-lg
           md:w-auto
+          disabled:opacity-50
         "
+        :disabled="!venueSearch.valid"
         @click="$emit('search')"
       >
         Search
@@ -96,6 +98,7 @@ import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete"
 import ClientOnly from "vue-client-only";
 import DatePicker from "vue2-datepicker";
 import { getDay } from "../../utils";
+
 export default {
   props: ["venueSearch", "date"],
   components: {
@@ -106,12 +109,12 @@ export default {
   methods: {
     disableDate(date) {
       const midnight = new Date();
-      midnight.setHours(0,0,0,0);
+      midnight.setHours(0, 0, 0, 0);
       return date < midnight;
     },
   },
   data: () => ({
     getDay,
-  }),
+  })
 };
 </script>

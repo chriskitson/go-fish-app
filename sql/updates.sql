@@ -146,3 +146,7 @@ INSERT INTO `categories` (`name`, `key`, `value`) VALUES ('Newry, Mourne and Dow
 -- 30/05/22
 SET SQL_SAFE_UPDATES = 0;
 UPDATE venues SET place_data_updated = NULL;
+
+-- 07/06/22
+ALTER TABLE `search_cache` 
+CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;

@@ -83,7 +83,8 @@ let state = {
     },
     venueSearch: {
         search: "",
-        detail: null
+        detail: null,
+        valid: false
     },
     dateSearch: tomorrow,
     venueDetail: {

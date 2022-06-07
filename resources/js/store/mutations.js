@@ -2,6 +2,7 @@ import { clearErrors } from "../utils";
 import { MESSAGES } from "../config/messages";
 import { manageTabs } from "./state";
 import { userRegister } from "../utils/klaviyo";
+import { searchCountries } from "../config";
 
 let mutations = {
     // Generic
@@ -196,9 +197,15 @@ let mutations = {
     },
     // Venue Search
     VENUE_SEARCH_SET(state, detail) {
+        // get country (for validation purposes)
+        let country = detail.address_components.filter(
+            (a) => a.types.indexOf("country") > -1
+        );
+        country = country.length > 0 ? country[0].short_name : "";
         state.venueSearch = {
             ...state.venueSearch,
-            detail
+            detail,
+            valid: searchCountries.indexOf(country) > -1
         };
     },
     DATE_SET(state, date) {

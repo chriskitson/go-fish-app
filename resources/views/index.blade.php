@@ -25,8 +25,9 @@ if (isset($date) && isset($location) && request()->get('address') !== '' && requ
         'search' => request()->get('town'),
         'detail' => [
             'place_id' => $location,
-            'address' => request()->get('address')
+            'address' => request()->get('address'),
         ],
+        'valid' => true,
     ];
     $initial_state['dateSearch'] = intval($date);
 }

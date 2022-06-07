@@ -16,12 +16,18 @@ export const bindState = (context, state, client) => {
             state.venueSearch = {
                 ...state.venueSearch,
                 search: context.venueDetail.name,
+                valid: true
             };
         }
     }
     if (context.venueSearchResults) {
         state.venueSearchResults = context.venueSearchResults.results;
-        state.venueSearch.search = context.venueSearchResults.search;
+        state.venueSearch = {
+            ...state.venueSearch,
+            search: context.venueSearchResults.search,
+            valid: true,
+            detail: context.venueSearchResults.place_id
+        }
     }
     if (context.path) {
         state.path = context.path;

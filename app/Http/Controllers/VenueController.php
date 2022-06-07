@@ -344,6 +344,8 @@ class VenueController extends Controller
         }
       });
 
+   
+
       // convert to array, filter  and sort
       $results = $venues->toArray();
 
@@ -442,7 +444,8 @@ class VenueController extends Controller
       "results" => $results,
       "search" => $search,
       "limit" => env("SEARCH_DISTANCE_LIMIT", 2000),
-      "cached" => !$cache_exists
+      "cached" => $cache_exists,
+      "place_id" => $location
     ));
   }
 
