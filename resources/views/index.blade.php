@@ -80,7 +80,7 @@ $page_title = $page->get_title($initial_state['path']);
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 
-<body>
+<body class="{{ Request::segment(1) }}">
     {!! Ssr::entry('js/app-server.js')->context($initial_state)->render() !!}
     <script>
         window.__INITIAL_STATE__ = '{!! json_encode($initial_state, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) !!}';

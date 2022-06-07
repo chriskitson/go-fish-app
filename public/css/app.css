@@ -33316,6 +33316,16 @@ body {
   margin-bottom: 20px;
 }
 
+.venue .top-search {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .venue .top-search {
+    display: block;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

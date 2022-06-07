@@ -140,3 +140,13 @@ body {
 .content-page p {
     margin-bottom: 20px;
 }
+
+.venue .top-search {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .venue .top-search {
+        display: block;
+    }
+}

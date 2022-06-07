@@ -12,7 +12,7 @@
       @cache="clearCache"
     ></header-component>
     <div
-      class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100 hidden md:block"
+      class="w-full py-3 mx-auto md:max-w-5xl bg-grey-100 top-search"
       v-if="showSearch"
     >
       <top-search-component
