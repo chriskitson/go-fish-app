@@ -86,7 +86,7 @@ let state = {
         detail: null,
         valid: false
     },
-    dateSearch: tomorrow,
+    dateSearch: today,
     venueDetail: {
         id: 0,
         name: "",
@@ -96,7 +96,7 @@ let state = {
         tickets: [],
         closed: [],
         ticketsLoaded: false,
-        date: tomorrow,
+        date: today,
         account: "",
         accountLink: "",
         days: {
