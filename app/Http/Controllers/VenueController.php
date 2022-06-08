@@ -126,10 +126,11 @@ class VenueController extends Controller
     $venue->description = $this->clean_web($venue->description);
     $venue->rules = $this->clean_web($venue->rules);
     // get reviews and photos (cached in db)
-    $venue_data = Venue::find($id, ["photos", "reviews"]);
+    $venue_data = Venue::find($id, ["photos", "reviews", "place_meta"]);
     $venue->photos = json_decode($venue_data->photos);
     $venue->reviews = json_decode($venue_data->reviews);
-
+    $venue_meta = json_decode($venue_data->place_meta);
+    $venue->address_components = isset($venue_meta->address_components) ? $venue_meta->address_components : null;
     $venue["managed"] = $venue_managed;
     $venue["ticket_count"] = Ticket::where([
       ["venue_id", "=", $venue->id]

@@ -2,7 +2,7 @@
   <div class="pt-8 mb-8 border-t border-grey-100">
     <h3 class="mb-4 text-lg font-semibold">Photos of {{ name }}:</h3>
     <client-only>
-      <vue-masonry-wall :items="photos" :options="{ width: 300, padding: 12 }">
+      <vue-masonry-wall :items="photos" :options="{ width: 310, padding: 10 }" :ssr="{columns: 2}">
         <template v-slot:default="{ item }">
           <div class="item">
             <img :src="item.image" />
@@ -21,6 +21,6 @@ export default {
   components: {
     ClientOnly,
     VueMasonryWall,
-  },
+  }
 };
 </script>

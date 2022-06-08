@@ -13,10 +13,22 @@ export const bindState = (context, state, client) => {
             state.dateSearch = date;
         }
         if (context.venueDetail.name) {
+            let town = context.venueDetail.address_components ? context.venueDetail.address_components.filter(
+                (a) => a.types.indexOf("postal_town") > -1
+            ) : [];
             state.venueSearch = {
                 ...state.venueSearch,
-                search: context.venueDetail.name,
-                valid: true
+                search: town.length > 0 ? town[0].long_name : "",
+                valid: true,
+                detail: {
+                    place_id: context.venueDetail.place_id,
+                    formatted_address: context.venueDetail.address,
+                    address_components: [{
+                        long_name: town.length > 0 ? town[0].long_name : "",
+                        short_name: town.length > 0 ? town[0].short_name : "",
+                        types: ["postal_town"]
+                    }]
+                }
             };
         }
     }

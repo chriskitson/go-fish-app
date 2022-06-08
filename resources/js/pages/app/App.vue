@@ -155,9 +155,11 @@ export default {
     searchVenues() {
       const { dateSearch, venueSearch } = this.$store.state;
       if (dateSearch && venueSearch.detail) {
-        let town = venueSearch.detail.address_components.filter(
-          (a) => a.types.indexOf("postal_town") > -1
-        );
+        let town = venueSearch.detail.address_components
+          ? venueSearch.detail.address_components.filter(
+              (a) => a.types.indexOf("postal_town") > -1
+            )
+          : [];
         town = town.length > 0 ? town[0].long_name : "";
         window.location.href = `/search/${dateSearch.getTime()}/${
           venueSearch.detail.place_id
