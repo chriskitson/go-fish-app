@@ -345,8 +345,6 @@ class VenueController extends Controller
         }
       });
 
-   
-
       // convert to array, filter  and sort
       $results = $venues->toArray();
 
