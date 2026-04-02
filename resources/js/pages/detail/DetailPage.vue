@@ -50,6 +50,12 @@
             Read more
           </button>
         </div>
+        <client-only>
+          <social-share-component 
+            :title="venueDetail.name" 
+            :url="venueUrl"
+          />
+        </client-only>
 
         <div class="flex mt-5">
           <a
@@ -142,7 +148,7 @@
               text-md
               font-semibold
               text-center text-white
-              bg-white bg-red-200
+              bg-red-200
               rounded-md
               cursor-pointer
               justify-content
@@ -201,7 +207,7 @@
               text-lg
               font-semibold
               text-center text-white
-              bg-white bg-red-200
+              bg-red-200
               rounded-md
               cursor-pointer
               justify-content
@@ -277,6 +283,10 @@ export default {
             }))
           : [];
       },
+      venueUrl() {
+        if (typeof window === 'undefined') return `/venue/${this.venueDetail.id}`;
+        return `${window.location.protocol}//${window.location.host}/venue/${this.venueDetail.id}`;
+      }
     }),
   },
   mounted() {

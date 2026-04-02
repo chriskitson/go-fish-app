@@ -99,6 +99,13 @@ Vue.component(
     require("./components/search/TopSearchComponent.vue").default
 );
 
+if (typeof window !== "undefined") {
+    Vue.component(
+        "social-share-component",
+        require("./components/shared/SocialShareComponent.vue").default
+    );
+}
+
 Vue.component(
     "home-banner-component",
     require("./components/shared/HomeBannerComponent.vue").default
