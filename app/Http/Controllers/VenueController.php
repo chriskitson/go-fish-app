@@ -90,6 +90,36 @@ class VenueController extends Controller
     return response()->json($venues);
   }
 
+  public function autocomplete(Request $request)
+  {
+    $q = $request->input('q', '');
+    if (empty($q)) {
+      return response()->json([]);
+    }
+
+    $venues = Venue::select('id', 'name', 'address', 'place_id')
+      ->where('deleted', 0)
+      ->where('active', 1)
+      ->where(function ($query) use ($q) {
+        $query->where('name', 'like', '%' . $q . '%')
+              ->orWhere('address', 'like', '%' . $q . '%');
+      })
+      ->limit(8)
+      ->get();
+
+    // Map the results to have a consistent structure to send to frontend
+    $results = $venues->map(function ($venue) {
+        return [
+            'type' => 'venue',
+            'title' => $venue->name,
+            'subtitle' => $venue->address,
+            'data' => $venue
+        ];
+    });
+
+    return response()->json($results);
+  }
+
   public function manage_venues(Request $request)
   {
     $user = $request->user();

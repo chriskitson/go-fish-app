@@ -37,6 +37,7 @@ Route::get('user', [BootstrapController::class, 'user']);
 // venues (no user context)
 Route::get('venues', [VenueController::class, 'all']);
 Route::get('venues/near', [VenueController::class, 'near']);
+Route::get('venues/autocomplete', [VenueController::class, 'autocomplete']);
 Route::get('venues/{id}', [VenueController::class, 'all']);
 Route::get('venues/tickets/{id}', [VenueController::class, 'tickets']);
 Route::get('venues/ticket/{venue}/{id}', [VenueController::class, 'ticket']);

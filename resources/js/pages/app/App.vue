@@ -155,6 +155,12 @@ export default {
     searchVenues() {
       const { dateSearch, venueSearch } = this.$store.state;
       if (dateSearch && venueSearch.detail) {
+        // Direct routing if search component set it as a venue
+        if (venueSearch.detail._is_venue) {
+           window.location.href = `/venue/${venueSearch.detail.venue_id}/${dateSearch.getTime()}`;
+           return;
+        }
+
         let town = venueSearch.detail.address_components
           ? venueSearch.detail.address_components.filter(
               (a) => a.types.indexOf("postal_town") > -1
