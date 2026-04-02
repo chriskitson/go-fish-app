@@ -64,6 +64,11 @@
         ></div>
         Login
       </button>
+
+      <!-- Google Sign In Button -->
+      <div class="mt-4">
+          <div ref="googleBtn" class="w-full flex justify-center"></div>
+      </div>
       <div class="mt-4 text-xs text-grey-300">
         <a class="text-red-200 no-underline border-b border-red-300" href="#">
           Forgot your password?
@@ -76,5 +81,29 @@
 <script>
 export default {
   props: ["login", "loggedIn", "loading", "title", "description"],
+  mounted() {
+    this.initGoogleBtn();
+  },
+  methods: {
+    initGoogleBtn() {
+      const clientId = this.$store.state.googleClientId;
+      if (window.google && window.google.accounts && clientId) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: this.handleCredentialResponse
+        });
+        window.google.accounts.id.renderButton(
+          this.$refs.googleBtn,
+          { theme: "outline", size: "large", type: "standard", width: "100%" }
+        );
+      } else if (clientId) {
+        // Retry if script not loaded yet
+        setTimeout(() => this.initGoogleBtn(), 500);
+      }
+    },
+    handleCredentialResponse(response) {
+      this.$store.dispatch('LOGIN_GOOGLE', response.credential);
+    }
+  }
 };
 </script>

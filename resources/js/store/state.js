@@ -19,6 +19,7 @@ let state = {
     live: false,
     loading: false,
     path: "",
+    googleClientId: "",
     bookingFee: 0,
     prices: [],
     venues: [],

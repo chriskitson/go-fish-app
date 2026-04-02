@@ -47,6 +47,9 @@ export const bindState = (context, state, client) => {
     if (context.bookingFee) {
         state.bookingFee = parseFloat(context.bookingFee);
     }
+    if (context.googleClientId) {
+        state.googleClientId = context.googleClientId;
+    }
     if (context.dateSearch) {
         state.dateSearch = new Date(context.dateSearch);
     }

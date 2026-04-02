@@ -58,6 +58,12 @@
                 ></div>
                 Create Account
             </button>
+
+            <!-- Google Sign In Button -->
+            <div class="mt-4">
+                <div ref="googleBtn" class="w-full flex justify-center"></div>
+            </div>
+
             <div class="mt-4 text-xs text-center text-grey-300">
                 By signing up, you agree to the
                 <a
@@ -80,6 +86,30 @@
 
 <script>
 export default {
-    props: ["register", "loggedIn", "loading"]
+    props: ["register", "loggedIn", "loading"],
+    mounted() {
+        this.initGoogleBtn();
+    },
+    methods: {
+        initGoogleBtn() {
+            const clientId = this.$store.state.googleClientId;
+            if (window.google && window.google.accounts && clientId) {
+                window.google.accounts.id.initialize({
+                    client_id: clientId,
+                    callback: this.handleCredentialResponse
+                });
+                window.google.accounts.id.renderButton(
+                    this.$refs.googleBtn,
+                    { theme: "outline", size: "large", type: "standard", width: "100%" }
+                );
+            } else if (clientId) {
+                // Retry if script not loaded yet
+                setTimeout(() => this.initGoogleBtn(), 500);
+            }
+        },
+        handleCredentialResponse(response) {
+            this.$store.dispatch('LOGIN_GOOGLE', response.credential);
+        }
+    }
 };
 </script>

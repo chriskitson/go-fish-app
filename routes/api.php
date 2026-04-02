@@ -29,6 +29,7 @@ PUBLIC ENDPOINTS
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('signup', [RegisterController::class, 'signup']);
 Route::get('signup/{id}', [RegisterController::class, 'get_subscription']);
+Route::post('login/google', [UserController::class, 'loginGoogle']);
 Route::get('verify', [RegisterController::class, 'verify']);
 
 Route::get('load', [BootstrapController::class, 'load']);

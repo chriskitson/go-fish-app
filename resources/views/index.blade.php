@@ -46,6 +46,7 @@ if ($initial_state['path'] === 'signup' && Request::get('p') !== '') {
 }
 $initial_state['allCategories'] = $venue->get_categories()->original;
 $initial_state['prices'] = $register->get_prices();
+$initial_state['googleClientId'] = env('GOOGLE_CLIENT_ID', '');
 
 $page_title = $page->get_title($initial_state['path']);
 @endphp
@@ -78,6 +79,7 @@ $page_title = $page->get_title($initial_state['path']);
                 async defer></script>
     @endif
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="{{ Request::segment(1) }}">
