@@ -151,6 +151,23 @@ let actions = {
                 });
             });
     },
+    LOGIN_GOOGLE({ commit }, credential) {
+        commit("SET_LOADING", true);
+        return axios
+            .post(`/api/login/google`, { token: credential })
+            .then(res => {
+                commit("LOGIN", {
+                    success: true,
+                    ...res.data
+                });
+            })
+            .catch(err => {
+                commit("LOGIN", {
+                    success: false,
+                    errors: [err.response?.data?.message || 'Google Login failed']
+                });
+            });
+    },
     LOGOUT({ commit }, user) {
         commit("SET_LOADING", true);
         return axios
