@@ -99,6 +99,7 @@
         <google-places-autocomplete
           class="w-full h-9x"
           :value="register.search"
+          :options="{ componentRestrictions: { country: ['gb', 'ie'] } }"
           @resultChanged="findVenue"
         >
           <div slot="input" slot-scope="{ context, events, actions }">

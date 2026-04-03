@@ -78,6 +78,7 @@
                   :value="locationSearch.search"
                   required
                   class="h-9 w-80"
+                  :options="{ componentRestrictions: { country: ['gb', 'ie'] } }"
                   @resultChanged="(placeDetail) => $emit('set', placeDetail)"
                 >
                   <div slot="input" slot-scope="{ context, events, actions }">
