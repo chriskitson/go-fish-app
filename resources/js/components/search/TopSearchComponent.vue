@@ -153,7 +153,7 @@ export default {
         try {
           const predictions = await new Promise((resolve) => {
             this.autocompleteService.getPlacePredictions(
-              { input: this.query, componentRestrictions: { country: ["UK", "IE"] } }, 
+              { input: this.query, componentRestrictions: { country: ["GB", "IE"] } }, 
               (predictions, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
                   resolve(predictions);
