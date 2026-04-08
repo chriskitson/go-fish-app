@@ -7,7 +7,7 @@
     <venue-list-component
       :title="
         userPosition === null
-          ? 'Fisheries in Northern Ireland'
+          ? 'Fisheries in United Kingdom'
           : 'Fisheries near me'
       "
       category="my area"
@@ -19,7 +19,7 @@
       @showLocation="showLocationSearch"
     ></venue-list-component>
     <category-list-component
-      title="Explore Northern Ireland"
+      title="Explore United Kingdom"
       :categories="categories"
       :live="true"
     ></category-list-component>

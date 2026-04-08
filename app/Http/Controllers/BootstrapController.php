@@ -170,7 +170,17 @@ class BootstrapController extends Controller
     }
 
     // add location based categories
-    $response->categories = Category::inRandomOrder()->limit(4)->get(["id", "name", "image"])->toArray();
+    $parent_id = $request->input('parent_id');
+    $categories_query = Category::query();
+    
+    if (isset($parent_id) && is_numeric($parent_id)) {
+        $categories_query->forParent($parent_id);
+    } else {
+        $categories_query->inRandomOrder()->limit(4);
+    }
+
+    $response->categories = $categories_query->get(["id", "name", "image", "parent_id"])->toArray();
+    $response->allCategories = Category::where('key', 'administrative_area_level_1')->orderBy('name', 'ASC')->get(["id", "name"])->toArray();
 
     return response()->json($response);
   }

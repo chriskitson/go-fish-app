@@ -30,6 +30,7 @@ let mutations = {
         };
         state.live = true;
         state.categories = data.categories;
+        state.allCategories = data.allCategories;
         localStorage.setItem("homeToken", data.token);
         localStorage.setItem("origin", data.userPosition?.origin);
     },

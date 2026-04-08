@@ -21,11 +21,27 @@ class Category extends Model
         'value',
         'results',
         'results_updated',
-        'image'
+        'image',
+        'parent_id'
     ];
 
     protected $table = 'categories';
     protected $primaryKey = 'id';
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function scopeForParent($query, $parentId)
+    {
+        return $query->where('parent_id', $parentId);
+    }
 
 
 }
