@@ -6,7 +6,7 @@
       position="bottom"
     ></home-banner-component>
     <h2 v-if="venueCategoryDetail.is_region" class="flex items-center mt-10 mb-2 text-xl font-semibold">
-      Counties in {{ venueCategoryDetail.name }}
+      Areas in {{ venueCategoryDetail.name }}
     </h2>
     <div
       v-if="venueCategoryDetail.is_region && live && !loading && venueCategory"
