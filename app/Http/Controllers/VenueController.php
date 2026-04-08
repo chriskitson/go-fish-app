@@ -97,6 +97,7 @@ class VenueController extends Controller
       return response()->json([]);
     }
 
+    // 1. Fetch Venues
     $venues = Venue::select('id', 'name', 'address', 'place_id')
       ->where('deleted', 0)
       ->where('active', 1)
@@ -107,8 +108,7 @@ class VenueController extends Controller
       ->limit(8)
       ->get();
 
-    // Map the results to have a consistent structure to send to frontend
-    $results = $venues->map(function ($venue) {
+    $venueResults = $venues->map(function ($venue) {
         return [
             'type' => 'venue',
             'title' => $venue->name,
@@ -116,6 +116,27 @@ class VenueController extends Controller
             'data' => $venue
         ];
     });
+
+    // 2. Fetch Categories (Counties and Regions)
+    $categories = Category::where('name', 'like', '%' . $q . '%')
+        ->limit(5)
+        ->get();
+
+    $categoryResults = $categories->map(function ($cat) {
+        $subtitle = 'Region';
+        if ($cat->key === 'administrative_area_level_2') {
+            $subtitle = 'County';
+        }
+        return [
+            'type' => 'category',
+            'title' => $cat->name,
+            'subtitle' => $subtitle,
+            'data' => $cat
+        ];
+    });
+
+    // Merge: Categories first (often what they are looking for when typing a place name), then Venues
+    $results = $categoryResults->merge($venueResults);
 
     return response()->json($results);
   }
@@ -768,25 +789,29 @@ class VenueController extends Controller
   {
     // is it numerical?
     if (is_numeric($id)) {
-      $category = Category::find($id, ["id", "name", "image"]);
+      $category = Category::find($id, ["id", "name", "image", "key"]);
+      $category->is_region = $category->key === 'administrative_area_level_1';
     } else {
       if ($id === "latest") {
         $category = array(
           "id" => "latest",
           "name" => "Latest Fisheries",
-          "image" => "/images/bg1.jpg"
+          "image" => "/images/bg1.jpg",
+          "is_region" => false
         );
       } elseif ($id === "best") {
         $category = array(
           "id" => "best",
           "name" => "Best Fisheries",
-          "image" => "/images/bg1.jpg"
+          "image" => "/images/bg1.jpg",
+          "is_region" => false
         );
       } elseif ($id === "near") {
         $category = array(
           "id" => "near",
           "name" => "Fisheries Near Me",
-          "image" => "/images/bg1.jpg"
+          "image" => "/images/bg1.jpg",
+          "is_region" => false
         );
       }
     }
@@ -795,8 +820,8 @@ class VenueController extends Controller
 
   public function get_categories()
   {
-    // used for footer links
-    $categories = Category::inRandomOrder()->limit(10)->get(["id", "name"]);
+    // used for footer links - only show countries/regions
+    $categories = Category::where('key', 'administrative_area_level_1')->orderBy('name', 'ASC')->get(["id", "name"]);
     return response()->json($categories);
   }
 
@@ -805,72 +830,89 @@ class VenueController extends Controller
 
     if (is_numeric($id)) { // location based
 
-      $category = Category::find($id, ["key", "value", "results", "results_updated"]);
+      $category = Category::find($id);
 
       if (isset($category)) {
 
-        $category_key = $category->key;
-        $category_value = $category->value;
+        if ($category->key === 'administrative_area_level_1') {
+          // It's a region, return child categories (counties)
+          $items = $category->children()->orderBy('name', 'ASC')->get(["id", "name", "image"])->toArray();
+          $type = 'category';
+        } else {
+          // It's a county, return venues
+          $category_key = $category->key;
+          $category_value = $category->value;
 
-        // get all venues
-        $venues = Venue::where([
-          ["active", "=", 1],
-          ["deleted", "=", 0]
-        ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
+          // get all venues
+          $venues = Venue::where([
+            ["active", "=", 1],
+            ["deleted", "=", 0]
+          ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
 
-        // filter venues based on location category
-        $venues = array_values(array_filter($venues, function ($venue) use ($category_key, $category_value) {
-          $place_meta = json_decode($venue["place_meta"]);
-          if (isset($place_meta) && $place_meta !== "") {
-            $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
-              return in_array($category_key, $component->types);
-            }));
-          } else {
-            $place_component_match = null;
-          }
-          if ($place_component_match) {
-            return $place_component_match->long_name === $category_value;
-          } else {
-            return false;
-          }
-        }));
+          // filter venues based on location category
+          $items = array_values(array_filter($venues, function ($venue) use ($category_key, $category_value) {
+            $place_meta = json_decode($venue["place_meta"]);
+            if (isset($place_meta) && $place_meta !== "") {
+              $place_component_match = current(array_filter($place_meta->address_components, function ($component) use ($category_key) {
+                return in_array($category_key, $component->types);
+              }));
+            } else {
+              $place_component_match = null;
+            }
+            if ($place_component_match) {
+              return $place_component_match->long_name === $category_value;
+            } else {
+              return false;
+            }
+          }));
+          $type = 'venue';
+        }
       } else {
-        $venues = [];
+        $items = [];
+        $type = 'venue';
       }
     } else {
+      $type = 'venue';
       if ($id === "latest") {
-        $venues = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
+        $items = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
       } elseif ($id === "best") {
-        $venues = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
+        $items = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
       } else {
-        $venues = []; // return done, browser will fetch with client location
+        $items = []; // return done, browser will fetch with client location
       }
     }
 
-    // map venues to display fields
-    $venues = array_map(function ($v) {
+    // map items to display fields
+    $items = array_map(function ($v) use ($type) {
       $image = "#";
 
       $v = (array)$v;
 
       // use google photos if image missing
-      if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
+      if ($type === 'venue' && (!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
         $photos = json_decode($v["photos"]);  // pull from google photos
         if (isset($photos) && count($photos) > 0) {
           $image = $photos[0]->url;
         }
       } else {
-        $image = $v["image"];
+        $image = isset($v["image"]) ? $v["image"] : "";
       }
-      return array(
+      
+      $mapped = array(
         "id" => $v["id"],
         "name" => $v["name"],
         "image" => $image,
-        "rating" => $v["rating"]
+        "type" => $type
       );
-    }, (array)$venues);
 
-    return response()->json($venues);
+      if ($type === 'venue') {
+        $mapped["rating"] = isset($v["rating"]) ? $v["rating"] : 0;
+      }
+
+      return $mapped;
+    }, (array)$items);
+
+    return response()->json($items);
   }
 
   public function closed_add(Request $request, $id)

@@ -5,7 +5,23 @@
       :message="venueCategoryDetail.name"
       position="bottom"
     ></home-banner-component>
+    <h2 v-if="venueCategoryDetail.is_region" class="flex items-center mt-10 mb-2 text-xl font-semibold">
+      Counties in {{ venueCategoryDetail.name }}
+    </h2>
+    <div
+      v-if="venueCategoryDetail.is_region && live && !loading && venueCategory"
+      class="grid w-full grid-cols-2 gap-4 mb-6 md:grid-cols-4"
+    >
+      <category-item-component
+        v-for="(cat, i) in venueCategory"
+        :key="`region-cat-${i}`"
+        :live="true"
+        :category="cat"
+      ></category-item-component>
+    </div>
+
     <venue-list-component
+      v-if="!venueCategoryDetail.is_region"
       :title="categoryTitle"
       :category="venueCategoryDetail.name"
       :venues="venueCategory"

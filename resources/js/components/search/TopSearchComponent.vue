@@ -56,14 +56,16 @@
                 <svg v-if="item.type === 'venue'" class="w-5 h-5 text-orange-200 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12.98,3.52C17.08,4.06 20.14,7.02 22.38,10.3C23.08,11.32 23.08,12.67 22.38,13.69C20.14,16.97 17.08,19.93 12.98,20.47C11.06,20.72 9.14,20.21 7.39,19.18L4,20.88V17C2.61,15.95 1.74,14.38 1.38,12.68C1.38,12.32 1.38,11.66 1.38,11.3C1.74,9.6 2.61,8.03 4,6.97V3.09L7.39,4.8C9.14,3.76 11.06,3.25 12.98,3.52M15,10A1.5,1.5 0 0,0 13.5,11.5A1.5,1.5 0 0,0 15,13A1.5,1.5 0 0,0 16.5,11.5A1.5,1.5 0 0,0 15,10Z" />
                 </svg>
+                <icon v-else-if="item.type === 'category'" name="globe" class="w-5 h-5 text-orange-200 group-hover:text-orange-300" />
                 <icon v-else name="location-marker" class="w-5 h-5 text-grey-400 group-hover:text-orange-200" />
               </div>
               <div class="flex-1 truncate">
                 <div class="font-medium text-grey-800 truncate">
                   {{ item.title }} 
                   <span v-if="item.type === 'venue'" class="inline-block px-1.5 py-0.5 ml-2 text-[10px] font-bold tracking-wider text-white uppercase bg-orange-200 rounded shrink-0">Fishery</span>
+                  <span v-if="item.type === 'category'" class="inline-block px-1.5 py-0.5 ml-2 text-[10px] font-bold tracking-wider text-white uppercase bg-blue-400 rounded shrink-0">{{ item.subtitle }}</span>
                 </div>
-                <div class="text-xs text-grey-500 truncate">{{ item.subtitle }}</div>
+                <div v-if="item.type !== 'category'" class="text-xs text-grey-500 truncate">{{ item.subtitle }}</div>
               </div>
             </li>
           </ul>
@@ -195,6 +197,8 @@ export default {
               }
            });
         }
+      } else if (item.type === 'category') {
+        window.location.href = `/category/${item.data.id}`;
       } else {
         // Instantly navigate to the fishery page with date if available!
         if (this.date) {
@@ -208,6 +212,8 @@ export default {
     triggerSearch() {
       if (this.selectedItem && this.selectedItem.type === 'venue') {
          window.location.href = `/venue/${this.selectedItem.data.id}`;
+      } else if (this.selectedItem && this.selectedItem.type === 'category') {
+         window.location.href = `/category/${this.selectedItem.data.id}`;
       } else {
          this.$emit('search');
       }
