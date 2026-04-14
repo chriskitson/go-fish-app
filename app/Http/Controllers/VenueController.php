@@ -136,6 +136,7 @@ class VenueController extends Controller
     });
 
     // Merge: Categories first (often what they are looking for when typing a place name), then Venues
+    // FIX V2: Categories first, then Venues. Use concat to avoid Eloquent model checks.
     $results = $categoryResults->concat($venueResults);
 
     return response()->json($results);
