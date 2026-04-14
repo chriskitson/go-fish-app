@@ -108,7 +108,7 @@ class VenueController extends Controller
       ->limit(8)
       ->get();
 
-    $venueResults = $venues->map(function ($venue) {
+    $venueResults = $venues->toBase()->map(function ($venue) {
         return [
             'type' => 'venue',
             'title' => $venue->name,
@@ -122,7 +122,7 @@ class VenueController extends Controller
         ->limit(5)
         ->get();
 
-    $categoryResults = $categories->map(function ($cat) {
+    $categoryResults = $categories->toBase()->map(function ($cat) {
         $subtitle = 'Region';
         if ($cat->key === 'administrative_area_level_2') {
             $subtitle = 'County';
