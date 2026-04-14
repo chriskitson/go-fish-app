@@ -136,7 +136,7 @@ class VenueController extends Controller
     });
 
     // Merge: Categories first (often what they are looking for when typing a place name), then Venues
-    $results = $categoryResults->merge($venueResults);
+    $results = $categoryResults->concat($venueResults);
 
     return response()->json($results);
   }
