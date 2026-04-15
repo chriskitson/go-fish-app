@@ -114,7 +114,8 @@ let state = {
             reference: '',
             type: '',
             amount: null
-        }
+        },
+        visible: true
     },
     venueSearchResults: [],
     userTickets: [],

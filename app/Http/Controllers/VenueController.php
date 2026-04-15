@@ -80,13 +80,13 @@ class VenueController extends Controller
 
   public function all()
   {
-    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get()->toarray();
+    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get()->toarray();
     return response()->json($venues);
   }
 
   public function names()
   {
-    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0]])->get(["id", "name"]);
+    $venues = Venue::orderBy("name", "ASC")->where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get(["id", "name"]);
     return response()->json($venues);
   }
 
@@ -101,6 +101,7 @@ class VenueController extends Controller
     $venues = Venue::select('id', 'name', 'address', 'place_id')
       ->where('deleted', 0)
       ->where('active', 1)
+      ->where('visible', 1)
       ->where(function ($query) use ($q) {
         $query->where('name', 'like', '%' . $q . '%')
               ->orWhere('address', 'like', '%' . $q . '%');
@@ -169,7 +170,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating"]);
+    $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating", "visible"]);
     // is venue managed?
     $venue_user = User::where("venue_id", "=", $venue->id);
     $venue_managed = $venue_user->count() > 0 && $venue_user->first()->hasVerifiedEmail();
@@ -227,7 +228,8 @@ class VenueController extends Controller
         "thursday" => $venue->open_thursday == 1,
         "friday" => $venue->open_friday == 1,
         "saturday" => $venue->open_saturday == 1
-      )
+      ),
+      "visible" => $venue->visible == 1
     );
     return response()->json($fields);
   }
@@ -372,7 +374,8 @@ class VenueController extends Controller
       $venues = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0],
-        ["active", "=", 1]
+        ["active", "=", 1],
+        ["visible", "=", 1]
       ])->get(["id", "name", "place_id", "image", "rating", "photos"]);
 
       // set origin
@@ -563,7 +566,8 @@ class VenueController extends Controller
         "open_wednesday" => $request->open_wednesday,
         "open_thursday" => $request->open_thursday,
         "open_friday" => $request->open_friday,
-        "open_saturday" => $request->open_saturday
+        "open_saturday" => $request->open_saturday,
+        "visible" => $request->visible ?? 1
       );
 
       $venue = new Venue($fields);
@@ -578,7 +582,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "phone", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "phone", "place_id", "visible"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -627,7 +631,8 @@ class VenueController extends Controller
         "open_wednesday" => $request->open_wednesday,
         "open_thursday" => $request->open_thursday,
         "open_friday" => $request->open_friday,
-        "open_saturday" => $request->open_saturday
+        "open_saturday" => $request->open_saturday,
+        "visible" => $request->visible
       ];
 
       if ($is_global_admin) {
@@ -643,7 +648,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "phone", "place_id"]));
+      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "phone", "place_id", "visible"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -847,7 +852,8 @@ class VenueController extends Controller
           // get all venues
           $venues = Venue::where([
             ["active", "=", 1],
-            ["deleted", "=", 0]
+            ["deleted", "=", 0],
+            ["visible", "=", 1]
           ])->get(["id", "name", "address", "phone", "place_id", "image", "place_meta", "rating", "photos"])->toArray();
 
           // filter venues based on location category
@@ -875,9 +881,9 @@ class VenueController extends Controller
     } else {
       $type = 'venue';
       if ($id === "latest") {
-        $items = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
+        $items = Venue::orderBy("created_at", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 random venues
       } elseif ($id === "best") {
-        $items = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
+        $items = Venue::orderBy("rating", "desc")->limit(12)->where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get(["id", "name", "image", "rating", "photos"])->toArray();   // select 12 rating
       } else {
         $items = []; // return done, browser will fetch with client location
       }
@@ -979,7 +985,7 @@ class VenueController extends Controller
     $town = "";
 
     // get all venues
-    $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1]])->get(["id", "name", "address", "phone", "place_id", "image", "photos", "rating"]);
+    $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get(["id", "name", "address", "phone", "place_id", "image", "photos", "rating"]);
 
     // determine location based on lat lng
     if ($this->USE_GOOGLE === True && isset($o) || (isset($lat) && isset($lng))) {

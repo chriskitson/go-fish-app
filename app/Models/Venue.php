@@ -40,6 +40,7 @@ class Venue extends Model
         'checkout_session',
         'account_link',
         'active',
+        'visible',
         'account_payment_confirmed',
         'account_payment_reference',
     ];
