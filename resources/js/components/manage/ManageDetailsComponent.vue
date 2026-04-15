@@ -76,6 +76,16 @@
           :disabled="loading"
         ></textarea>
       </div>
+      <div class="mb-8 md:mb-0 flex items-center mt-4">
+        <input
+          type="checkbox"
+          id="visible"
+          v-model="venue.visible"
+          :disabled="loading"
+          class="w-4 h-4 mr-2 border rounded b-grey-200"
+        />
+        <label for="visible" class="font-semibold text-grey-300">Visible on website?</label>
+      </div>
     </div>
   </div>
 </template>
