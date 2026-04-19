@@ -43,6 +43,11 @@ class Venue extends Model
         'visible',
         'account_payment_confirmed',
         'account_payment_reference',
+        'fishery_types',
+    ];
+    
+    protected $casts = [
+        'fishery_types' => 'array',
     ];
 
     protected $table = 'venues';

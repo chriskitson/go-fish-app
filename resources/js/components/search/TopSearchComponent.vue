@@ -71,6 +71,19 @@
           </ul>
         </div>
       </div>
+      <div
+        class="flex items-center w-full h-12 px-2 mb-2 bg-white border-grey-200 md:border-t md:border-b md:border-l md:w-48 md:mb-0"
+      >
+        <span class="mr-2 text-grey-400 whitespace-nowrap">Filter:</span>
+        <select
+          v-model="selectedType"
+          class="w-full bg-transparent outline-none text-sm"
+        >
+          <option v-for="type in types" :key="type" :value="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
       <button
         class="w-full h-12 px-8 text-white transition duration-150 ease-in-out bg-orange-200 border border-orange-200 rounded-lg md:w-auto disabled:opacity-50 hover:bg-opacity-90"
         :disabled="!venueSearch.valid"
@@ -104,7 +117,27 @@ export default {
       results: [],
       selectedItem: null,
       autocompleteService: null,
+      types: [
+        "All",
+        "Rainbow Trout",
+        "Brown Trout",
+        "Sea Trout",
+        "Salmon",
+        "Coarse",
+        "Pike",
+        "Carp",
+      ],
     };
+  },
+  computed: {
+    selectedType: {
+      get() {
+        return this.venueSearch.type;
+      },
+      set(val) {
+        this.$store.dispatch("VENUE_SEARCH_TYPE_SET", val);
+      },
+    },
   },
   mounted() {
     if (this.venueSearch && this.venueSearch.search) {
@@ -215,7 +248,7 @@ export default {
       } else if (this.selectedItem && this.selectedItem.type === 'category') {
          window.location.href = `/category/${this.selectedItem.data.id}`;
       } else {
-         this.$emit('search');
+         this.$emit('search', this.selectedType);
       }
     }
   }

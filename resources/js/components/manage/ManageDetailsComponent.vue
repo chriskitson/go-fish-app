@@ -76,6 +76,22 @@
           :disabled="loading"
         ></textarea>
       </div>
+      <div class="col-span-2 mt-8">
+        <label class="block mb-4 font-semibold text-grey-300">Fishery Type</label>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div v-for="type in fisheryTypes" :key="type" class="flex items-center">
+            <input
+              type="checkbox"
+              :id="type"
+              v-model="venue.fishery_types"
+              :value="type"
+              :disabled="loading"
+              class="w-4 h-4 mr-2 border rounded b-grey-200"
+            />
+            <label :for="type" class="text-sm text-grey-300">{{ type }}</label>
+          </div>
+        </div>
+      </div>
       <div class="mb-8 md:mb-0 flex items-center mt-4">
         <input
           type="checkbox"
@@ -94,6 +110,19 @@
 
 export default {
   props: ["loading", "venue", "manageVenueErrorFields"],
+  data() {
+    return {
+      fisheryTypes: [
+        "Rainbow Trout",
+        "Brown Trout",
+        "Sea Trout",
+        "Salmon",
+        "Coarse",
+        "Pike",
+        "Carp",
+      ],
+    };
+  },
   methods: {
     errorStyle(key) {
       return this.manageVenueErrorFields?.indexOf(key) > -1

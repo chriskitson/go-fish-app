@@ -198,6 +198,15 @@ let mutations = {
     },
     // Venue Search
     VENUE_SEARCH_SET(state, detail) {
+        if (!detail) {
+            state.venueSearch = {
+                ...state.venueSearch,
+                detail: null,
+                valid: false
+            };
+            return;
+        }
+
         // get country (for validation purposes)
         let country = detail.address_components.filter(
             (a) => a.types.indexOf("country") > -1
@@ -211,6 +220,9 @@ let mutations = {
     },
     DATE_SET(state, date) {
         state.dateSearch = date;
+    },
+    VENUE_SEARCH_TYPE_SET(state, type) {
+        state.venueSearch.type = type;
     },
     VENUE_SEARCH_RESULTS_SET(state, res) {
         state.venueSearchResults = res.results;

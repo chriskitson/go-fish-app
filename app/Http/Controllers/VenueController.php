@@ -104,36 +104,36 @@ class VenueController extends Controller
       ->where('visible', 1)
       ->where(function ($query) use ($q) {
         $query->where('name', 'like', '%' . $q . '%')
-              ->orWhere('address', 'like', '%' . $q . '%');
+          ->orWhere('address', 'like', '%' . $q . '%');
       })
       ->limit(8)
       ->get();
 
     $venueResults = $venues->toBase()->map(function ($venue) {
-        return [
-            'type' => 'venue',
-            'title' => $venue->name,
-            'subtitle' => $venue->address,
-            'data' => $venue
-        ];
+      return [
+        'type' => 'venue',
+        'title' => $venue->name,
+        'subtitle' => $venue->address,
+        'data' => $venue
+      ];
     });
 
     // 2. Fetch Categories (Counties and Regions)
     $categories = Category::where('name', 'like', '%' . $q . '%')
-        ->limit(5)
-        ->get();
+      ->limit(5)
+      ->get();
 
     $categoryResults = $categories->toBase()->map(function ($cat) {
-        $subtitle = 'Region';
-        if ($cat->key === 'administrative_area_level_2') {
-            $subtitle = 'County';
-        }
-        return [
-            'type' => 'category',
-            'title' => $cat->name,
-            'subtitle' => $subtitle,
-            'data' => $cat
-        ];
+      $subtitle = 'Region';
+      if ($cat->key === 'administrative_area_level_2') {
+        $subtitle = 'County';
+      }
+      return [
+        'type' => 'category',
+        'title' => $cat->name,
+        'subtitle' => $subtitle,
+        'data' => $cat
+      ];
     });
 
     // Merge: Categories first (often what they are looking for when typing a place name), then Venues
@@ -170,7 +170,7 @@ class VenueController extends Controller
 
   public function get($id)
   { // for front end website display
-    $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating", "visible"]);
+    $venue = Venue::find($id, ["id", "name", "address", "phone", "description", "rules", "image", "place_id", "place_data_updated", "rating", "visible", "fishery_types"]);
     // is venue managed?
     $venue_user = User::where("venue_id", "=", $venue->id);
     $venue_managed = $venue_user->count() > 0 && $venue_user->first()->hasVerifiedEmail();
@@ -229,7 +229,8 @@ class VenueController extends Controller
         "friday" => $venue->open_friday == 1,
         "saturday" => $venue->open_saturday == 1
       ),
-      "visible" => $venue->visible == 1
+      "visible" => $venue->visible == 1,
+      "fishery_types" => $venue->fishery_types ?? []
     );
     return response()->json($fields);
   }
@@ -350,33 +351,39 @@ class VenueController extends Controller
     $date_day_of_week = intval(gmdate("w", strtotime($date)));
     $date_day_of_week = $this->get_day($date_day_of_week);
 
+    $type = request()->query("type", "All");
+    $cache_id = $type === "All" ? $location : $location . "_" . str_replace(" ", "_", $type);
+
     // determine location and check if cache exists
     $cache_exists = isset($location) && count(SearchCache::where([
-      ["id", "=", $location]
+      ["id", "=", $cache_id]
     ])->get()) > 0;
 
     if ($cache_exists) { // load venues from cached results
 
       $req = SearchCache::where([
-        ["id", "=", $location]
+        ["id", "=", $cache_id]
       ])->first();
 
       $search = $req->search;
       $results = json_decode($req->data);
-
-    // } elseif ($this->USE_GOOGLE === True) { // look up location based data search results
-    } elseif (True === True) { // look up location based data search results
+    } elseif ($this->USE_GOOGLE == True) { // look up location based data search results
 
       // get address from URL string
       $search = $address;
 
-      // get all venues
       $venues = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0],
         ["active", "=", 1],
         ["visible", "=", 1]
-      ])->get(["id", "name", "place_id", "image", "rating", "photos"]);
+      ]);
+
+      if ($type !== "All") {
+        $venues = $venues->whereJsonContains("fishery_types", $type);
+      }
+
+      $venues = $venues->get(["id", "name", "place_id", "image", "rating", "photos"]);
 
       // set origin
       $origin = "place_id:" . $location;
@@ -389,22 +396,9 @@ class VenueController extends Controller
       // calculate distances
       $distances = $this->calculate_distances($origin, $destinations);
 
-      // set distances on venue collection, then convert to array
-      $venues->map(function ($venue, $index) use ($distances) {
-        if (isset($distances[$index]["distance"])) {
-          $venue->distance = $distances[$index]["distance"]["value"];
-          $venue->distanceDisplay = $distances[$index]["distance"]["text"];
-        } else {
-          $venue->distance = "999999999999";
-          $venue->distanceDisplay = "Unknown";
-        }
-      });
-
-      // convert to array, filter  and sort
-      $results = $venues->toArray();
-
-      // map venues to display fields
-      $results = array_map(function ($v) {
+      // build results array with distances included
+      $venuesArray = $venues->values()->toArray();
+      $results = array_map(function ($v, $index) use ($distances) {
         $image = "#";
         // use google photos if image missing
         if ((!isset($v["image"]) || $v["image"] === "") && isset($v["photos"]) && $v["photos"] !== "") {
@@ -415,27 +409,37 @@ class VenueController extends Controller
         } else {
           $image = $v["image"];
         }
+
+        if (isset($distances[$index]["distance"])) {
+          $distance = $distances[$index]["distance"]["value"];
+          $distanceDisplay = $distances[$index]["distance"]["text"];
+        } else {
+          $distance = "999999999999";
+          $distanceDisplay = "Unknown";
+        }
+
         return array(
           "id" => $v["id"],
           "name" => $v["name"],
           "image" => $image,
           "rating" => $v["rating"],
-          "distance" => $v["distance"],
+          "distance" => $distance,
           "place_id" => $v["place_id"],
-          "distanceDisplay" => $v["distanceDisplay"]
+          "distanceDisplay" => $distanceDisplay
         );
-      }, $results);
+      }, $venuesArray, array_keys($venuesArray));
 
       $results = array_filter($results, function ($v) {
         return $v["distance"] < env("SEARCH_DISTANCE_LIMIT", 0);
       });
+
       // sort by distance
       usort($results, function ($a, $b) {
         return $a["distance"] > $b["distance"];
       });
       // write to cache expiring in 1 week
       $cache = new SearchCache([
-        "id" => $location,
+        "id" => $cache_id,
         "search" => $search,
         "data" => json_encode($results),
         "expires" => date("Y-m-d", strtotime(env("CACHE_EXPIRES", "+1 week")))
@@ -567,7 +571,8 @@ class VenueController extends Controller
         "open_thursday" => $request->open_thursday,
         "open_friday" => $request->open_friday,
         "open_saturday" => $request->open_saturday,
-        "visible" => $request->visible ?? 1
+        "visible" => $request->visible ?? 1,
+        "fishery_types" => $request->fishery_types ?? []
       );
 
       $venue = new Venue($fields);
@@ -582,7 +587,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "phone", "place_id", "visible"]));
+      return response()->json(Venue::find($venue_id, ["id", "name", "description", "rules", "address", "phone", "place_id", "visible", "fishery_types"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -632,7 +637,8 @@ class VenueController extends Controller
         "open_thursday" => $request->open_thursday,
         "open_friday" => $request->open_friday,
         "open_saturday" => $request->open_saturday,
-        "visible" => $request->visible
+        "visible" => $request->visible,
+        "fishery_types" => json_encode($request->fishery_types ?? [])
       ];
 
       if ($is_global_admin) {
@@ -648,7 +654,7 @@ class VenueController extends Controller
       // clear cached requests
       $this->clear_cache();
 
-      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "phone", "place_id", "visible"]));
+      return response()->json(Venue::find($venue_id, ["name", "description", "account", "rules", "address", "phone", "place_id", "visible", "fishery_types"]));
     } else {
       return response("Unauthorized", 401);
     }
@@ -904,7 +910,7 @@ class VenueController extends Controller
       } else {
         $image = isset($v["image"]) ? $v["image"] : "";
       }
-      
+
       $mapped = array(
         "id" => $v["id"],
         "name" => $v["name"],

@@ -85,7 +85,8 @@ let state = {
     venueSearch: {
         search: "",
         detail: null,
-        valid: false
+        valid: false,
+        type: "All"
     },
     dateSearch: today,
     venueDetail: {
@@ -115,7 +116,8 @@ let state = {
             type: '',
             amount: null
         },
-        visible: true
+        visible: true,
+        fishery_types: []
     },
     venueSearchResults: [],
     userTickets: [],

@@ -14,14 +14,12 @@ trait GoogleMapTrait
     // batch requests up in 25s
     $destinations_batched = array_chunk($destinations, 25);
     $distances = [];
+
     foreach ($destinations_batched as $batch) {
       $dest = implode("|", $batch);
       $distances_res = Http::get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $dest . "&key=" . $key);
-      // start debug
-      // echo "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $dest . "&key=" . $key;
-      // echo json_encode($distances_res);
-      // end debug
-      exit();
+      // $distances_res debug:
+      // echo json_encode($distances_res->json());
       if (count($distances_res->json()["rows"]) > 0) {
         $distances_results = array_filter($distances_res->json()["rows"][0]["elements"], function ($d) {
           return !isset($d["status"]) || $d["status"] !== "ZERO_RESULTS";

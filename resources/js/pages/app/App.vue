@@ -167,11 +167,12 @@ export default {
             )
           : [];
         town = town.length > 0 ? town[0].long_name : "";
+        const address = venueSearch.detail.formatted_address || venueSearch.detail.vicinity || '';
         window.location.href = `/search/${dateSearch.getTime()}/${
           venueSearch.detail.place_id
-        }?address=${encodeURIComponent(
-          venueSearch.detail.formatted_address
-        )}&town=${encodeURIComponent(town)}`;
+        }?address=${encodeURIComponent(address)}&town=${encodeURIComponent(town)}&type=${encodeURIComponent(
+          venueSearch.type
+        )}`;
       }
     },
     logout() {
