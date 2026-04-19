@@ -18,18 +18,24 @@ if (isset($venuemanageid)) {
     $initial_state['venueDetail']['tickets'] = $venue->get_tickets_detail($venuemanageid)->original;
     $initial_state['venueDetail']['closed'] = $venue->get_closures($venuemanageid)->original;
 }
-if (isset($date) && isset($location) && request()->get('address') !== '' && request()->get('town') !== '') {
+$search_address = request()->get('address');
+if (isset($date) && isset($location) && $search_address !== '' && $search_address !== 'undefined') {
     // venue search
-    $initial_state['venueSearchResults'] = $venue->search($date, $location, request()->get('address'))->original;
-    $initial_state['venueSearch'] = [
-        'search' => request()->get('town'),
-        'detail' => [
-            'place_id' => $location,
-            'address' => request()->get('address'),
-        ],
-        'valid' => true,
-    ];
-    $initial_state['dateSearch'] = intval($date);
+    try {
+        $initial_state['venueSearchResults'] = $venue->search($date, $location, $search_address)->original;
+        $initial_state['venueSearch'] = [
+            'search' => request()->get('town') ?: $search_address,
+            'detail' => [
+                'place_id' => $location,
+                'address' => $search_address,
+            ],
+            'valid' => true,
+            'type' => request()->get('type', 'All'),
+        ];
+        $initial_state['dateSearch'] = intval($date);
+    } catch (\Exception $e) {
+        $initial_state['venueSearchResults'] = [];
+    }
 }
 if (isset($categoryid)) {
     $initial_state['venueCategory'] = $venue->get_category($categoryid)->original;

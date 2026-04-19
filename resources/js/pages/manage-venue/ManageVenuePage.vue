@@ -237,6 +237,7 @@ export default {
         image,
         days,
         visible,
+        fishery_types,
       } = this.venue;
       if (id > 0) {
         // update
@@ -257,6 +258,7 @@ export default {
           open_friday: days.friday,
           open_saturday: days.saturday,
           visible,
+          fishery_types,
         };
         this.$store.dispatch("VENUE_DETAILS_UPDATE", {
           venue,
@@ -281,6 +283,7 @@ export default {
           open_friday: days.friday,
           open_saturday: days.saturday,
           visible,
+          fishery_types,
         };
         this.$store.dispatch("VENUE_DETAILS_CREATE", {
           venue,

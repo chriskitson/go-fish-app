@@ -66,6 +66,9 @@ let actions = {
     DATE_SET({ commit }, date) {
         commit("DATE_SET", date);
     },
+    VENUE_SEARCH_TYPE_SET({ commit }, type) {
+        commit("VENUE_SEARCH_TYPE_SET", type);
+    },
     VENUE_TICKETS_GET({ commit }, { id, date, user }) {
         commit("SET_LOADING", true);
         return axios
@@ -98,9 +101,10 @@ let actions = {
                 handleError(err.response.data.message);
             });
     },
-    VENUE_SEARCH_RESULTS_GET({ commit }, { date, location, address }) {
+    VENUE_SEARCH_RESULTS_GET({ commit }, { date, location, type }) {
+        const typeFilter = type && type !== "All" ? `?type=${type}` : "";
         return axios
-            .get(`/api/search/${date.getTime()}/${location}`)
+            .get(`/api/search/${date.getTime()}/${location}${typeFilter}`)
             .then(res => {
                 commit("VENUE_SEARCH_RESULTS_SET", res.data);
                 router.push(`/search/${date}/${location}`);
