@@ -13,6 +13,8 @@ import SignUpConfirm from '../pages/signup-confirm/SignUpConfirmPage';
 import MyTickets from '../pages/my-tickets/MyTicketsPage';
 import ManageVenues from '../pages/manage-venues/ManageVenuesPage';
 import ManageVenue from '../pages/manage-venue/ManageVenuePage';
+import ManageCategories from '../pages/manage-categories/ManageCategoriesPage';
+import ManageCategory from '../pages/manage-category/ManageCategoryPage';
 import Category from '../pages/category/CategoryPage';
 import Bookings from '../pages/bookings/BookingsPage';
 import Content from '../pages/content/ContentPage';
@@ -34,6 +36,8 @@ export const routes = [
     { path: '/manage-venues', component: ManageVenues, name: 'Manage Venues' },
     { path: '/manage-venues/:id', component: ManageVenue, name: 'Manage Venue' },
     { path: '/add-venue', component: ManageVenue, name: 'Add Venue' },
+    { path: '/manage-categories', component: ManageCategories, name: 'Manage Categories' },
+    { path: '/manage-categories/:id', component: ManageCategory, name: 'Manage Category' },
     { path: '/category/:id', component: Category, name: 'Category' },
     { path: '/bookings', component: Bookings, name: 'Bookings' },
     { path: '/about', component: Content, name: 'About us' },

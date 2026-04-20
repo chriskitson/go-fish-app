@@ -123,6 +123,15 @@ let state = {
     userTickets: [],
     userTicketDetail: {},
     manageVenues: [],
+    manageCategories: [],
+    manageCategory: {
+        id: 0,
+        name: "",
+        image: "",
+        key: "",
+        value: "",
+        parent_id: null
+    },
     manageVenueNewTicket: false,
     manageVenueErrorFields: [],
     venueCategory: [],

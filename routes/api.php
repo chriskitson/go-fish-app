@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BookingController;
@@ -107,5 +108,12 @@ Route::group([
     Route::delete('auth/venues/{id}/subscription', [VenueController::class, 'subscription_cancel']);
     Route::get('auth/venues/admin', [VenueController::class, 'manage_venues']);
     Route::get('auth/venues/{id}/account', [VenueController::class, 'account_create']);
+
+    // manage categories
+    Route::get('auth/categories/admin', [CategoryController::class, 'manage_categories']);
+    Route::get('auth/categories/{id}', [CategoryController::class, 'manage_category']);
+    Route::post('auth/categories/{id}/image', [CategoryController::class, 'upload_image']);
+    Route::delete('auth/categories/{id}/image', [CategoryController::class, 'delete_image']);
+
 
 });

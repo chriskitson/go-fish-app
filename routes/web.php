@@ -72,6 +72,14 @@ Route::get('/add-venue', function () {
     return view('index');
 });
 
+Route::get('/manage-categories', function () {
+    return view('index');
+});
+
+Route::get('/manage-categories/{id}', function ($id) {
+    return view('index', ['categorymanageid' => $id]);
+});
+
 Route::get('/category/{categoryid}', function ($categoryid) {
     return view('index', ['categoryid' => $categoryid]);
 });

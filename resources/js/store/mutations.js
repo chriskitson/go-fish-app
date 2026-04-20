@@ -500,6 +500,31 @@ let mutations = {
         } else {
             state.loading = false;
         }
+    },
+    CATEGORIES_ADMIN(state, res) {
+        state.manageCategories = res;
+        state.loading = false;
+    },
+    CATEGORY_MANAGE_SET(state, res) {
+        state.manageCategory = {
+            ...state.manageCategory,
+            ...res
+        };
+        state.loading = false;
+    },
+    CATEGORY_IMAGE_UPLOAD(state, { image_url }) {
+        state.manageCategory = {
+            ...state.manageCategory,
+            image: image_url
+        };
+        state.loading = false;
+    },
+    CATEGORY_IMAGE_DELETE(state) {
+        state.manageCategory = {
+            ...state.manageCategory,
+            image: ""
+        };
+        state.loading = false;
     }
 };
 export default mutations;
