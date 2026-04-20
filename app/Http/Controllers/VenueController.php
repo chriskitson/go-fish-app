@@ -757,7 +757,7 @@ class VenueController extends Controller
       $upload_folder = 'venues';
       $image = $request->file('image');
       $image_uploaded_path = $image->store($upload_folder, 'public');
-      $image_url = Storage::disk('public')->url($image_uploaded_path);
+      $image_url = '/storage/' . $image_uploaded_path;
 
       // update database
       Venue::where([

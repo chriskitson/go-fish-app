@@ -60,6 +60,12 @@
           >
           <a
             class="ml-6 text-sm text-white"
+            v-if="user.loggedIn && user.globalAdmin"
+            href="/manage-categories"
+            >Manage Categories</a
+          >
+          <a
+            class="ml-6 text-sm text-white"
             v-if="user.loggedIn && user.userType === userType.FISHERY"
             :href="`/manage-venues/${user.venue.id}`"
             >Manage Venue</a

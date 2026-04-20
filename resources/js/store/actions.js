@@ -567,5 +567,61 @@ let actions = {
                 handleError(err.response?.data.message);
             });
     },
+    CATEGORIES_ADMIN_GET({ commit }, { user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(`/api/auth/categories/admin`, getTokenHeader(user))
+            .then(res => {
+                commit("CATEGORIES_ADMIN", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    CATEGORY_MANAGE_GET({ commit }, { id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .get(`/api/auth/categories/${id}`, getTokenHeader(user))
+            .then(res => {
+                commit("CATEGORY_MANAGE_SET", res.data);
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    },
+    CATEGORY_MANAGE_IMAGE_UPDATE({ commit }, { id, image, user }) {
+        commit("SET_LOADING", true);
+        let formData = new FormData();
+        formData.append("image", image);
+        return axios
+            .post(
+                `/api/auth/categories/${id}/image`,
+                formData,
+                getTokenHeader(user, "multipart/form-data")
+            )
+            .then(res => {
+                commit("CATEGORY_IMAGE_UPLOAD", {
+                    image_url: res.data.image_url
+                });
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data);
+            });
+    },
+    CATEGORY_MANAGE_IMAGE_DELETE({ commit }, { id, user }) {
+        commit("SET_LOADING", true);
+        return axios
+            .delete(`/api/auth/categories/${id}/image`, getTokenHeader(user))
+            .then(res => {
+                commit("CATEGORY_IMAGE_DELETE");
+            })
+            .catch(err => {
+                commit("SET_LOADING", false);
+                handleError(err.response.data.message);
+            });
+    }
 };
 export default actions;
