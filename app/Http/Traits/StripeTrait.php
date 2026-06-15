@@ -125,10 +125,12 @@ trait StripeTrait
 
   public function get_subscription_prices()
   {
+    $product_id = env('STRIPE_SUBSCRIPTION_PRODUCT');
+    if (!$product_id) {
+      return (object) ['data' => []];
+    }
     $client = new \Stripe\StripeClient($_ENV["STRIPE_SECRET"]);
     // look up default prices for product
-
-    //STRIPE_SUBSCRIPTION_PRODUCT
-    return $client->prices->all(['product' => env('STRIPE_SUBSCRIPTION_PRODUCT'), 'expand' => ['data.tiers']]);
+    return $client->prices->all(['product' => $product_id, 'expand' => ['data.tiers']]);
   }
 }

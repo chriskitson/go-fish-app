@@ -67,34 +67,55 @@
           If you are a fishery owner we would love you to use our platform to
           advertise, sell and manage your tickets online.
         </p>
+
+        <div class="bg-white p-4 mb-4 border-grey-300 border rounded shadow-sm">
+          <p class="font-semibold mb-3 text-red-200">Choose your payment plan:</p>
+          <div v-for="plan in prices" :key="plan.id" class="flex items-center mb-3 p-2 border border-grey-100 rounded hover:bg-grey-50 transition cursor-pointer">
+            <input
+              type="radio"
+              :id="plan.id"
+              :value="plan.id"
+              v-model="register.payment_model"
+              class="mr-3 cursor-pointer"
+            />
+            <label :for="plan.id" class="text-sm font-medium cursor-pointer flex-1">
+              {{ plan.name }}
+            </label>
+          </div>
+        </div>
+
         <p class="mb-4">Our pricing model is <strong>simple</strong>:</p>
-        <ul class="list-inside list-disc mb-8 text-sm">
-          <li>
-            You pay a fixed monthly fee based on volume of tickets sold
+        <ul class="list-inside list-disc mb-8 text-sm" v-if="selectedPlan">
+          <li v-if="selectedPlan.monthly_fee > 0">
+            You pay a fixed monthly fee of <strong>{{ formatCurrency(selectedPlan.monthly_fee) }}</strong>
+          </li>
+          <li v-else>
+            No fixed monthly fee
           </li>
           <li>
-            In addition GoFish collects <strong>&pound;1 booking fee</strong> for each ticket
-            sold
+            You pay <strong>{{ selectedPlan.commission }}% commission</strong> on each ticket sold
           </li>
           <li>
             Our payment partner (Stripe) collects
             <strong>1.4% + 20p</strong> (per transaction)
           </li>
           <li class="mt-4 italic">
-            E.g. &pound;10 ticket, GoFish collect &pound;1, Stripe collect 34p,
-            you get &pound;8.66
+            E.g. &pound;10 ticket, GoFish collect {{ formatCurrency(10 * selectedPlan.commission / 100) }} (commission), Stripe collect 34p,
+            you get {{ formatCurrency(10 - (10 * selectedPlan.commission / 100) - 0.34) }}
           </li>
         </ul>
-        <div class="bg-white p-4 mb-8 border-grey-300 border">
-          <p class="font-semibold mb-4 text-lg">Our low cost monthly fee:</p>
-          <table class="w-full">
-            <tbody>
-              <tr v-for="(price, i) in prices" :key="`price-${i}`">
-                <td>Up to {{ price.up_to ? price.up_to : 'unlimited' }} tickets sold</td>
-                <td>{{ formatCurrency(price.flat_amount / 100) }} per month</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <div
+          v-if="selectedPlan"
+          class="bg-white p-4 mb-8 border-grey-300 border text-sm italic rounded"
+        >
+          <p v-if="selectedPlan.monthly_fee === 0">
+            You will be charged a flat {{ selectedPlan.commission }}% commission on all tickets sold via
+            GoFish. No monthly fee applies.
+          </p>
+          <p v-else>
+            You will be billed {{ formatCurrency(selectedPlan.monthly_fee) }} per month, plus {{ selectedPlan.commission }}% commission on all tickets sold via GoFish.
+          </p>
         </div>
         <google-places-autocomplete
           class="w-full h-9x"
@@ -201,6 +222,12 @@ export default {
   data: () => ({
     formatCurrency,
   }),
+  computed: {
+    selectedPlan() {
+      if (!this.prices || !Array.isArray(this.prices)) return null;
+      return this.prices.find(p => p.id === this.register.payment_model);
+    }
+  },
   components: {
     GooglePlacesAutocomplete,
   },
