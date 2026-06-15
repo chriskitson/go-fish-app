@@ -89,7 +89,8 @@ class RegisterController extends Controller
       "name" => ["required", "string", "max:255"],
       "email" => ["required", "string", "email", "max:255", "unique:users"],
       "password" => ["required", "string", "min:8", "confirmed"],
-      "subscription" => ["required", "string", "max:255"]
+      "subscription" => ["required", "string", "max:255"],
+      "payment_model" => ["required", "string", "max:255"]
     ]);
 
     if ($validator->fails()) {
@@ -108,12 +109,26 @@ class RegisterController extends Controller
 
     } else {  // set up new venue
 
+      $plans = $this->get_prices();
+      $selected_plan = null;
+      foreach ($plans as $plan) {
+        if ($plan['id'] === $data['payment_model']) {
+          $selected_plan = $plan;
+          break;
+        }
+      }
+
+      $subscription_name = $selected_plan ? $selected_plan['name'] : 'Commission-only';
+      $payment_fee = $selected_plan ? $selected_plan['commission'] : 10;
+
       $venue = Venue::create([
         "name" => $data["fisheryName"],
         "address" => $data["address"],
         "place_id" => $data["placeId"],
         "active" => 0, // mark as inactive until session is complete (webhook will mark as active)
-        "subscription" => $data["subscription"],
+        "subscription" => $subscription_name,
+        "payment_model" => $data["payment_model"],
+        "payment_fee" => $payment_fee,
         "checkout_session" => ""
       ]);
       $venue->save();
@@ -222,6 +237,22 @@ class RegisterController extends Controller
         "account_link" => $account_link
       ));
 
+      // Activate venue immediately if they are on a free plan (monthly fee is 0)
+      $plans = $this->get_prices();
+      $selected_plan = null;
+      foreach ($plans as $p) {
+        if ($p['id'] === $venue->payment_model) {
+          $selected_plan = $p;
+          break;
+        }
+      }
+      if ($selected_plan && $selected_plan['monthly_fee'] == 0) {
+        $venue->update([
+          'active' => 1,
+          'account_payment_confirmed' => 1,
+        ]);
+      }
+
       // generate account link from venue page
       $account_link = env('APP_URL', '') . '/manage-venues/' . $venue->id . '?tab=Payment';
 
@@ -253,8 +284,54 @@ class RegisterController extends Controller
 
   public function get_prices()
   {
-    $pricing_tiers =  current($this->get_subscription_prices()->data)["tiers"];
-    return $pricing_tiers;
+    return \Illuminate\Support\Facades\Cache::remember('stripe_billing_plans', 86400, function () {
+      $result = [];
+
+      // Always include the commission-only free tier
+      $commission_only = config('billing.commission_only');
+      $result[] = [
+        'id' => 'commission_only',
+        'name' => $commission_only['name'],
+        'monthly_fee' => $commission_only['monthly_fee'],
+        'commission' => $commission_only['commission'],
+        'stripe_price_id' => null,
+      ];
+
+      // Fetch all active prices for the product from Stripe
+      $product_id = config('billing.product_id');
+      if ($product_id) {
+        try {
+          $client = new \Stripe\StripeClient(env("STRIPE_SECRET"));
+          $prices = $client->prices->all([
+            'product' => $product_id,
+            'active' => true,
+          ]);
+
+          foreach ($prices->data as $price) {
+            $amount = $price->unit_amount / 100;
+            $currency = strtoupper($price->currency) === 'GBP' ? '£' : '$';
+            $commission = isset($price->metadata['commission']) ? (float) $price->metadata['commission'] : 5;
+
+            $result[] = [
+              'id' => $price->id,
+              'name' => "{$currency}{$amount} per month with {$commission}% commission",
+              'monthly_fee' => $amount,
+              'commission' => $commission,
+              'stripe_price_id' => $price->id,
+            ];
+          }
+
+          // Sort by monthly fee ascending (free tier first, then cheapest paid)
+          usort($result, function ($a, $b) {
+            return $a['monthly_fee'] <=> $b['monthly_fee'];
+          });
+        } catch (\Exception $e) {
+          // If Stripe API fails, return just the commission-only plan
+        }
+      }
+
+      return $result;
+    });
   }
 
 }

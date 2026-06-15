@@ -208,7 +208,7 @@ let actions = {
                 });
             });
     },
-    SIGNUP({ commit }, { fisheryName, placeId, address, name, email, password, confirm, subscription }) {
+    SIGNUP({ commit }, { fisheryName, placeId, address, name, email, password, confirm, subscription, payment_model }) {
         commit("SET_LOADING", true);
         return axios
             .post(`/api/signup`, {
@@ -219,7 +219,8 @@ let actions = {
                 email,
                 password,
                 password_confirmation: confirm,
-                subscription
+                subscription,
+                payment_model
             })
             .then(res => {
                 commit("SIGNUP", res.data);

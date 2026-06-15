@@ -129,7 +129,7 @@ class BookingController extends Controller
       }, $booking_responses)) * 100;
 
       // work out booking fee (based on number of tickets)
-      $booking_fee = array_sum(array_map(function ($b) {
+      $booking_fee = $booking_responses[0]["payment_fee"] > 0 ? 0 : array_sum(array_map(function ($b) {
         return intval($b["qty"]) * $_ENV["BOOKING_FEE"];
       }, $booking_responses));
 

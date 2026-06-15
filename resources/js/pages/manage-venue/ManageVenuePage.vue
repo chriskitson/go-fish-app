@@ -103,6 +103,7 @@
           :prices="prices"
           @create="subscriptionCreate"
           @cancel="subscriptionCancel"
+          @updateModel="updateDetails"
         ></manage-subscription-component>
         <div
           class="
@@ -238,6 +239,7 @@ export default {
         days,
         visible,
         fishery_types,
+        payment_model,
       } = this.venue;
       if (id > 0) {
         // update
@@ -259,6 +261,7 @@ export default {
           open_saturday: days.saturday,
           visible,
           fishery_types,
+          payment_model,
         };
         this.$store.dispatch("VENUE_DETAILS_UPDATE", {
           venue,
@@ -284,6 +287,7 @@ export default {
           open_saturday: days.saturday,
           visible,
           fishery_types,
+          payment_model,
         };
         this.$store.dispatch("VENUE_DETAILS_CREATE", {
           venue,

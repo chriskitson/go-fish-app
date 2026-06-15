@@ -69,7 +69,8 @@ let state = {
         fisheryName: "",
         confirmed: false,
         stripeUrl: "",
-        subscription: "lite"
+        subscription: "commission_only",
+        payment_model: "commission_only"
     },
     userPosition: {
         error: "",
@@ -117,7 +118,8 @@ let state = {
             amount: null
         },
         visible: true,
-        fishery_types: []
+        fishery_types: [],
+        payment_model: "commission_only"
     },
     venueSearchResults: [],
     userTickets: [],

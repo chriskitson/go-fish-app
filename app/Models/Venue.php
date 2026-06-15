@@ -44,6 +44,7 @@ class Venue extends Model
         'account_payment_confirmed',
         'account_payment_reference',
         'fishery_types',
+        'payment_model'
     ];
     
     protected $casts = [

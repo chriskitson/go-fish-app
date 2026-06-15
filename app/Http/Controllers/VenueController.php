@@ -196,10 +196,29 @@ class VenueController extends Controller
     $venue = Venue::find($id);
     $venue->description = $this->clean_admin($venue->description);
     $venue->rules = $this->clean_admin($venue->rules);
-    if ($venue->account_payment_confirmed == 1 && isset($venue->account_payment_reference) && $venue->account_payment_reference !== "") { // has active subscription
+
+    $plans = (new RegisterController)->get_prices();
+    $selected_plan = null;
+    foreach ($plans as $p) {
+      if ($p['id'] === $venue->payment_model) {
+        $selected_plan = $p;
+        break;
+      }
+    }
+
+    $is_free = $selected_plan && $selected_plan['monthly_fee'] == 0;
+
+    if ($is_free) {
+      $subscription_confirmed = true;
+      $subscription_amount = 0;
+    } elseif ($venue->account_payment_confirmed == 1 && isset($venue->account_payment_reference) && $venue->account_payment_reference !== "") { // has active subscription
       // get subscription details from stripe
       $subscription_confirmed = true;
-      $subscription_amount = ($this->get_gofish_subscription($venue->account_payment_reference)->plan->amount / 100);
+      try {
+        $subscription_amount = ($this->get_gofish_subscription($venue->account_payment_reference)->plan->amount / 100);
+      } catch (\Exception $e) {
+        $subscription_amount = null;
+      }
     } else {
       $subscription_confirmed = false;
       $subscription_amount = null;
@@ -214,6 +233,7 @@ class VenueController extends Controller
       "place_id" => $venue->place_id,
       "rules" => $venue->rules,
       "account" => $venue->account,
+      "payment_model" => $venue->payment_model,
       "subscription" => array(
         "confirmed" => $subscription_confirmed,
         "reference" => $venue->account_payment_reference,
@@ -638,8 +658,24 @@ class VenueController extends Controller
         "open_friday" => $request->open_friday,
         "open_saturday" => $request->open_saturday,
         "visible" => $request->visible,
-        "fishery_types" => json_encode($request->fishery_types ?? [])
+        "fishery_types" => json_encode($request->fishery_types ?? []),
+        "payment_model" => $request->payment_model,
+        "payment_fee" => $request->payment_model === 'commission' ? 10 : 0
       ];
+
+      $plans = (new RegisterController)->get_prices();
+      $selected_plan = null;
+      foreach ($plans as $p) {
+        if ($p['id'] === $request->payment_model) {
+          $selected_plan = $p;
+          break;
+        }
+      }
+      $commission = $selected_plan ? $selected_plan['commission'] : 10;
+      $plan_name = $selected_plan ? $selected_plan['name'] : 'Commission-only';
+
+      $fields["payment_fee"] = $commission;
+      $fields["subscription"] = $plan_name;
 
       if ($is_global_admin) {
         $fields = array_merge($fields,  [
@@ -647,9 +683,46 @@ class VenueController extends Controller
         ]);
       }
 
+      $venue = Venue::find($venue_id);
+      $old_payment_model = $venue->payment_model;
+
       Venue::where([
         ["id", "=", $venue_id]
       ])->update($fields);
+
+      // Transition handling
+      $old_selected_plan = null;
+      foreach ($plans as $p) {
+        if ($p['id'] === $old_payment_model) {
+          $old_selected_plan = $p;
+          break;
+        }
+      }
+      $old_monthly_fee = $old_selected_plan ? $old_selected_plan['monthly_fee'] : 0;
+      $new_monthly_fee = $selected_plan ? $selected_plan['monthly_fee'] : 0;
+
+      if ($old_monthly_fee > 0 && $new_monthly_fee == 0) {
+        // cancel active subscription if exists
+        if (isset($venue->account_payment_reference) && $venue->account_payment_reference !== "") {
+          try {
+            $this->cancel_gofish_subscription($venue->account_payment_reference);
+          } catch (\Exception $e) {
+            // handle exception
+          }
+        }
+        $venue->update([
+          'account_payment_confirmed' => 1,
+          'account_payment_reference' => '',
+          'active' => 1,
+        ]);
+      }
+
+      if ($old_monthly_fee == 0 && $new_monthly_fee > 0) {
+        $venue->update([
+          'account_payment_confirmed' => 0,
+          'account_payment_reference' => '',
+        ]);
+      }
 
       // clear cached requests
       $this->clear_cache();
@@ -1106,8 +1179,23 @@ class VenueController extends Controller
 
     if ($is_admin || $is_global_admin && ($venue_id === $id)) {
 
+      $venue = Venue::find($venue_id);
+
+      $plans = (new RegisterController)->get_prices();
+      $selected_plan = null;
+      foreach ($plans as $p) {
+        if ($p['id'] === $venue->payment_model) {
+          $selected_plan = $p;
+          break;
+        }
+      }
+
+      if (!$selected_plan || !$selected_plan['stripe_price_id']) {
+        return response()->json(['success' => false, 'message' => 'No monthly fee is required for this plan.'], 400);
+      }
+
       // create stripe subscription checkout session (for monthly fee to GOFish)
-      $checkout_session_id = $this->create_gofish_subscription(env("STRIPE_SUBSCRIPTION_PRODUCT_PRICES"), $venue_id, $user_email);
+      $checkout_session_id = $this->create_gofish_subscription($selected_plan['stripe_price_id'], $venue_id, $user_email);
 
       // get venue info
       $venue = Venue::find($venue_id);
