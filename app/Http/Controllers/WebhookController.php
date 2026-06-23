@@ -8,12 +8,14 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Traits\BookingTrait;
 use App\Http\Traits\StripeTrait;
+use App\Http\Traits\KlaviyoTrait;
 
 class WebhookController extends Controller
 {
 
   use BookingTrait;
   use StripeTrait;
+  use KlaviyoTrait;
 
   /**
    * Create a new controller instance.
@@ -95,6 +97,12 @@ class WebhookController extends Controller
 
         break;
 
+      case "checkout.session.expired":
+
+        $this->booking_session_failed($event);
+
+        break;
+
       case "payment_intent.succeeded":
 
         $this->booking_receipt($event);
@@ -126,12 +134,29 @@ class WebhookController extends Controller
         $transaction->confirmed = 1;
         $transaction->payment = $payment_intent; // e.g. pi_3JWy30Hi5I5M4Wuh1YZXKvRT
         $transaction->save();
+
+        // track successful payment event in Klaviyo
+        $this->track_payment_success($transaction);
       }
 
       // clear basket
       Basket::where([
         ["user_id", "=", $user_id]
       ])->delete();
+    }
+  }
+
+  public function booking_session_failed($event)
+  {
+    // track failed/expired payment event in Klaviyo
+    $session_id = $event->data->object->id;
+
+    $transaction = Transaction::where([
+      ["session", "=", $session_id]
+    ])->first();
+
+    if (isset($transaction)) {
+      $this->track_payment_failed($transaction);
     }
   }
 
