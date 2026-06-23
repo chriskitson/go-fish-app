@@ -14,14 +14,19 @@ let mutations = {
     },
     // Load user data
     BOOTSTRAP_DATA(state, data) {
-        state.venues = data.venues ? data.venues.map(v => {
-            const photos = v.photos !== '' ? JSON.parse(v.photos) : [];
-            const venue = {
-                ...v,
-                image: !v.image && photos && photos.length > 0 ? photos[0].url : v.image
-            };
-            return venue;
-        }) : [];
+        state.venues = data.venues
+            ? data.venues.map(v => {
+                  const photos = v.photos !== "" ? JSON.parse(v.photos) : [];
+                  const venue = {
+                      ...v,
+                      image:
+                          !v.image && photos && photos.length > 0
+                              ? photos[0].url
+                              : v.image
+                  };
+                  return venue;
+              })
+            : [];
         state.userPosition = data.userPosition;
         state.locationSearch = {
             show: false,
@@ -31,6 +36,7 @@ let mutations = {
         state.live = true;
         state.categories = data.categories;
         state.allCategories = data.allCategories;
+        state.stripe = data.stripe;
         localStorage.setItem("homeToken", data.token);
         localStorage.setItem("origin", data.userPosition?.origin);
     },
@@ -39,10 +45,16 @@ let mutations = {
             ...state.user,
             ...data.user
         };
-        localStorage.setItem("globalAdmin", data.user.globalAdmin ? "true" : "false");
+        localStorage.setItem(
+            "globalAdmin",
+            data.user.globalAdmin ? "true" : "false"
+        );
         localStorage.setItem("userType", data.user.userType);
-        const { user: { firstName, lastName, email, userType } } = state;
-        userRegister({  // klaviyo user track
+        const {
+            user: { firstName, lastName, email, userType }
+        } = state;
+        userRegister({
+            // klaviyo user track
             firstName,
             lastName,
             email,
@@ -143,7 +155,7 @@ let mutations = {
                 search: "",
                 placeId: "",
                 address: "",
-                confirmed: true,
+                confirmed: true
                 // stripeUrl: stripe
             };
         } else {
@@ -209,7 +221,7 @@ let mutations = {
 
         // get country (for validation purposes)
         let country = detail.address_components.filter(
-            (a) => a.types.indexOf("country") > -1
+            a => a.types.indexOf("country") > -1
         );
         country = country.length > 0 ? country[0].short_name : "";
         state.venueSearch = {
@@ -450,7 +462,7 @@ let mutations = {
         state.userPosition = {
             ...state.userPosition,
             town
-        }
+        };
         state.loading = false;
     },
     VENUE_BOOKINGS_GET(state, res) {
@@ -475,9 +487,9 @@ let mutations = {
                     ...state.venueDetail.subscription,
                     confirmed: false,
                     amount: null,
-                    type: ''
+                    type: ""
                 }
-            }
+            };
         }
         state.loading = false;
     },
@@ -491,8 +503,8 @@ let mutations = {
                 ...state.venueDetail,
                 account,
                 accountLink
-            }
-            if (accountLink && accountLink !== '') {
+            };
+            if (accountLink && accountLink !== "") {
                 window.location.href = accountLink; // redirect to stripe
             } else {
                 state.loading = false;
@@ -528,6 +540,3 @@ let mutations = {
     }
 };
 export default mutations;
-
-
-

@@ -15,6 +15,12 @@ export const userType = {
     FISHERY: 2
 };
 
+const stripe = {
+    percentage: 1.5,
+    fixed: 0.2,
+    currency: "GBP"
+};
+
 let state = {
     live: false,
     loading: false,
@@ -146,7 +152,8 @@ let state = {
     },
     venueManageTab: manageTabs.DETAILS,
     venueBookings: [],
-    venueSignUpDetail: {}
+    venueSignUpDetail: {},
+    stripe
 };
 
 export default state;

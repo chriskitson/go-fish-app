@@ -7,21 +7,13 @@
         :loggedIn="loggedIn"
         :loading="loading"
         :prices="prices"
+        :stripe="stripe"
         @register="register"
       ></signup-component>
 
       <div
         v-if="signupForm.confirmed"
-        class="
-          w-full
-          px-6
-          py-8
-          text-black
-          bg-white
-          rounded
-          shadow-md
-          bg-opacity-80
-        "
+        class="w-full px-6 py-8 text-black bg-white rounded shadow-md bg-opacity-80"
       >
         <h1 class="mb-8 text-xl text-center text-red-200">
           Thank you for signing up to GoFish!
@@ -46,6 +38,7 @@ export default {
       loggedIn: (state) => state.user.loggedIn,
       loading: (state) => state.loading,
       prices: (state) => state.prices,
+      stripe: (state) => state.stripe,
     }),
   },
   methods: {

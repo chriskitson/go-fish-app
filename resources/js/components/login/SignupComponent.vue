@@ -1,16 +1,7 @@
 <template>
   <div class="container flex flex-col items-center flex-1 px-2 mx-auto">
     <div
-      class="
-        w-full
-        px-6
-        py-8
-        text-black
-        bg-white
-        rounded
-        shadow-md
-        bg-opacity-80
-      "
+      class="w-full px-6 py-8 text-black bg-white rounded shadow-md bg-opacity-80"
     >
       <h1
         class="mb-8 text-xl text-center text-red-200"
@@ -41,22 +32,7 @@
         </p>
         <a
           :href="register.stripeUrl"
-          class="
-            flex
-            items-center
-            w-full
-            px-4
-            py-2
-            mt-4
-            text-lg
-            font-semibold
-            text-center text-white
-            bg-white bg-red-200
-            rounded-md
-            cursor-pointer
-            justify-content
-            md:w-auto
-          "
+          class="flex items-center w-full px-4 py-2 mt-4 text-lg font-semibold text-center text-white bg-white bg-red-200 rounded-md cursor-pointer justify-content md:w-auto"
         >
           <span class="flex-1">Proceed to Stripe</span>
           <icon name="chevron-right" class="w-5 h-5 ml-2 text-white" />
@@ -69,8 +45,14 @@
         </p>
 
         <div class="bg-white p-4 mb-4 border-grey-300 border rounded shadow-sm">
-          <p class="font-semibold mb-3 text-red-200">Choose your payment plan:</p>
-          <div v-for="plan in prices" :key="plan.id" class="flex items-center mb-3 p-2 border border-grey-100 rounded hover:bg-grey-50 transition cursor-pointer">
+          <p class="font-semibold mb-3 text-red-200">
+            Choose your payment plan:
+          </p>
+          <div
+            v-for="plan in prices"
+            :key="plan.id"
+            class="flex items-center mb-3 p-2 border border-grey-100 rounded hover:bg-grey-50 transition cursor-pointer"
+          >
             <input
               type="radio"
               :id="plan.id"
@@ -78,7 +60,10 @@
               v-model="register.payment_model"
               class="mr-3 cursor-pointer"
             />
-            <label :for="plan.id" class="text-sm font-medium cursor-pointer flex-1">
+            <label
+              :for="plan.id"
+              class="text-sm font-medium cursor-pointer flex-1"
+            >
               {{ plan.name }}
             </label>
           </div>
@@ -87,21 +72,42 @@
         <p class="mb-4">Our pricing model is <strong>simple</strong>:</p>
         <ul class="list-inside list-disc mb-8 text-sm" v-if="selectedPlan">
           <li v-if="selectedPlan.monthly_fee > 0">
-            You pay a fixed monthly fee of <strong>{{ formatCurrency(selectedPlan.monthly_fee) }}</strong>
+            You pay a fixed monthly fee of
+            <strong>{{ formatCurrency(selectedPlan.monthly_fee) }}</strong>
           </li>
-          <li v-else>
-            No fixed monthly fee
-          </li>
+          <li v-else>No fixed monthly fee</li>
           <li>
-            You pay <strong>{{ selectedPlan.commission }}% commission</strong> on each ticket sold
+            You pay
+            <strong>{{ selectedPlan.commission }}% commission</strong> on each
+            ticket sold
           </li>
           <li>
             Our payment partner (Stripe) collects
-            <strong>1.4% + 20p</strong> (per transaction)
+            <strong
+              >{{ stripe.percentage }}% +
+              {{ poundsToPennies(stripe.fixed) }}p</strong
+            >
+            (per transaction)
           </li>
           <li class="mt-4 italic">
-            E.g. &pound;10 ticket, GoFish collect {{ formatCurrency(10 * selectedPlan.commission / 100) }} (commission), Stripe collect 34p,
-            you get {{ formatCurrency(10 - (10 * selectedPlan.commission / 100) - 0.34) }}
+            E.g. {{ currencySymbol(stripe.currency) }}10 ticket, GoFish collect
+            {{ formatCurrency((10 * selectedPlan.commission) / 100, stripe.currency) }}
+            (commission), Stripe collect
+            {{
+              formatCurrency(
+                (10 * stripe.percentage) / 100 + parseFloat(stripe.fixed),
+                stripe.currency
+              )
+            }}, you get
+            {{
+              formatCurrency(
+                10 -
+                  (10 * selectedPlan.commission) / 100 -
+                  (10 * stripe.percentage) / 100 -
+                  parseFloat(stripe.fixed),
+                stripe.currency
+              )
+            }}
           </li>
         </ul>
 
@@ -110,11 +116,14 @@
           class="bg-white p-4 mb-8 border-grey-300 border text-sm italic rounded"
         >
           <p v-if="selectedPlan.monthly_fee === 0">
-            You will be charged a flat {{ selectedPlan.commission }}% commission on all tickets sold via
-            GoFish. No monthly fee applies.
+            You will be charged a flat {{ selectedPlan.commission }}% commission
+            on all tickets sold via GoFish. No monthly fee applies.
           </p>
           <p v-else>
-            You will be billed {{ formatCurrency(selectedPlan.monthly_fee) }} per month, plus {{ selectedPlan.commission }}% commission on all tickets sold via GoFish.
+            You will be billed
+            {{ formatCurrency(selectedPlan.monthly_fee) }} per month, plus
+            {{ selectedPlan.commission }}% commission on all tickets sold via
+            GoFish.
           </p>
         </div>
         <google-places-autocomplete
@@ -172,19 +181,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="
-            flex
-            w-full
-            p-3
-            my-1
-            text-sm text-center text-white
-            bg-red-200
-            rounded
-            focus:outline-none
-            align-center
-            justify-items-center
-            disabled:opacity-50
-          "
+          class="flex w-full p-3 my-1 text-sm text-center text-white bg-red-200 rounded focus:outline-none align-center justify-items-center disabled:opacity-50"
           @click="$emit('register')"
         >
           <div
@@ -216,17 +213,19 @@
 
 <script>
 import { GooglePlacesAutocomplete } from "vue-better-google-places-autocomplete";
-import { formatCurrency } from "../../utils";
+import { formatCurrency, poundsToPennies, currencySymbol } from "../../utils";
 export default {
-  props: ["register", "loggedIn", "loading", "prices"],
+  props: ["register", "loggedIn", "loading", "prices", "stripe"],
   data: () => ({
     formatCurrency,
+    poundsToPennies,
+    currencySymbol,
   }),
   computed: {
     selectedPlan() {
       if (!this.prices || !Array.isArray(this.prices)) return null;
-      return this.prices.find(p => p.id === this.register.payment_model);
-    }
+      return this.prices.find((p) => p.id === this.register.payment_model);
+    },
   },
   components: {
     GooglePlacesAutocomplete,
