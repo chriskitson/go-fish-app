@@ -2,7 +2,7 @@ export const bindState = (context, state, client) => {
     if (context.venueDetail) {
         state.venueDetail = {
             ...state.venueDetail,
-            ...context.venueDetail,
+            ...context.venueDetail
         };
         if (context.venueDetail.date) {
             const date = new Date(context.venueDetail.date);
@@ -13,9 +13,11 @@ export const bindState = (context, state, client) => {
             state.dateSearch = date;
         }
         if (context.venueDetail.name) {
-            let town = context.venueDetail.address_components ? context.venueDetail.address_components.filter(
-                (a) => a.types.indexOf("postal_town") > -1
-            ) : [];
+            let town = context.venueDetail.address_components
+                ? context.venueDetail.address_components.filter(
+                      a => a.types.indexOf("postal_town") > -1
+                  )
+                : [];
             state.venueSearch = {
                 ...state.venueSearch,
                 search: town.length > 0 ? town[0].long_name : "",
@@ -23,11 +25,14 @@ export const bindState = (context, state, client) => {
                 detail: {
                     place_id: context.venueDetail.place_id,
                     formatted_address: context.venueDetail.address,
-                    address_components: [{
-                        long_name: town.length > 0 ? town[0].long_name : "",
-                        short_name: town.length > 0 ? town[0].short_name : "",
-                        types: ["postal_town"]
-                    }]
+                    address_components: [
+                        {
+                            long_name: town.length > 0 ? town[0].long_name : "",
+                            short_name:
+                                town.length > 0 ? town[0].short_name : "",
+                            types: ["postal_town"]
+                        }
+                    ]
                 }
             };
         }
@@ -39,7 +44,7 @@ export const bindState = (context, state, client) => {
             search: context.venueSearchResults.search,
             valid: true,
             detail: context.venueSearchResults.place_id
-        }
+        };
     }
     if (context.path) {
         state.path = context.path;
@@ -75,25 +80,41 @@ export const bindState = (context, state, client) => {
             search: context.signupPlace.name,
             placeId: context.signupPlace.placeId,
             address: context.signupPlace.address
-        }
+        };
     }
     if (context.prices) {
         state.prices = context.prices;
+        if (state.prices.length > 0) {
+            state.signupForm = {
+                ...state.signupForm,
+                payment_model: state.prices[0].id
+            };
+        }
     }
     if (client) {
         state.user = {
             ...state.user,
             loggedIn: localStorage.getItem("access_token") !== null,
-            access_token: localStorage.getItem("access_token") !== null ?
-                localStorage.getItem("access_token") : "",
-            refresh_token: localStorage.getItem("refresh_token") !== null ?
-                localStorage.getItem("refresh_token") : "",
-            token_type: localStorage.getItem("token_type") !== null ?
-                localStorage.getItem("token_type") : "",
-            globalAdmin: localStorage.getItem("globalAdmin") !== null ?
-                localStorage.getItem("globalAdmin") === "true" : "",
-            userType: localStorage.getItem("userType") !== null ?
-                localStorage.getItem("userType") : ""
+            access_token:
+                localStorage.getItem("access_token") !== null
+                    ? localStorage.getItem("access_token")
+                    : "",
+            refresh_token:
+                localStorage.getItem("refresh_token") !== null
+                    ? localStorage.getItem("refresh_token")
+                    : "",
+            token_type:
+                localStorage.getItem("token_type") !== null
+                    ? localStorage.getItem("token_type")
+                    : "",
+            globalAdmin:
+                localStorage.getItem("globalAdmin") !== null
+                    ? localStorage.getItem("globalAdmin") === "true"
+                    : "",
+            userType:
+                localStorage.getItem("userType") !== null
+                    ? localStorage.getItem("userType")
+                    : ""
         };
     }
 

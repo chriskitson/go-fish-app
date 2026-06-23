@@ -48,7 +48,8 @@ let state = {
         email: "",
         password: ""
     },
-    registerForm: { // fisherman
+    registerForm: {
+        // fisherman
         messages: [],
         errors: [],
         name: "",
@@ -56,7 +57,8 @@ let state = {
         password: "",
         confirm: ""
     },
-    signupForm: {   // fishery
+    signupForm: {
+        // fishery
         messages: [],
         errors: [],
         name: "",
@@ -69,8 +71,8 @@ let state = {
         fisheryName: "",
         confirmed: false,
         stripeUrl: "",
-        subscription: "commission_only",
-        payment_model: "commission_only"
+        subscription: "",
+        payment_model: ""
     },
     userPosition: {
         error: "",
@@ -113,13 +115,13 @@ let state = {
         },
         subscription: {
             confirmed: false,
-            reference: '',
-            type: '',
+            reference: "",
+            type: "",
             amount: null
         },
         visible: true,
         fishery_types: [],
-        payment_model: "commission_only"
+        payment_model: ""
     },
     venueSearchResults: [],
     userTickets: [],
