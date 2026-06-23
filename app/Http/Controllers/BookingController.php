@@ -10,273 +10,273 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Traits\BookingTrait;
 use App\Http\Traits\StripeTrait;
+use App\Http\Traits\KlaviyoTrait;
 
 class BookingController extends Controller
 {
 
-  use BookingTrait;
-  use StripeTrait;
+    use BookingTrait;
+    use StripeTrait;
+    use KlaviyoTrait;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-  }
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct() {}
 
-  public function book(Request $request)
-  {
+    public function book(Request $request)
+    {
 
-    $user = $request->user();
-    $user_id = $user->id;
-    $url = $request->url;
+        $user = $request->user();
+        $user_id = $user->id;
+        $url = $request->url;
 
-    // get tickets from user basket
-    $items = Basket::where([
-      ["user_id", "=", $user_id]
-    ])->get();
+        // get tickets from user basket
+        $items = Basket::where([
+            ["user_id", "=", $user_id]
+        ])->get();
 
-    // array to hold booking responses
-    $booking_responses = [];
-    $booking_success = true;
+        // array to hold booking responses
+        $booking_responses = [];
+        $booking_success = true;
 
-    // verify all tickets are from the same venue
-    $venue_count = count(array_unique(array_map(function ($item) {
-      return $item["venue_id"];
-    }, $items->toArray())));
+        // verify all tickets are from the same venue
+        $venue_count = count(array_unique(array_map(function ($item) {
+            return $item["venue_id"];
+        }, $items->toArray())));
 
-    if ($venue_count > 1) {
-      return response()->json(array(
-        "success" => false,
-        "message" => "MULTIPLE_VENUES"
-      ), 500);
-    }
-
-    // loop through tickets and attempt to create a ticket for each
-    foreach ($items as $item) {
-
-      $basket_id = $item->id;
-      $date = $item->date;
-      $ticket_id = $item->ticket_id;
-      $venue_id = $item->venue_id;
-      $qty = $item->qty;
-
-      // get ticket info
-      $ticket = Ticket::where([
-        ["venue_id", "=", $venue_id],
-        ["id", "=", $ticket_id]
-      ])->get(["daily_limit", "cost", "name"])->first();
-
-      if (isset($ticket)) {
-
-        // get daily limit
-        $daily_limit = $ticket->daily_limit;
-        $cost = $ticket->cost;
-
-        // count number of bookings
-        $bookings = count(Booking::join("transactions", "transactions.id", "bookings.transaction_id")->where([
-          ["ticket_id", "=", $ticket_id],
-          ["confirmed", true]
-        ])->whereDate("bookings.created_at", $date)->get("bookings.id"));
-
-        if ($daily_limit > 0 && $daily_limit >= ($bookings + $qty)) {
-
-          // get venue info
-          $venue = Venue::where([
-            ["id", "=", $venue_id],
-          ])->get(["name", "account", "payment_fee"])->first();
-
-          // pad number for display purposes
-          $ticket_number = str_pad(strval($ticket_id), 5, "0", STR_PAD_LEFT);
-
-          array_push($booking_responses, array(
-            "success" => true,
-            "id" => $ticket_id,
-            "venue" => $venue,
-            "ticket" => $ticket_number . " - " . $venue->name . " - " . $ticket->name . " - " . date("d M Y", strtotime($date)),
-            "ticket_id" => $ticket_id,
-            "qty" => $qty,
-            "cost" => $cost,
-            "date" => $date,
-            "account" => $venue->account,
-            "payment_fee" => $venue->payment_fee
-          ));
-        } else {
-          $booking_success = false;
-          array_push($booking_responses, array(
-            "success" => false,
-            "basket_id" => $basket_id,
-            "status" => "NO_AVAILABILITY"
-          ));
+        if ($venue_count > 1) {
+            return response()->json(array(
+                "success" => false,
+                "message" => "MULTIPLE_VENUES"
+            ), 500);
         }
-      } else {
-        $booking_success = false;
-        array_push($booking_responses, array(
-          "success" => false,
-          "basket_id" => $ticket_id,
-          "status" => "TICKET_NOT_FOUND"
-        ), 404);
-      }
-    }
 
-    if ($booking_success) {
+        // loop through tickets and attempt to create a ticket for each
+        foreach ($items as $item) {
 
-      // work out application fee (based on % share of tickets only NOT booking fee)
-      $application_fee = array_sum(array_map(function ($b) {
-        return ((floatval($b["cost"]) * $b["qty"]) / 100) * $b["payment_fee"];
-      }, $booking_responses)) * 100;
+            $basket_id = $item->id;
+            $date = $item->date;
+            $ticket_id = $item->ticket_id;
+            $venue_id = $item->venue_id;
+            $qty = $item->qty;
 
-      // work out booking fee (based on number of tickets)
-      $booking_fee = $booking_responses[0]["payment_fee"] > 0 ? 0 : array_sum(array_map(function ($b) {
-        return intval($b["qty"]) * $_ENV["BOOKING_FEE"];
-      }, $booking_responses));
+            // get ticket info
+            $ticket = Ticket::where([
+                ["venue_id", "=", $venue_id],
+                ["id", "=", $ticket_id]
+            ])->get(["daily_limit", "cost", "name"])->first();
 
-      $qty = array_sum(array_map(function ($b) {
-        return intval($b["qty"]);
-      }, $booking_responses));
+            if (isset($ticket)) {
 
-      // venue account
-      $venue_account_id = $booking_responses[0]["account"];
+                // get daily limit
+                $daily_limit = $ticket->daily_limit;
+                $cost = $ticket->cost;
 
-      // add booking fee to items (for display purposes)
-      array_push($booking_responses, array(
-        "ticket" => "Booking fee",
-        "qty" => 1,
-        "cost" => $booking_fee
-      ));
+                // count number of bookings
+                $bookings = count(Booking::join("transactions", "transactions.id", "bookings.transaction_id")->where([
+                    ["ticket_id", "=", $ticket_id],
+                    ["confirmed", true]
+                ])->whereDate("bookings.created_at", $date)->get("bookings.id"));
 
-      // prepare tickets for stripe
-      $items = array_map(function ($r) {
-        return array(
-          "cost" =>  $r["cost"],
-          "ticket" =>  $r["ticket"],
-          "qty" => $r["qty"]
-        );
-      }, $booking_responses);
+                if ($daily_limit > 0 && $daily_limit >= ($bookings + $qty)) {
 
-      $total = array_sum(array_map(function ($b) {
-        return floatval($b["cost"]) * $b["qty"];
-      }, $booking_responses)) * 100;
+                    // get venue info
+                    $venue = Venue::where([
+                        ["id", "=", $venue_id],
+                    ])->get(["name", "account", "payment_fee"])->first();
 
-      // generate stripe session for payments
-      $payment_session = $this->create_checkout_session($user_id, $user->email, $items, "GBP", $venue_account_id, ($application_fee + ($booking_fee * 100)), $url);
+                    // pad number for display purposes
+                    $ticket_number = str_pad(strval($ticket_id), 5, "0", STR_PAD_LEFT);
 
-      // create transaction record
-      $transaction = new Transaction([
-        "session" => $payment_session,
-        "qty" => $qty,
-        "total" => $total / 100,
-        "booking_fee" => $booking_fee,
-        "ticket_fee" => $application_fee / 100
-      ]);
-      $transaction->save();
-      $transaction_id = $transaction->id;
+                    array_push($booking_responses, array(
+                        "success" => true,
+                        "id" => $ticket_id,
+                        "venue" => $venue,
+                        "ticket" => $ticket_number . " - " . $venue->name . " - " . $ticket->name . " - " . date("d M Y", strtotime($date)),
+                        "ticket_id" => $ticket_id,
+                        "qty" => $qty,
+                        "cost" => $cost,
+                        "date" => $date,
+                        "account" => $venue->account,
+                        "payment_fee" => $venue->payment_fee
+                    ));
+                } else {
+                    $booking_success = false;
+                    array_push($booking_responses, array(
+                        "success" => false,
+                        "basket_id" => $basket_id,
+                        "status" => "NO_AVAILABILITY"
+                    ));
+                }
+            } else {
+                $booking_success = false;
+                array_push($booking_responses, array(
+                    "success" => false,
+                    "basket_id" => $ticket_id,
+                    "status" => "TICKET_NOT_FOUND"
+                ), 404);
+            }
+        }
 
-      foreach ($booking_responses as $booking) {
-        for ($t = 0; $t < intval($booking["qty"]); $t++) {
-          if (isset($booking["ticket_id"])) {
-            $new_booking = new Booking([
-              "ticket_id" => $booking["ticket_id"],
-              "user_id" => $user_id,
-              "transaction_id" => $transaction_id,
-              "date" => $date,
-              "cost" => $booking["cost"]
+        if ($booking_success) {
+
+            // work out application fee (based on % share of tickets only NOT booking fee)
+            $application_fee = array_sum(array_map(function ($b) {
+                return ((floatval($b["cost"]) * $b["qty"]) / 100) * $b["payment_fee"];
+            }, $booking_responses)) * 100;
+
+            // work out booking fee (based on number of tickets)
+            $booking_fee = $booking_responses[0]["payment_fee"] > 0 ? 0 : array_sum(array_map(function ($b) {
+                return intval($b["qty"]) * $_ENV["BOOKING_FEE"];
+            }, $booking_responses));
+
+            $qty = array_sum(array_map(function ($b) {
+                return intval($b["qty"]);
+            }, $booking_responses));
+
+            // venue account
+            $venue_account_id = $booking_responses[0]["account"];
+
+            // add booking fee to items (for display purposes)
+            array_push($booking_responses, array(
+                "ticket" => "Booking fee",
+                "qty" => 1,
+                "cost" => $booking_fee
+            ));
+
+            // prepare tickets for stripe
+            $items = array_map(function ($r) {
+                return array(
+                    "cost" =>  $r["cost"],
+                    "ticket" =>  $r["ticket"],
+                    "qty" => $r["qty"]
+                );
+            }, $booking_responses);
+
+            $total = array_sum(array_map(function ($b) {
+                return floatval($b["cost"]) * $b["qty"];
+            }, $booking_responses)) * 100;
+
+            // generate stripe session for payments
+            $payment_session = $this->create_checkout_session($user_id, $user->email, $items, "GBP", $venue_account_id, ($application_fee + ($booking_fee * 100)), $url);
+
+            // create transaction record
+            $transaction = new Transaction([
+                "session" => $payment_session,
+                "qty" => $qty,
+                "total" => $total / 100,
+                "booking_fee" => $booking_fee,
+                "ticket_fee" => $application_fee / 100
             ]);
-            $new_booking->save();
-          }
+            $transaction->save();
+            $transaction_id = $transaction->id;
+
+            foreach ($booking_responses as $booking) {
+                for ($t = 0; $t < intval($booking["qty"]); $t++) {
+                    if (isset($booking["ticket_id"])) {
+                        $new_booking = new Booking([
+                            "ticket_id" => $booking["ticket_id"],
+                            "user_id" => $user_id,
+                            "transaction_id" => $transaction_id,
+                            "date" => $date,
+                            "cost" => $booking["cost"]
+                        ]);
+                        $new_booking->save();
+                    }
+                }
+            };
+        } else {
+            $payment_session = "";
         }
-      };
-    } else {
-      $payment_session = "";
+
+        return response()->json(array(
+            "success" => $booking_success,
+            "bookings" => $booking_responses,
+            "user" => $user_id,
+            "session_id" => $payment_session,
+            "transaction_id" => isset($transaction_id) ? $transaction_id : 0,
+            "account_id" => $venue->account
+        ), $booking_success ? 200 : 500);
     }
 
-    return response()->json(array(
-      "success" => $booking_success,
-      "bookings" => $booking_responses,
-      "user" => $user_id,
-      "session_id" => $payment_session,
-      "transaction_id" => isset($transaction_id) ? $transaction_id : 0,
-      "account_id" => $venue->account
-    ), $booking_success ? 200 : 500);
-  }
+    public function user(Request $request)
+    {
 
-  public function user(Request $request)
-  {
+        $user = $request->user();
+        $user_id = isset($user) ? $user->id : 0;
 
-    $user = $request->user();
-    $user_id = isset($user) ? $user->id : 0;
+        // get confirmed transactions
+        $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
+            ["confirmed", "=", 1],
+            ["user_id", "=", $user_id]
+        ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
 
-    // get confirmed transactions
-    $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
-      ["confirmed", "=", 1],
-      ["user_id", "=", $user_id]
-    ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+        // get bookings (tickets) for each transaction
+        foreach ($transactions as $transaction) {
+            $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+                ["user_id", "=", $user_id],
+                ["transaction_id", "=", $transaction->id]
+            ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+            $transaction->tickets = $tickets;
+        }
 
-    // get bookings (tickets) for each transaction
-    foreach ($transactions as $transaction) {
-      $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
-        ["user_id", "=", $user_id],
-        ["transaction_id", "=", $transaction->id]
-      ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
-      $transaction->tickets = $tickets;
+        return response()->json($transactions);
     }
 
-    return response()->json($transactions);
-  }
+    public function venue(Request $request)
+    {
 
-  public function venue(Request $request)
-  {
+        $user = $request->user();
+        $is_admin = $user->user_type == 2;
+        $venue_id = $user->venue_id;
 
-    $user = $request->user();
-    $is_admin = $user->user_type == 2;
-    $venue_id = $user->venue_id;
+        if ($is_admin && isset($venue_id)) {
+            // get confirmed transactions
+            $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->join("tickets", "bookings.ticket_id", "tickets.id")->join("users", "bookings.user_id", "users.id")->where([
+                ["confirmed", "=", 1],
+                ["tickets.venue_id", "=", $venue_id]
+            ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session", "users.name"]);
 
-    if ($is_admin && isset($venue_id)) {
-      // get confirmed transactions
-      $transactions = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->join("tickets", "bookings.ticket_id", "tickets.id")->join("users", "bookings.user_id", "users.id")->where([
-        ["confirmed", "=", 1],
-        ["tickets.venue_id", "=", $venue_id]
-      ])->distinct()->orderBy("transactions.id", "DESC")->get(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session", "users.name"]);
+            // get bookings (tickets) for each transaction
+            foreach ($transactions as $transaction) {
+                $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+                    ["venue_id", "=", $venue_id],
+                    ["transaction_id", "=", $transaction->id]
+                ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+                $transaction->tickets = $tickets;
+            }
 
-      // get bookings (tickets) for each transaction
-      foreach ($transactions as $transaction) {
-        $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
-          ["venue_id", "=", $venue_id],
-          ["transaction_id", "=", $transaction->id]
-        ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
-        $transaction->tickets = $tickets;
-      }
-
-      return response()->json($transactions);
-    } else {
-      return response("Unauthorized", 401);
-    }
-  }
-
-  public function get(Request $request, $session)
-  {
-
-    $user = $request->user();
-    $user_id = isset($user) ? $user->id : 0;
-
-    // get confirmed transaction
-    $transaction = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
-      ["confirmed", "=", 1],
-      ["user_id", "=", $user_id],
-      ["session", "=", $session]
-    ])->distinct()->first(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
-
-    if (isset($transaction)) {
-      // get bookings (tickets) for transaction
-      $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
-        ["user_id", "=", $user_id],
-        ["transaction_id", "=", $transaction->id]
-      ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
-      $transaction->tickets = $tickets;
+            return response()->json($transactions);
+        } else {
+            return response("Unauthorized", 401);
+        }
     }
 
-    return response()->json($transaction);
-  }
+    public function get(Request $request, $session)
+    {
+
+        $user = $request->user();
+        $user_id = isset($user) ? $user->id : 0;
+
+        // get confirmed transaction
+        $transaction = Transaction::join("bookings", "bookings.transaction_id", "transactions.id")->where([
+            ["confirmed", "=", 1],
+            ["user_id", "=", $user_id],
+            ["session", "=", $session]
+        ])->distinct()->first(["transactions.id", "transactions.created_at AS date", "total", "receipt_link", "qty", "transactions.booking_fee", "session"]);
+
+        if (isset($transaction)) {
+            // get bookings (tickets) for transaction
+            $tickets = Booking::join("tickets", "bookings.ticket_id", "tickets.id")->join("venues", "tickets.venue_id", "venues.id")->where([
+                ["user_id", "=", $user_id],
+                ["transaction_id", "=", $transaction->id]
+            ])->get(["bookings.id AS booking_id", "bookings.cost AS booking_cost", "bookings.date AS booking_date", "venues.id AS venue_id", "venues.name AS venue_name", "tickets.name AS ticket_name"]);
+            $transaction->tickets = $tickets;
+        }
+
+        return response()->json($transaction);
+    }
 }
