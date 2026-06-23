@@ -19,9 +19,7 @@ class RegisterController extends Controller
   use StripeTrait;
   use KlaviyoTrait;
 
-  public function __construct()
-  {
-  }
+  public function __construct() {}
 
   public function register(Request $request) // fisherman
   {
@@ -106,7 +104,6 @@ class RegisterController extends Controller
       // venue exists, get info
       $venue_id = Venue::where("place_id", "=", $data["placeId"])->first()->id;
       $venue_managed = User::where("venue_id", "=", $venue_id)->count() > 0;
-
     } else {  // set up new venue
 
       $plans = $this->get_prices();
@@ -135,7 +132,6 @@ class RegisterController extends Controller
 
       $venue_id = $venue->id;
       $venue_managed = false;
-
     }
 
     // if venue is active then don't proceed
@@ -225,7 +221,7 @@ class RegisterController extends Controller
         $account_id = $this->connected_account_create($email, $venue->name);
         // update account against venue
         $venue->update(array(
-          "account" => $account_id 
+          "account" => $account_id
         ));
       }
 
@@ -287,16 +283,6 @@ class RegisterController extends Controller
     return \Illuminate\Support\Facades\Cache::remember('stripe_billing_plans', 86400, function () {
       $result = [];
 
-      // Always include the commission-only free tier
-      $commission_only = config('billing.commission_only');
-      $result[] = [
-        'id' => 'commission_only',
-        'name' => $commission_only['name'],
-        'monthly_fee' => $commission_only['monthly_fee'],
-        'commission' => $commission_only['commission'],
-        'stripe_price_id' => null,
-      ];
-
       // Fetch all active prices for the product from Stripe
       $product_id = config('billing.product_id');
       if ($product_id) {
@@ -333,5 +319,4 @@ class RegisterController extends Controller
       return $result;
     });
   }
-
 }
