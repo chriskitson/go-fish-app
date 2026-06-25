@@ -88,7 +88,7 @@ class BootstrapController extends Controller
             $venues_array = [];
 
             // get all venues
-            $venues = Venue::where([["deleted", "=", 0], ["active", "=", 1], ["visible", "=", 1]])->get(["id", "name", "address", "place_id", "image", "rating", "photos"]);
+            $venues = Venue::where([["deleted", "=", 0], ["visible", "=", 1]])->get(["id", "name", "address", "place_id", "image", "rating", "photos", "active"]);
 
             // determine location based on lat lng if supplied
             if ($this->USE_GOOGLE === True && isset($lat) && isset($lng)) {

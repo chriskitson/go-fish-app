@@ -13,7 +13,8 @@
       ></rating-component>
       <span class="text-xl font-bold text-white"
         >{{ venue.name }}
-        {{ venue.distanceDisplay ? ` - ${venue.distanceDisplay}` : "" }}</span
+        {{ venue.distanceDisplay ? ` - ${venue.distanceDisplay}` : "" }}
+        <span v-if="venue.active === 0" class="inline-block px-1.5 py-0.5 ml-2 text-[10px] font-bold tracking-wider text-white uppercase bg-grey-400 rounded">Coming Soon</span></span
       >
     </div>
     <div class="flex items-center justify-center w-full h-full" v-if="!live">
