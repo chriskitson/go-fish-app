@@ -97,10 +97,9 @@ class VenueController extends Controller
       return response()->json([]);
     }
 
-    // 1. Fetch Venues
-    $venues = Venue::select('id', 'name', 'address', 'place_id')
+    // 1. Fetch Venues (include inactive — they are discoverable but not yet bookable)
+    $venues = Venue::select('id', 'name', 'address', 'place_id', 'active')
       ->where('deleted', 0)
-      ->where('active', 1)
       ->where('visible', 1)
       ->where(function ($query) use ($q) {
         $query->where('name', 'like', '%' . $q . '%')
@@ -392,24 +391,24 @@ class VenueController extends Controller
       // get address from URL string
       $search = $address;
 
-      $venues = Venue::where([
+      // 1. Distance-based results: venues WITH a place_id (can calculate distance)
+      $venues_with_place = Venue::where([
         ["place_id", "!=", ""],
         ["deleted", "=", 0],
-        ["active", "=", 1],
         ["visible", "=", 1]
       ]);
 
       if ($type !== "All") {
-        $venues = $venues->whereJsonContains("fishery_types", $type);
+        $venues_with_place = $venues_with_place->whereJsonContains("fishery_types", $type);
       }
 
-      $venues = $venues->get(["id", "name", "place_id", "image", "rating", "photos"]);
+      $venues_with_place = $venues_with_place->get(["id", "name", "place_id", "image", "rating", "photos", "active"]);
 
       // set origin
       $origin = "place_id:" . $location;
 
       // set destinations
-      $destinations = $venues->map(function ($venue) {
+      $destinations = $venues_with_place->map(function ($venue) {
         return "place_id:" . $venue->place_id;
       })->toArray();
 
@@ -417,7 +416,7 @@ class VenueController extends Controller
       $distances = $this->calculate_distances($origin, $destinations);
 
       // build results array with distances included
-      $venuesArray = $venues->values()->toArray();
+      $venuesArray = $venues_with_place->values()->toArray();
       $results = array_map(function ($v, $index) use ($distances) {
         $image = "#";
         // use google photos if image missing
@@ -445,7 +444,8 @@ class VenueController extends Controller
           "rating" => $v["rating"],
           "distance" => $distance,
           "place_id" => $v["place_id"],
-          "distanceDisplay" => $distanceDisplay
+          "distanceDisplay" => $distanceDisplay,
+          "active" => $v["active"]
         );
       }, $venuesArray, array_keys($venuesArray));
 
@@ -453,24 +453,113 @@ class VenueController extends Controller
         return $v["distance"] < env("SEARCH_DISTANCE_LIMIT", 0);
       });
 
+      // 2. Name-matched results: venues WITHOUT a place_id that match the search text
+      $search_terms = array_filter(explode(" ", $search));
+      $venues_without_place = Venue::where([
+        ["place_id", "=", ""],
+        ["deleted", "=", 0],
+        ["visible", "=", 1]
+      ]);
+
+      if ($type !== "All") {
+        $venues_without_place = $venues_without_place->whereJsonContains("fishery_types", $type);
+      }
+
+      if (count($search_terms) > 0) {
+        $venues_without_place = $venues_without_place->where(function ($query) use ($search_terms) {
+          foreach ($search_terms as $term) {
+            $query->orWhere("name", "like", "%" . $term . "%");
+          }
+        });
+      }
+
+      $venues_without_place = $venues_without_place->get(["id", "name", "place_id", "image", "rating", "photos", "active"]);
+
+      foreach ($venues_without_place as $v) {
+        $image = "#";
+        if ((!isset($v->image) || $v->image === "") && isset($v->photos) && $v->photos !== "") {
+          $photos = json_decode($v->photos);
+          if (isset($photos) && count($photos) > 0) {
+            $image = $photos[0]->url;
+          }
+        } else {
+          $image = $v->image;
+        }
+
+        $results[] = array(
+          "id" => $v->id,
+          "name" => $v->name,
+          "image" => $image,
+          "rating" => $v->rating,
+          "distance" => 999999999999,
+          "place_id" => $v->place_id,
+          "distanceDisplay" => "Unknown",
+          "active" => $v->active
+        );
+      }
+
       // sort by distance
       usort($results, function ($a, $b) {
         return $a["distance"] > $b["distance"];
       });
+
       // write to cache expiring in 1 week
       $cache = new SearchCache([
         "id" => $cache_id,
         "search" => $search,
-        "data" => json_encode($results),
+        "data" => json_encode(array_values($results)),
         "expires" => date("Y-m-d", strtotime(env("CACHE_EXPIRES", "+1 week")))
       ]);
       $cache->save();
 
       // read results back from cache (better performance)
       $results = json_decode($cache->data);
-    } else {  // no access to Google or cache, so no results returned
-      $search = "";
-      $results = [];
+    } else {  // no access to Google or cache — fallback to name-based search
+      $search = $address;
+      $search_terms = array_filter(explode(" ", $search));
+
+      $venues = Venue::where([
+        ["deleted", "=", 0],
+        ["visible", "=", 1]
+      ]);
+
+      if ($type !== "All") {
+        $venues = $venues->whereJsonContains("fishery_types", $type);
+      }
+
+      if (count($search_terms) > 0) {
+        $venues = $venues->where(function ($query) use ($search_terms) {
+          foreach ($search_terms as $term) {
+            $query->orWhere("name", "like", "%" . $term . "%")
+                  ->orWhere("address", "like", "%" . $term . "%");
+          }
+        });
+      }
+
+      $venues = $venues->get(["id", "name", "place_id", "image", "rating", "photos", "active"]);
+
+      $results = $venues->map(function ($v) {
+        $image = "#";
+        if ((!isset($v->image) || $v->image === "") && isset($v->photos) && $v->photos !== "") {
+          $photos = json_decode($v->photos);
+          if (isset($photos) && count($photos) > 0) {
+            $image = $photos[0]->url;
+          }
+        } else {
+          $image = $v->image;
+        }
+
+        return array(
+          "id" => $v->id,
+          "name" => $v->name,
+          "image" => $image,
+          "rating" => $v->rating,
+          "distance" => 999999999999,
+          "place_id" => $v->place_id,
+          "distanceDisplay" => "Unknown",
+          "active" => $v->active
+        );
+      })->toArray();
     }
 
     if (count($results) > 0) {
