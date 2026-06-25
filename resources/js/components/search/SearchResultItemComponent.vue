@@ -17,8 +17,9 @@
                 :current="parseFloat(result.rating) || 0"
             ></rating-component>
             <a :href="`/venue/${result.id}/${dateStamp}`" class="text-lg font-bold"
-                >{{ result.name }} - {{ result.distanceDisplay }}</a
-            >
+                >{{ result.name }} - {{ result.distanceDisplay }}
+                <span v-if="!result.active" class="inline-block px-1.5 py-0.5 ml-2 text-[10px] font-bold tracking-wider text-white uppercase bg-grey-300 rounded">Coming Soon</span>
+            </a>
             <span class="text-sm">{{ result.address }}</span>
             <span
                 class="flex items-center mt-2 text-sm justify-content text-grey-300"
@@ -33,9 +34,14 @@
             >
             <span
                 class="flex items-center mt-2 text-sm justify-content text-grey-300"
-                v-if="result.tickets.length === 0"
+                v-if="result.tickets.length === 0 && result.active"
                 ><icon name="ticket" class="w-4 h-4 mr-2" /> There are no
                 tickets available on {{ date }}.</span
+            >
+            <span
+                class="flex items-center mt-2 text-sm justify-content text-grey-300"
+                v-if="result.tickets.length === 0 && !result.active"
+                ><icon name="ticket" class="w-4 h-4 mr-2" /> Online booking coming soon — contact the fishery directly.</span
             >
         </div>
     </div>
